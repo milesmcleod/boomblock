@@ -75065,6 +75065,8 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -75104,105 +75106,34 @@ var AudioTracks = function (_React$Component) {
   }
 
   _createClass(AudioTracks, [{
-    key: 'routeDrums',
-    value: function routeDrums(newProps) {
+    key: 'routeTrack',
+    value: function routeTrack(type, newProps) {
       var _this2 = this;
 
-      var drumsSource = this.state.audioContext.createBufferSource();
-      var drumsBuffer = void 0;
-      this.state.audioContext.decodeAudioData(newProps.drumsArrayBuffer, function (buffer) {
-        drumsBuffer = buffer;
-        drumsSource.buffer = drumsBuffer;
-        var drumsGain = _this2.state.audioContext.createGain();
-        drumsSource.connect(drumsGain);
-        var drumsAnalyser = _this2.state.audioContext.createAnalyser();
-        drumsGain.connect(drumsAnalyser);
-        drumsAnalyser.connect(_this2.state.masterGain);
-        _this2.setState({
-          drumsSource: drumsSource,
-          drumsGain: drumsGain,
-          drumsAnalyser: drumsAnalyser
-        });
-        console.log('loaded drums');
-      });
-    }
-  }, {
-    key: 'routeBass',
-    value: function routeBass(newProps) {
-      var _this3 = this;
+      var source = this.state.audioContext.createBufferSource();
+      var typeBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps[type + 'ArrayBuffer'], function (buffer) {
+        var _this2$setState;
 
-      var bassSource = this.state.audioContext.createBufferSource();
-      var bassBuffer = void 0;
-      this.state.audioContext.decodeAudioData(newProps.bassArrayBuffer, function (buffer) {
-        bassBuffer = buffer;
-        bassSource.buffer = bassBuffer;
-        var bassGain = _this3.state.audioContext.createGain();
-        bassSource.connect(bassGain);
-        var bassAnalyser = _this3.state.audioContext.createAnalyser();
-        bassGain.connect(bassAnalyser);
-        bassAnalyser.connect(_this3.state.masterGain);
-        _this3.setState({
-          bassSource: bassSource,
-          bassGain: bassGain,
-          bassAnalyser: bassAnalyser
-        });
-        console.log('loaded bass');
-      });
-    }
-  }, {
-    key: 'routeMelody',
-    value: function routeMelody(newProps) {
-      var _this4 = this;
-
-      var melodySource = this.state.audioContext.createBufferSource();
-      var melodyBuffer = void 0;
-      this.state.audioContext.decodeAudioData(newProps.melodyArrayBuffer, function (buffer) {
-        melodyBuffer = buffer;
-        melodySource.buffer = melodyBuffer;
-        var melodyGain = _this4.state.audioContext.createGain();
-        melodySource.connect(melodyGain);
-        var melodyAnalyser = _this4.state.audioContext.createAnalyser();
-        melodyGain.connect(melodyAnalyser);
-        melodyAnalyser.connect(_this4.state.masterGain);
-        _this4.setState({
-          melodySource: melodySource,
-          melodyGain: melodyGain,
-          melodyAnalyser: melodyAnalyser
-        });
-        console.log('loaded melody');
-      });
-    }
-  }, {
-    key: 'routeSamples',
-    value: function routeSamples(newProps) {
-      var _this5 = this;
-
-      var samplesSource = this.state.audioContext.createBufferSource();
-      var samplesBuffer = void 0;
-      this.state.audioContext.decodeAudioData(newProps.samplesArrayBuffer, function (buffer) {
-        samplesBuffer = buffer;
-        samplesSource.buffer = samplesBuffer;
-        var samplesGain = _this5.state.audioContext.createGain();
-        samplesSource.connect(samplesGain);
-        var samplesAnalyser = _this5.state.audioContext.createAnalyser();
-        samplesGain.connect(samplesAnalyser);
-        samplesAnalyser.connect(_this5.state.masterGain);
-        _this5.setState({
-          samplesSource: samplesSource,
-          samplesGain: samplesGain,
-          samplesAnalyser: samplesAnalyser
-        });
-        console.log('loaded samples');
+        typeBuffer = buffer;
+        source.buffer = typeBuffer;
+        var gain = _this2.state.audioContext.createGain();
+        source.connect(gain);
+        var analyser = _this2.state.audioContext.createAnalyser();
+        gain.connect(analyser);
+        analyser.connect(_this2.state.masterGain);
+        _this2.setState((_this2$setState = {}, _defineProperty(_this2$setState, type + 'Source', source), _defineProperty(_this2$setState, type + 'Gain', gain), _defineProperty(_this2$setState, type + 'Analyser', analyser), _this2$setState));
+        console.log('loaded ' + type);
       });
     }
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(newProps) {
       if (newProps.drumsArrayBuffer && newProps.bassArrayBuffer && newProps.melodyArrayBuffer && newProps.samplesArrayBuffer) {
-        this.routeDrums(newProps);
-        this.routeBass(newProps);
-        this.routeMelody(newProps);
-        this.routeSamples(newProps);
+        this.routeTrack('drums', newProps);
+        this.routeTrack('bass', newProps);
+        this.routeTrack('melody', newProps);
+        this.routeTrack('samples', newProps);
         this.state.masterGain.connect(this.state.audioContext.destination);
       }
     }
@@ -75228,6 +75159,15 @@ var AudioTracks = function (_React$Component) {
         // this.state.bassSource.start();
         // this.state.melodySource.start();
         // this.state.samplesSource.start();
+        // window.setInterval(() => {
+        // const data = new Float32Array(this.state.melodyAnalyser.frequencyBinCount);
+        // this.state.melodyAnalyser.getFloatFrequencyData(data);
+        // console.log(data);
+        // this.state.drumsGain.gain.value = Math.random();
+        // this.state.bassGain.gain.value = Math.random();
+        // this.state.samplesGain.gain.value = Math.random();
+        // this.state.melodyGain.gain.value = Math.random();
+        // }, 1000);
       }
       return _react2.default.createElement('div', null);
     }

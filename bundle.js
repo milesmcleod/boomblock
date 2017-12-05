@@ -45165,24 +45165,99 @@ document.addEventListener('DOMContentLoaded', function () {
   audio.load();
   window.audio = audio;
 
-  var loadCheck = function loadCheck() {
-    window.setTimeout(function () {
-      if (audio.loaded === 1) {
-        // audio.start();
-        console.log('loaded up!');
-      } else {
-        loadCheck();
-      }
-    }, 1000);
-  };
-
-  loadCheck();
-
   var world = new _world2.default();
   var lighting = new _lighting2.default(world.scene);
   var floor = new _floor2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
   var traintrack = new _traintrack2.default(world.scene);
+  window.world = world;
+
+  var handleClick = function handleClick() {
+    var clickElement = world.intersects[0];
+    switch (clickElement.object.name) {
+      case 'play':
+        if (!audio.playing) {
+          audio.masterGain.gain.value = 1;
+          clickElement.object.material.color.set(0xffffff);
+          world.scene.children[3].children.filter(function (obj) {
+            return obj.name === 'pause';
+          })[0].material.color.set(0x000000);
+          audio.start();
+        }
+        break;
+      case 'pause':
+        if (audio.playing) {
+          audio.masterGain.gain.value = 0;
+          clickElement.object.material.color.set(0xffffff);
+          world.scene.children[3].children.filter(function (obj) {
+            return obj.name === 'play';
+          })[0].material.color.set(0x000000);
+          audio.stop();
+          window.removeEventListener('mouseup', handleClick, false);
+          audio.reload();
+          loadCheck();
+        }
+        break;
+      case 'reset':
+        if (audio.playing) {
+          audio.masterGain.gain.value = 0;
+          audio.stop();
+        }
+        audio.masterGain.gain.value = 1;
+        window.removeEventListener('mouseup', handleClick, false);
+        audio.reload();
+        audio.pausedAt = 0;
+        loadCheck();
+        break;
+      case 'mute':
+        if (audio.masterGain.gain.value) {
+          audio.masterGain.gain.value = 0;
+        } else {
+          audio.masterGain.gain.value = 1;
+        }
+        break;
+      case 'track1':
+        if (audio.drumsGain.gain.value) {
+          audio.drumsGain.gain.value = 0;
+        } else {
+          audio.drumsGain.gain.value = 1;
+        }
+        break;
+      case 'track2':
+        if (audio.bassGain.gain.value) {
+          audio.bassGain.gain.value = 0;
+        } else {
+          audio.bassGain.gain.value = 1;
+        }
+        break;
+      case 'track3':
+        if (audio.melodyGain.gain.value) {
+          audio.melodyGain.gain.value = 0;
+        } else {
+          audio.melodyGain.gain.value = 1;
+        }
+        break;
+      case 'track4':
+        if (audio.samplesGain.gain.value) {
+          audio.samplesGain.gain.value = 0;
+        } else {
+          audio.samplesGain.gain.value = 1;
+        }
+        break;
+    }
+  };
+
+  var loadCheck = function loadCheck() {
+    window.setTimeout(function () {
+      if (audio.loaded === 1) {
+        window.addEventListener('mouseup', handleClick, false);
+      } else {
+        loadCheck();
+      }
+    }, 10);
+  };
+
+  loadCheck();
 
   world.loop();
 });
@@ -45225,7 +45300,6 @@ var World = function () {
       this.aspectRatio = this.width / this.height;
       this.nearPlane = 1;
       this.farPlane = 20000;
-      this.mousePos = { x: 0, y: 0 };
     }
   }, {
     key: 'createCamera',
@@ -45262,8 +45336,8 @@ var World = function () {
       this.mouse = new THREE.Vector2();
     }
   }, {
-    key: 'onWindowResize',
-    value: function onWindowResize() {
+    key: 'handleWindowResize',
+    value: function handleWindowResize() {
       this.height = window.innerHeight;
       this.width = window.innerWidth;
       this.renderer.setSize(this.width, this.height);
@@ -45273,7 +45347,8 @@ var World = function () {
   }, {
     key: 'handleMouseMove',
     value: function handleMouseMove(event) {
-      this.mousePos = { x: event.clientX, y: event.clientY };
+      this.mouse.x = event.clientX / window.innerWidth * 2 - 1;
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
   }]);
 
@@ -45284,13 +45359,20 @@ var World = function () {
     this.createCamera();
     this.createRenderer();
     this.createControls();
-    window.addEventListener('resize', this.onWindowResize.bind(this), false);
-    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    this.createRaycaster();
+    window.addEventListener('resize', this.handleWindowResize.bind(this), false);
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
   }
 
   _createClass(World, [{
     key: 'update',
-    value: function update() {}
+    value: function update() {
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
+      // for ( var i = 0; i < this.intersects.length; i++ ) {
+      //   this.intersects[ i ].object.material.color.set(0x000000);
+      // }
+    }
   }, {
     key: 'render',
     value: function render() {
@@ -46602,20 +46684,37 @@ var BoomBlock = function () {
     key: 'createTrackButtons',
     value: function createTrackButtons(boombox) {
       var trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
-      var trackButtonMaterial = new THREE.MeshPhongMaterial({
+      var trackButtonMaterial1 = new THREE.MeshPhongMaterial({
         color: 0xfffff,
         side: THREE.DoubleSide
       });
-      this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      this.trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      this.trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      this.trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
+      var trackButtonMaterial2 = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      var trackButtonMaterial3 = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      var trackButtonMaterial4 = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial1);
+      this.trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial2);
+      this.trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial3);
+      this.trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial4);
       // trackButton1.material.uniforms.transparent = true;
       // trackButton1.material.uniforms.opacity = 0.3;
       this.trackButton1.position.set(175, 100, 110);
       this.trackButton2.position.set(175, 30, 110);
       this.trackButton3.position.set(175, -40, 110);
       this.trackButton4.position.set(175, -110, 110);
+
+      this.trackButton1.name = 'track1';
+      this.trackButton2.name = 'track2';
+      this.trackButton3.name = 'track3';
+      this.trackButton4.name = 'track4';
 
       boombox.add(this.trackButton1);
       boombox.add(this.trackButton2);
@@ -46630,22 +46729,39 @@ var BoomBlock = function () {
         color: 0xfffff,
         side: THREE.DoubleSide
       });
+      var pauseButtonMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      var resetButtonMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      var muteButtonMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
 
       this.playButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
       this.playButton.position.set(-180, -10, 110);
       this.playButton.rotation.x = Math.PI / 2;
 
-      this.pauseButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.pauseButton = new THREE.Mesh(playButtonGeometry, pauseButtonMaterial);
       this.pauseButton.position.set(-100, -10, 110);
       this.pauseButton.rotation.x = Math.PI / 2;
 
-      this.resetButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.resetButton = new THREE.Mesh(playButtonGeometry, resetButtonMaterial);
       this.resetButton.position.set(-20, -10, 110);
       this.resetButton.rotation.x = Math.PI / 2;
 
-      this.muteButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.muteButton = new THREE.Mesh(playButtonGeometry, muteButtonMaterial);
       this.muteButton.position.set(60, -10, 110);
       this.muteButton.rotation.x = Math.PI / 2;
+
+      this.playButton.name = 'play';
+      this.pauseButton.name = 'pause';
+      this.resetButton.name = 'reset';
+      this.muteButton.name = 'mute';
 
       boombox.add(this.playButton);
       boombox.add(this.pauseButton);
@@ -46781,6 +46897,9 @@ var AudioTracks = function () {
     this.masterGain.connect(this.audioContext.destination);
 
     this.loaded = 0;
+    this.playing = 0;
+    this.startedAt = 0;
+    this.pausedAt = 0;
   }
 
   _createClass(AudioTracks, [{
@@ -46827,7 +46946,7 @@ var AudioTracks = function () {
 
       var sourceNode = this.audioContext.createBufferSource();
       var typeBuffer = void 0;
-      this.audioContext.decodeAudioData(arrayBufferCollection[type + "ArrayBuffer"], function (buffer) {
+      this.audioContext.decodeAudioData(arrayBufferCollection[type + "ArrayBuffer"].slice(), function (buffer) {
         typeBuffer = buffer;
         sourceNode.buffer = typeBuffer;
         var gainNode = _this2.audioContext.createGain();
@@ -46845,10 +46964,20 @@ var AudioTracks = function () {
   }, {
     key: "start",
     value: function start() {
-      this.drumsSource.start();
-      this.bassSource.start();
-      this.melodySource.start();
-      this.samplesSource.start();
+      this.playing = 1;
+      if (this.pausedAt) {
+        this.startedAt = Date.now() - this.pausedAt;
+        this.drumsSource.start(0, this.pausedAt / 1000);
+        this.bassSource.start(0, this.pausedAt / 1000);
+        this.melodySource.start(0, this.pausedAt / 1000);
+        this.samplesSource.start(0, this.pausedAt / 1000);
+      } else {
+        this.startedAt = Date.now();
+        this.drumsSource.start(0);
+        this.bassSource.start(0);
+        this.melodySource.start(0);
+        this.samplesSource.start(0);
+      }
       // window.setInterval(() => {
       // const data = new Float32Array(this.melodyAnalyser.frequencyBinCount);
       // this.melodyAnalyser.getFloatFrequencyData(data);
@@ -46858,6 +46987,25 @@ var AudioTracks = function () {
       // this.samplesGain.gain.value = Math.random();
       // this.melodyGain.gain.value = Math.random();
       // }, 1000);
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      this.playing = 0;
+      this.pausedAt = Date.now() - this.startedAt;
+      this.drumsSource.stop();
+      this.bassSource.stop();
+      this.melodySource.stop();
+      this.samplesSource.stop();
+    }
+  }, {
+    key: "reload",
+    value: function reload() {
+      this.loaded = 0;
+      this.routeTrack('drums', this.arrayBufferCollection);
+      this.routeTrack('bass', this.arrayBufferCollection);
+      this.routeTrack('samples', this.arrayBufferCollection);
+      this.routeTrack('melody', this.arrayBufferCollection);
     }
   }]);
 

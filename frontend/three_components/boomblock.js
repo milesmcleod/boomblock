@@ -114,25 +114,37 @@ class BoomBlock {
 
   createTrackButtons(boombox) {
     const trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
-    const trackButtonMaterial = new THREE.MeshPhongMaterial({
+    const trackButtonMaterial1 = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
+    const trackButtonMaterial2 = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
+    const trackButtonMaterial3 = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
+    const trackButtonMaterial4 = new THREE.MeshPhongMaterial({
       color: 0xfffff,
       side: THREE.DoubleSide
     });
     this.trackButton1 = new THREE.Mesh(
       trackButtonGeometry,
-      trackButtonMaterial
+      trackButtonMaterial1
     );
     this.trackButton2 = new THREE.Mesh(
       trackButtonGeometry,
-      trackButtonMaterial
+      trackButtonMaterial2
     );
     this.trackButton3 = new THREE.Mesh(
       trackButtonGeometry,
-      trackButtonMaterial
+      trackButtonMaterial3
     );
     this.trackButton4 = new THREE.Mesh(
       trackButtonGeometry,
-      trackButtonMaterial
+      trackButtonMaterial4
     );
     // trackButton1.material.uniforms.transparent = true;
     // trackButton1.material.uniforms.opacity = 0.3;
@@ -140,6 +152,11 @@ class BoomBlock {
     this.trackButton2.position.set(175, 30, 110);
     this.trackButton3.position.set(175, -40, 110);
     this.trackButton4.position.set(175, -110, 110);
+
+    this.trackButton1.name = 'track1';
+    this.trackButton2.name = 'track2';
+    this.trackButton3.name = 'track3';
+    this.trackButton4.name = 'track4';
 
     boombox.add(this.trackButton1);
     boombox.add(this.trackButton2);
@@ -153,6 +170,18 @@ class BoomBlock {
       color: 0xfffff,
       side: THREE.DoubleSide
     });
+    const pauseButtonMaterial = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
+    const resetButtonMaterial = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
+    const muteButtonMaterial = new THREE.MeshPhongMaterial({
+      color: 0xfffff,
+      side: THREE.DoubleSide
+    });
 
     this.playButton = new THREE.Mesh(
       playButtonGeometry,
@@ -163,24 +192,29 @@ class BoomBlock {
 
     this.pauseButton = new THREE.Mesh(
       playButtonGeometry,
-      playButtonMaterial
+      pauseButtonMaterial
     );
     this.pauseButton.position.set(-100, -10, 110);
     this.pauseButton.rotation.x = Math.PI/2;
 
     this.resetButton = new THREE.Mesh(
       playButtonGeometry,
-      playButtonMaterial
+      resetButtonMaterial
     );
     this.resetButton.position.set(-20, -10, 110);
     this.resetButton.rotation.x = Math.PI/2;
 
     this.muteButton = new THREE.Mesh(
       playButtonGeometry,
-      playButtonMaterial
+      muteButtonMaterial
     );
     this.muteButton.position.set(60, -10, 110);
     this.muteButton.rotation.x = Math.PI/2;
+
+    this.playButton.name = 'play';
+    this.pauseButton.name = 'pause';
+    this.resetButton.name = 'reset';
+    this.muteButton.name = 'mute';
 
     boombox.add(this.playButton);
     boombox.add(this.pauseButton);

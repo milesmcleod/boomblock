@@ -32,6 +32,9 @@ class AudioTracks {
     this.masterGain.connect(this.audioContext.destination);
 
     this.loaded = 0;
+    this.playing = 0;
+    this.startedAt = 0;
+    this.pausedAt = 0;
   }
 
   load() {
@@ -86,7 +89,7 @@ class AudioTracks {
     const sourceNode = this.audioContext.createBufferSource();
     let typeBuffer;
     this.audioContext.decodeAudioData(
-      arrayBufferCollection[`${type}ArrayBuffer`],
+      arrayBufferCollection[`${type}ArrayBuffer`].slice(),
       (buffer) => {
         typeBuffer = buffer;
         sourceNode.buffer = typeBuffer;
@@ -105,10 +108,20 @@ class AudioTracks {
   }
 
   start() {
-    this.drumsSource.start();
-    this.bassSource.start();
-    this.melodySource.start();
-    this.samplesSource.start();
+    this.playing = 1;
+    if (this.pausedAt) {
+      this.startedAt = Date.now() - this.pausedAt;
+      this.drumsSource.start(0, this.pausedAt / 1000);
+      this.bassSource.start(0, this.pausedAt / 1000);
+      this.melodySource.start(0, this.pausedAt / 1000);
+      this.samplesSource.start(0, this.pausedAt / 1000);
+    } else {
+      this.startedAt = Date.now();
+      this.drumsSource.start(0);
+      this.bassSource.start(0);
+      this.melodySource.start(0);
+      this.samplesSource.start(0);
+    }
     // window.setInterval(() => {
       // const data = new Float32Array(this.melodyAnalyser.frequencyBinCount);
       // this.melodyAnalyser.getFloatFrequencyData(data);
@@ -118,6 +131,23 @@ class AudioTracks {
       // this.samplesGain.gain.value = Math.random();
       // this.melodyGain.gain.value = Math.random();
     // }, 1000);
+  }
+
+  stop() {
+    this.playing = 0;
+    this.pausedAt = Date.now() - this.startedAt;
+    this.drumsSource.stop();
+    this.bassSource.stop();
+    this.melodySource.stop();
+    this.samplesSource.stop();
+  }
+
+  reload() {
+    this.loaded = 0;
+    this.routeTrack('drums', this.arrayBufferCollection);
+    this.routeTrack('bass', this.arrayBufferCollection);
+    this.routeTrack('samples', this.arrayBufferCollection);
+    this.routeTrack('melody', this.arrayBufferCollection);
   }
 }
 

@@ -10,7 +10,6 @@ class World {
     this.aspectRatio = this.width/this.height;
     this.nearPlane = 1;
     this.farPlane = 20000;
-    this.mousePos = {x: 0, y: 0};
   }
 
   createCamera() {
@@ -48,7 +47,7 @@ class World {
     this.mouse = new THREE.Vector2();
   }
 
-  onWindowResize() {
+  handleWindowResize() {
     this.height = window.innerHeight;
     this.width = window.innerWidth;
     this.renderer.setSize(this.width, this.height);
@@ -56,8 +55,9 @@ class World {
     this.camera.updateProjectionMatrix();
   }
 
-  handleMouseMove (event) {
-    this.mousePos = {x: event.clientX, y: event.clientY};
+  handleMouseMove(event) {
+  	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
   constructor() {
@@ -65,12 +65,17 @@ class World {
     this.createCamera();
     this.createRenderer();
     this.createControls();
-    window.addEventListener('resize', this.onWindowResize.bind(this), false);
-    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    this.createRaycaster();
+    window.addEventListener('resize', this.handleWindowResize.bind(this), false);
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
   }
 
   update () {
-
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
+    // for ( var i = 0; i < this.intersects.length; i++ ) {
+    //   this.intersects[ i ].object.material.color.set(0x000000);
+    // }
   }
 
   render () {

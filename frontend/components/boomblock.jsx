@@ -41,7 +41,7 @@ class BoomBlock extends React.Component {
       fieldOfView = 60;
       aspectRatio = width/height;
       nearPlane = 1;
-      farPlane = 2000;
+      farPlane = 20000;
       camera = new THREE.PerspectiveCamera(
         fieldOfView,
         aspectRatio,
@@ -314,6 +314,17 @@ class BoomBlock extends React.Component {
       boombox.add(tapeReader);
       scene.add(boombox);
     // }
+
+    const trackGeometry = new THREE.BoxGeometry(10000, 50, 200);
+    const trackMaterial = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide
+    });
+    const trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+    trainTrack.position.set(0, 100, -300);
+    scene.add(trainTrack);
+
+    // 4 more buildings needed here. need to increase height of boomblock
 
     function update () {
 

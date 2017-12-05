@@ -49234,6 +49234,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
   var store = (0, _store2.default)();
+  window.getState = store.getState;
   var root = document.getElementById('content');
   _reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store }), root);
 });
@@ -67121,51 +67122,21 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(26);
 
-var _default_reducer = __webpack_require__(105);
+var _tracks_reducer = __webpack_require__(222);
 
-var _default_reducer2 = _interopRequireDefault(_default_reducer);
+var _tracks_reducer2 = _interopRequireDefault(_tracks_reducer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // root_reducer.js
 var rootReducer = (0, _redux.combineReducers)({
-  default: _default_reducer2.default
+  tracks: _tracks_reducer2.default
 });
 
 exports.default = rootReducer;
 
 /***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _merge = __webpack_require__(106);
-
-var _merge2 = _interopRequireDefault(_merge);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var reducer = function reducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  Object.freeze(state);
-  var nextState = void 0;
-
-  switch (action.type) {
-    default:
-      return state;
-  }
-}; // root_reducer.js
-exports.default = reducer;
-
-/***/ }),
+/* 105 */,
 /* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -70636,9 +70607,9 @@ var _boomblock = __webpack_require__(189);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
 
-var _audio_tracks = __webpack_require__(217);
+var _audio_tracks_container = __webpack_require__(225);
 
-var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
+var _audio_tracks_container2 = _interopRequireDefault(_audio_tracks_container);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -70647,7 +70618,7 @@ var App = function App() {
     'div',
     { className: 'app' },
     _react2.default.createElement(_boomblock2.default, null),
-    _react2.default.createElement(_audio_tracks2.default, null)
+    _react2.default.createElement(_audio_tracks_container2.default, null)
   );
 }; // app.jsx
 exports.default = App;
@@ -70733,7 +70704,7 @@ var BoomBlock = function (_React$Component) {
         fieldOfView = 60;
         aspectRatio = width / height;
         nearPlane = 1;
-        farPlane = 2000;
+        farPlane = 20000;
         camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
         camera.position.z = 700;
         camera.position.y = 325;
@@ -70967,6 +70938,17 @@ var BoomBlock = function (_React$Component) {
       boombox.add(tapeReader);
       scene.add(boombox);
       // }
+
+      var trackGeometry = new THREE.BoxGeometry(10000, 50, 200);
+      var trackMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+      var trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+      trainTrack.position.set(0, 100, -300);
+      scene.add(trainTrack);
+
+      // 4 more buildings needed here. need to increase height of boomblock
 
       function update() {}
 
@@ -75095,30 +75077,159 @@ var AudioTracks = function (_React$Component) {
   function AudioTracks(props) {
     _classCallCheck(this, AudioTracks);
 
-    return _possibleConstructorReturn(this, (AudioTracks.__proto__ || Object.getPrototypeOf(AudioTracks)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (AudioTracks.__proto__ || Object.getPrototypeOf(AudioTracks)).call(this, props));
+
+    _this.state = {
+      drumsSource: undefined,
+      drumsGain: undefined,
+      drumsAnalyser: undefined,
+
+      bassSource: undefined,
+      bassGain: undefined,
+      bassAnalyser: undefined,
+
+      melodySource: undefined,
+      melodyGain: undefined,
+      melodyAnalyser: undefined,
+
+      samplesSource: undefined,
+      samplesGain: undefined,
+      samplesAnalyser: undefined,
+
+      audioContext: undefined,
+
+      masterGain: undefined
+    };
+    return _this;
   }
 
   _createClass(AudioTracks, [{
-    key: "render",
+    key: 'routeDrums',
+    value: function routeDrums(newProps) {
+      var _this2 = this;
+
+      var drumsSource = this.state.audioContext.createBufferSource();
+      var drumsBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps.drumsArrayBuffer, function (buffer) {
+        drumsBuffer = buffer;
+        drumsSource.buffer = drumsBuffer;
+        var drumsGain = _this2.state.audioContext.createGain();
+        drumsSource.connect(drumsGain);
+        var drumsAnalyser = _this2.state.audioContext.createAnalyser();
+        drumsGain.connect(drumsAnalyser);
+        drumsAnalyser.connect(_this2.state.masterGain);
+        _this2.setState({
+          drumsSource: drumsSource,
+          drumsGain: drumsGain,
+          drumsAnalyser: drumsAnalyser
+        });
+        console.log('loaded drums');
+      });
+    }
+  }, {
+    key: 'routeBass',
+    value: function routeBass(newProps) {
+      var _this3 = this;
+
+      var bassSource = this.state.audioContext.createBufferSource();
+      var bassBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps.bassArrayBuffer, function (buffer) {
+        bassBuffer = buffer;
+        bassSource.buffer = bassBuffer;
+        var bassGain = _this3.state.audioContext.createGain();
+        bassSource.connect(bassGain);
+        var bassAnalyser = _this3.state.audioContext.createAnalyser();
+        bassGain.connect(bassAnalyser);
+        bassAnalyser.connect(_this3.state.masterGain);
+        _this3.setState({
+          bassSource: bassSource,
+          bassGain: bassGain,
+          bassAnalyser: bassAnalyser
+        });
+        console.log('loaded bass');
+      });
+    }
+  }, {
+    key: 'routeMelody',
+    value: function routeMelody(newProps) {
+      var _this4 = this;
+
+      var melodySource = this.state.audioContext.createBufferSource();
+      var melodyBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps.melodyArrayBuffer, function (buffer) {
+        melodyBuffer = buffer;
+        melodySource.buffer = melodyBuffer;
+        var melodyGain = _this4.state.audioContext.createGain();
+        melodySource.connect(melodyGain);
+        var melodyAnalyser = _this4.state.audioContext.createAnalyser();
+        melodyGain.connect(melodyAnalyser);
+        melodyAnalyser.connect(_this4.state.masterGain);
+        _this4.setState({
+          melodySource: melodySource,
+          melodyGain: melodyGain,
+          melodyAnalyser: melodyAnalyser
+        });
+        console.log('loaded melody');
+      });
+    }
+  }, {
+    key: 'routeSamples',
+    value: function routeSamples(newProps) {
+      var _this5 = this;
+
+      var samplesSource = this.state.audioContext.createBufferSource();
+      var samplesBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps.samplesArrayBuffer, function (buffer) {
+        samplesBuffer = buffer;
+        samplesSource.buffer = samplesBuffer;
+        var samplesGain = _this5.state.audioContext.createGain();
+        samplesSource.connect(samplesGain);
+        var samplesAnalyser = _this5.state.audioContext.createAnalyser();
+        samplesGain.connect(samplesAnalyser);
+        samplesAnalyser.connect(_this5.state.masterGain);
+        _this5.setState({
+          samplesSource: samplesSource,
+          samplesGain: samplesGain,
+          samplesAnalyser: samplesAnalyser
+        });
+        console.log('loaded samples');
+      });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (newProps.drumsArrayBuffer && newProps.bassArrayBuffer && newProps.melodyArrayBuffer && newProps.samplesArrayBuffer) {
+        this.routeDrums(newProps);
+        this.routeBass(newProps);
+        this.routeMelody(newProps);
+        this.routeSamples(newProps);
+        this.state.masterGain.connect(this.state.audioContext.destination);
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      var masterGain = audioContext.createGain();
+      this.setState({
+        audioContext: audioContext,
+        masterGain: masterGain
+      });
+      this.props.getDrums();
+      this.props.getBass();
+      this.props.getMelody();
+      this.props.getSamples();
+    }
+  }, {
+    key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        "div",
-        null,
-        _react2.default.createElement(
-          "audio",
-          { controls: true,
-            src: "https://s3-us-west-1.amazonaws.com/boomblock/boomblock_beat.mp3",
-            id: "beat-master"
-          },
-          "Your browser does not support the ",
-          _react2.default.createElement(
-            "code",
-            null,
-            "audio"
-          ),
-          " element."
-        )
-      );
+      if (this.state.drumsSource && this.state.bassSource && this.state.melodySource && this.state.samplesSource) {
+        // this.state.drumsSource.start();
+        // this.state.bassSource.start();
+        // this.state.melodySource.start();
+        // this.state.samplesSource.start();
+      }
+      return _react2.default.createElement('div', null);
     }
   }]);
 
@@ -75126,6 +75237,201 @@ var AudioTracks = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = AudioTracks;
+
+/***/ }),
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _merge = __webpack_require__(106);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _tracks_actions = __webpack_require__(223);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// root_reducer.js
+var TracksReducer = function TracksReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  Object.freeze(state);
+  var nextState = void 0;
+
+  switch (action.type) {
+    case _tracks_actions.RECEIVE_BASS_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['bassArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_actions.RECEIVE_DRUMS_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['drumsArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_actions.RECEIVE_MELODY_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['melodyArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_actions.RECEIVE_SAMPLES_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['samplesArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    default:
+      return state;
+  }
+};
+
+exports.default = TracksReducer;
+
+/***/ }),
+/* 223 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getTrack = exports.receiveSamplesTrack = exports.receiveMelodyTrack = exports.receiveBassTrack = exports.receiveDrumsTrack = exports.RECEIVE_SAMPLES_TRACK = exports.RECEIVE_MELODY_TRACK = exports.RECEIVE_BASS_TRACK = exports.RECEIVE_DRUMS_TRACK = undefined;
+
+var _api_util = __webpack_require__(224);
+
+var APIUtil = _interopRequireWildcard(_api_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var RECEIVE_DRUMS_TRACK = exports.RECEIVE_DRUMS_TRACK = "RECEIVE_DRUMS_TRACK";
+var RECEIVE_BASS_TRACK = exports.RECEIVE_BASS_TRACK = "RECEIVE_BASS_TRACK";
+var RECEIVE_MELODY_TRACK = exports.RECEIVE_MELODY_TRACK = "RECEIVE_MELODY_TRACK";
+var RECEIVE_SAMPLES_TRACK = exports.RECEIVE_SAMPLES_TRACK = "RECEIVE_SAMPLES_TRACK";
+
+var receiveDrumsTrack = exports.receiveDrumsTrack = function receiveDrumsTrack(arraybuffer) {
+  return {
+    type: RECEIVE_DRUMS_TRACK,
+    arraybuffer: arraybuffer
+  };
+};
+
+var receiveBassTrack = exports.receiveBassTrack = function receiveBassTrack(arraybuffer) {
+  return {
+    type: RECEIVE_BASS_TRACK,
+    arraybuffer: arraybuffer
+  };
+};
+
+var receiveMelodyTrack = exports.receiveMelodyTrack = function receiveMelodyTrack(arraybuffer) {
+  return {
+    type: RECEIVE_MELODY_TRACK,
+    arraybuffer: arraybuffer
+  };
+};
+
+var receiveSamplesTrack = exports.receiveSamplesTrack = function receiveSamplesTrack(arraybuffer) {
+  return {
+    type: RECEIVE_SAMPLES_TRACK,
+    arraybuffer: arraybuffer
+  };
+};
+
+var getTrack = exports.getTrack = function getTrack(type, url) {
+  return function (dispatch) {
+    var request = APIUtil.getTrack(url);
+    request.onload = function () {
+      switch (type) {
+        case 'drums':
+          dispatch(receiveDrumsTrack(request.response));
+          break;
+        case 'bass':
+          dispatch(receiveBassTrack(request.response));
+          break;
+        case 'melody':
+          dispatch(receiveMelodyTrack(request.response));
+          break;
+        case 'samples':
+          dispatch(receiveSamplesTrack(request.response));
+          break;
+      }
+    };
+    request.send();
+  };
+};
+
+/***/ }),
+/* 224 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var getTrack = exports.getTrack = function getTrack(url) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+  return request;
+};
+
+/***/ }),
+/* 225 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = __webpack_require__(176);
+
+var _tracks_actions = __webpack_require__(223);
+
+var _audio_tracks = __webpack_require__(217);
+
+var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    drumsArrayBuffer: state.tracks.drumsArrayBuffer,
+    bassArrayBuffer: state.tracks.bassArrayBuffer,
+    melodyArrayBuffer: state.tracks.melodyArrayBuffer,
+    samplesArrayBuffer: state.tracks.samplesArrayBuffer
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    getDrums: function getDrums() {
+      return dispatch((0, _tracks_actions.getTrack)('drums', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_drums.mp3"));
+    },
+    getBass: function getBass() {
+      return dispatch((0, _tracks_actions.getTrack)('bass', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_bass.mp3"));
+    },
+    getMelody: function getMelody() {
+      return dispatch((0, _tracks_actions.getTrack)('melody', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_melody.mp3"));
+    },
+    getSamples: function getSamples() {
+      return dispatch((0, _tracks_actions.getTrack)('samples', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_samples.mp3"));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_audio_tracks2.default);
 
 /***/ })
 /******/ ]);

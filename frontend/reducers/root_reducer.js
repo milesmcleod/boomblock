@@ -1,9 +1,9 @@
 // root_reducer.js
 import { combineReducers } from 'redux';
-import reducer from './default_reducer.js';
+import TracksReducer from './tracks_reducer.js';
 
 const rootReducer = combineReducers({
-  default: reducer
+  tracks: TracksReducer
 });
 
 export default rootReducer;

@@ -49225,7 +49225,7 @@ var _store = __webpack_require__(89);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _root = __webpack_require__(175);
+var _root = __webpack_require__(230);
 
 var _root2 = _interopRequireDefault(_root);
 
@@ -67122,17 +67122,20 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(26);
 
-var _tracks_reducer = __webpack_require__(222);
+var _tracks_api_data_reducer = __webpack_require__(227);
 
-var _tracks_reducer2 = _interopRequireDefault(_tracks_reducer);
+var _tracks_api_data_reducer2 = _interopRequireDefault(_tracks_api_data_reducer);
+
+var _audio_nodes_reducer = __webpack_require__(228);
+
+var _audio_nodes_reducer2 = _interopRequireDefault(_audio_nodes_reducer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// root_reducer.js
 var rootReducer = (0, _redux.combineReducers)({
-  tracks: _tracks_reducer2.default
-});
-
+  tracks: _tracks_api_data_reducer2.default,
+  audioNodes: _audio_nodes_reducer2.default
+}); // root_reducer.js
 exports.default = rootReducer;
 
 /***/ }),
@@ -69328,47 +69331,7 @@ exports['default'] = thunk;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ }),
-/* 175 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRedux = __webpack_require__(176);
-
-var _app = __webpack_require__(188);
-
-var _app2 = _interopRequireDefault(_app);
-
-var _reactRouterDom = __webpack_require__(191);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// root.jsx
-var Root = function Root(_ref) {
-  var store = _ref.store;
-  return _react2.default.createElement(
-    _reactRouterDom.HashRouter,
-    null,
-    _react2.default.createElement(
-      _reactRedux.Provider,
-      { store: store },
-      _react2.default.createElement(_app2.default, null)
-    )
-  );
-};
-
-exports.default = Root;
-
-/***/ }),
+/* 175 */,
 /* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -70589,394 +70552,8 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 }
 
 /***/ }),
-/* 188 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _boomblock = __webpack_require__(189);
-
-var _boomblock2 = _interopRequireDefault(_boomblock);
-
-var _audio_tracks_container = __webpack_require__(225);
-
-var _audio_tracks_container2 = _interopRequireDefault(_audio_tracks_container);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var App = function App() {
-  return _react2.default.createElement(
-    'div',
-    { className: 'app' },
-    _react2.default.createElement(_boomblock2.default, null),
-    _react2.default.createElement(_audio_tracks_container2.default, null)
-  );
-}; // app.jsx
-exports.default = App;
-
-/***/ }),
-/* 189 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _three = __webpack_require__(69);
-
-var THREE = _interopRequireWildcard(_three);
-
-var _threeOrbitcontrols = __webpack_require__(190);
-
-var _threeOrbitcontrols2 = _interopRequireDefault(_threeOrbitcontrols);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var BoomBlock = function (_React$Component) {
-  _inherits(BoomBlock, _React$Component);
-
-  function BoomBlock(props) {
-    _classCallCheck(this, BoomBlock);
-
-    return _possibleConstructorReturn(this, (BoomBlock.__proto__ || Object.getPrototypeOf(BoomBlock)).call(this, props));
-  }
-
-  _createClass(BoomBlock, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.animator();
-    }
-  }, {
-    key: 'animator',
-    value: function animator() {
-      var scene = void 0,
-          camera = void 0,
-          controls = void 0,
-          fieldOfView = void 0,
-          aspectRatio = void 0,
-          nearPlane = void 0,
-          farPlane = void 0,
-          shadowLight = void 0,
-          backLight = void 0,
-          ambientLight = void 0,
-          renderer = void 0,
-          world = void 0;
-
-      var floor = void 0;
-
-      var height = void 0,
-          width = void 0,
-          windowHalfX = void 0,
-          windowHalfY = void 0,
-          mousePos = { x: 0, y: 0 },
-          dist = 0;
-
-      function initialize() {
-        scene = new THREE.Scene();
-        height = window.innerHeight;
-        width = window.innerWidth;
-        fieldOfView = 60;
-        aspectRatio = width / height;
-        nearPlane = 1;
-        farPlane = 20000;
-        camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
-        camera.position.z = 700;
-        camera.position.y = 325;
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(width, height);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.physicallyCorrectLights = true;
-        world = document.getElementById('world');
-        world.appendChild(renderer.domElement);
-
-        controls = new _threeOrbitcontrols2.default(camera, renderer.domElement);
-
-        controls.minDistance = 0;
-        controls.maxDistance = Infinity;
-        controls.enableZoom = true;
-        controls.zoomSpeed = 1.0;
-
-        windowHalfX = width / 2;
-        windowHalfY = height / 2;
-        window.addEventListener('resize', onWindowResize, false);
-        window.addEventListener('mousemove', handleMouseMove);
-        //will need a click handler
-      }
-
-      function onWindowResize() {
-        height = window.innerHeight;
-        width = window.innerWidth;
-        windowHalfX = width / 2;
-        windowHalfY = height / 2;
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-      }
-      function handleMouseMove(event) {
-        mousePos = { x: event.clientX, y: event.clientY };
-      }
-
-      function createLights() {
-        ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
-        scene.add(ambientLight);
-        var spotLight1 = new THREE.SpotLight(0xffffff, 2);
-        spotLight1.position.set(200, 500, 500);
-
-        spotLight1.castShadow = true;
-
-        spotLight1.shadow.mapSize.width = 1024;
-        spotLight1.shadow.mapSize.height = 1024;
-
-        spotLight1.shadow.camera.near = 500;
-        spotLight1.shadow.camera.far = 4000;
-        spotLight1.shadow.camera.fov = 30;
-        spotLight1.angle = Math.PI / 5;
-
-        scene.add(spotLight1);
-        //this will need to be the sun and the streetlamps and the windows
-      }
-
-      function createFloor() {
-        floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0xcccccc }));
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -180;
-        floor.receiveShadow = true;
-        scene.add(floor);
-        //edit this
-      }
-
-      initialize();
-      createFloor();
-      createLights();
-
-      // function createBlock () {
-      var baseGeometry = new THREE.BoxGeometry(480, 360, 200); //width, height, depth
-      var baseMaterial = new THREE.MeshPhongMaterial({
-        color: 0x7F00FF,
-        side: THREE.DoubleSide
-      });
-      var base = new THREE.Mesh(baseGeometry, baseMaterial);
-      base.castShadow = true;
-      base.receiveShadow = true;
-
-      var reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
-      var reelMaterial = new THREE.MeshPhongMaterial({
-        color: 0xcccccc,
-        side: THREE.DoubleSide
-      });
-
-      var spokeGeometry = new THREE.BoxGeometry(12, 50, 1); //width, height, depth
-      var spokeMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-
-      var ringGeometry = new THREE.RingGeometry(50, 70, 32);
-      var ringMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-
-      var reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelLeft.position.x = -140;
-      reelLeft.position.y = 160;
-      reelLeft.position.z = 120;
-      reelLeft.rotation.x = Math.PI / 2;
-
-      var spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL1.position.set(-140, 190, 140);
-      var spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL2.position.set(-114, 144, 140);
-      spokeL2.rotation.z = Math.PI / 3;
-      var spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL3.position.set(-166, 144, 140);
-      spokeL3.rotation.z = 2 * Math.PI / 3;
-
-      var frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontLeftRing.position.set(-140, 160, 141);
-      var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backLeftRing.position.set(-140, 160, 99);
-
-      var leftReel = new THREE.Group();
-      leftReel.add(reelLeft);
-      leftReel.add(spokeL1);
-      leftReel.add(spokeL2);
-      leftReel.add(spokeL3);
-      leftReel.add(frontLeftRing);
-      leftReel.add(backLeftRing);
-      leftReel.position.y = 20;
-      leftReel.position.x = 40;
-      leftReel.position.z = 2;
-
-      var reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelRight.position.x = 25;
-      reelRight.position.y = 160;
-      reelRight.position.z = 120;
-      reelRight.rotation.x = Math.PI / 2;
-
-      var spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR1.position.set(25, 190, 140);
-      var spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR2.position.set(51, 144, 140);
-      spokeR2.rotation.z = Math.PI / 3;
-      var spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR3.position.set(-1, 144, 140);
-      spokeR3.rotation.z = 2 * Math.PI / 3;
-
-      var frontRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontRightRing.position.set(25, 160, 141);
-      var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backRightRing.position.set(25, 160, 99);
-
-      var rightReel = new THREE.Group();
-      rightReel.add(reelRight);
-      rightReel.add(spokeR1);
-      rightReel.add(spokeR2);
-      rightReel.add(spokeR3);
-      rightReel.add(frontRightRing);
-      rightReel.add(backRightRing);
-      rightReel.position.y = 20;
-      rightReel.position.x = 40;
-      rightReel.position.z = 2; // reels and spokes
-
-      var trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
-      var trackButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
-        side: THREE.DoubleSide
-      });
-      var trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      var trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      var trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      var trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
-      // trackButton1.material.uniforms.transparent = true;
-      // trackButton1.material.uniforms.opacity = 0.3;
-      trackButton1.position.set(175, 100, 110);
-      trackButton2.position.set(175, 30, 110);
-      trackButton3.position.set(175, -40, 110);
-      trackButton4.position.set(175, -110, 110); // track buttons
-
-      var playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
-      var playButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
-        side: THREE.DoubleSide
-      });
-
-      var playButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
-      playButton.position.set(-180, -10, 110);
-      playButton.rotation.x = Math.PI / 2;
-
-      var pauseButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
-      pauseButton.position.set(-100, -10, 110);
-      pauseButton.rotation.x = Math.PI / 2;
-
-      var resetButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
-      resetButton.position.set(-20, -10, 110);
-      resetButton.rotation.x = Math.PI / 2;
-
-      var muteButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
-      muteButton.position.set(60, -10, 110);
-      muteButton.rotation.x = Math.PI / 2;
-
-      var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
-      var freqBarMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
-        side: THREE.DoubleSide
-      });
-
-      var tapeReaderGeometry = new THREE.BoxGeometry(100, 40, 60);
-      var tapeReaderMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-
-      var tapeReader = new THREE.Mesh(tapeReaderGeometry, tapeReaderMaterial);
-      tapeReader.position.set(-20, 70, 110);
-
-      var boombox = new THREE.Group();
-      boombox.add(base);
-      boombox.add(leftReel);
-      boombox.add(rightReel);
-      boombox.add(trackButton1);
-      boombox.add(trackButton2);
-      boombox.add(trackButton3);
-      boombox.add(trackButton4);
-      boombox.add(playButton);
-      boombox.add(pauseButton);
-      boombox.add(resetButton);
-      boombox.add(muteButton);
-      for (var i = 0; i < 12; i++) {
-        var bar = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
-        bar.position.set(-195 + i * 25, -110, 110);
-        boombox.add(bar);
-      }
-      boombox.add(tapeReader);
-      scene.add(boombox);
-      // }
-
-      var trackGeometry = new THREE.BoxGeometry(10000, 50, 200);
-      var trackMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-      var trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
-      trainTrack.position.set(0, 100, -300);
-      scene.add(trainTrack);
-
-      // 4 more buildings needed here. need to increase height of boomblock
-
-      function update() {}
-
-      function render() {
-        renderer.render(scene, camera);
-      }
-
-      function loop() {
-        requestAnimationFrame(loop);
-        update();
-        render();
-      }
-
-      loop();
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement('div', { id: 'world', className: 'world' });
-    }
-  }]);
-
-  return BoomBlock;
-}(_react2.default.Component);
-
-exports.default = BoomBlock;
-
-/***/ }),
+/* 188 */,
+/* 189 */,
 /* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75047,143 +74624,14 @@ var withRouter = function withRouter(Component) {
 /* harmony default export */ __webpack_exports__["a"] = (withRouter);
 
 /***/ }),
-/* 217 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var AudioTracks = function (_React$Component) {
-  _inherits(AudioTracks, _React$Component);
-
-  function AudioTracks(props) {
-    _classCallCheck(this, AudioTracks);
-
-    var _this = _possibleConstructorReturn(this, (AudioTracks.__proto__ || Object.getPrototypeOf(AudioTracks)).call(this, props));
-
-    _this.state = {
-      drumsSource: undefined,
-      drumsGain: undefined,
-      drumsAnalyser: undefined,
-
-      bassSource: undefined,
-      bassGain: undefined,
-      bassAnalyser: undefined,
-
-      melodySource: undefined,
-      melodyGain: undefined,
-      melodyAnalyser: undefined,
-
-      samplesSource: undefined,
-      samplesGain: undefined,
-      samplesAnalyser: undefined,
-
-      audioContext: undefined,
-
-      masterGain: undefined
-    };
-    return _this;
-  }
-
-  _createClass(AudioTracks, [{
-    key: 'routeTrack',
-    value: function routeTrack(type, newProps) {
-      var _this2 = this;
-
-      var source = this.state.audioContext.createBufferSource();
-      var typeBuffer = void 0;
-      this.state.audioContext.decodeAudioData(newProps[type + 'ArrayBuffer'], function (buffer) {
-        var _this2$setState;
-
-        typeBuffer = buffer;
-        source.buffer = typeBuffer;
-        var gain = _this2.state.audioContext.createGain();
-        source.connect(gain);
-        var analyser = _this2.state.audioContext.createAnalyser();
-        gain.connect(analyser);
-        analyser.connect(_this2.state.masterGain);
-        _this2.setState((_this2$setState = {}, _defineProperty(_this2$setState, type + 'Source', source), _defineProperty(_this2$setState, type + 'Gain', gain), _defineProperty(_this2$setState, type + 'Analyser', analyser), _this2$setState));
-        console.log('loaded ' + type);
-      });
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(newProps) {
-      if (newProps.drumsArrayBuffer && newProps.bassArrayBuffer && newProps.melodyArrayBuffer && newProps.samplesArrayBuffer) {
-        this.routeTrack('drums', newProps);
-        this.routeTrack('bass', newProps);
-        this.routeTrack('melody', newProps);
-        this.routeTrack('samples', newProps);
-        this.state.masterGain.connect(this.state.audioContext.destination);
-      }
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      var masterGain = audioContext.createGain();
-      this.setState({
-        audioContext: audioContext,
-        masterGain: masterGain
-      });
-      this.props.getDrums();
-      this.props.getBass();
-      this.props.getMelody();
-      this.props.getSamples();
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      if (this.state.drumsSource && this.state.bassSource && this.state.melodySource && this.state.samplesSource) {
-        // this.state.drumsSource.start();
-        // this.state.bassSource.start();
-        // this.state.melodySource.start();
-        // this.state.samplesSource.start();
-        // window.setInterval(() => {
-        // const data = new Float32Array(this.state.melodyAnalyser.frequencyBinCount);
-        // this.state.melodyAnalyser.getFloatFrequencyData(data);
-        // console.log(data);
-        // this.state.drumsGain.gain.value = Math.random();
-        // this.state.bassGain.gain.value = Math.random();
-        // this.state.samplesGain.gain.value = Math.random();
-        // this.state.melodyGain.gain.value = Math.random();
-        // }, 1000);
-      }
-      return _react2.default.createElement('div', null);
-    }
-  }]);
-
-  return AudioTracks;
-}(_react2.default.Component);
-
-exports.default = AudioTracks;
-
-/***/ }),
+/* 217 */,
 /* 218 */,
 /* 219 */,
 /* 220 */,
 /* 221 */,
-/* 222 */
+/* 222 */,
+/* 223 */,
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75192,49 +74640,16 @@ exports.default = AudioTracks;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _merge = __webpack_require__(106);
-
-var _merge2 = _interopRequireDefault(_merge);
-
-var _tracks_actions = __webpack_require__(223);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// root_reducer.js
-var TracksReducer = function TracksReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var action = arguments[1];
-
-  Object.freeze(state);
-  var nextState = void 0;
-
-  switch (action.type) {
-    case _tracks_actions.RECEIVE_BASS_TRACK:
-      nextState = (0, _merge2.default)({}, state);
-      nextState['bassArrayBuffer'] = action.arraybuffer;
-      return nextState;
-    case _tracks_actions.RECEIVE_DRUMS_TRACK:
-      nextState = (0, _merge2.default)({}, state);
-      nextState['drumsArrayBuffer'] = action.arraybuffer;
-      return nextState;
-    case _tracks_actions.RECEIVE_MELODY_TRACK:
-      nextState = (0, _merge2.default)({}, state);
-      nextState['melodyArrayBuffer'] = action.arraybuffer;
-      return nextState;
-    case _tracks_actions.RECEIVE_SAMPLES_TRACK:
-      nextState = (0, _merge2.default)({}, state);
-      nextState['samplesArrayBuffer'] = action.arraybuffer;
-      return nextState;
-    default:
-      return state;
-  }
+var getTrack = exports.getTrack = function getTrack(url) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+  return request;
 };
 
-exports.default = TracksReducer;
-
 /***/ }),
-/* 223 */
+/* 225 */,
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75308,7 +74723,7 @@ var getTrack = exports.getTrack = function getTrack(type, url) {
 };
 
 /***/ }),
-/* 224 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75317,15 +74732,780 @@ var getTrack = exports.getTrack = function getTrack(type, url) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var getTrack = exports.getTrack = function getTrack(url) {
-  var request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  request.responseType = 'arraybuffer';
-  return request;
+
+var _merge = __webpack_require__(106);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _tracks_api_actions = __webpack_require__(226);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// root_reducer.js
+var TracksApiDataReducer = function TracksApiDataReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  Object.freeze(state);
+  var nextState = void 0;
+
+  switch (action.type) {
+    case _tracks_api_actions.RECEIVE_BASS_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['bassArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_api_actions.RECEIVE_DRUMS_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['drumsArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_api_actions.RECEIVE_MELODY_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['melodyArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    case _tracks_api_actions.RECEIVE_SAMPLES_TRACK:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['samplesArrayBuffer'] = action.arraybuffer;
+      return nextState;
+    default:
+      return state;
+  }
+};
+
+exports.default = TracksApiDataReducer;
+
+/***/ }),
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _merge = __webpack_require__(106);
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _web_audio_actions = __webpack_require__(229);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// root_reducer.js
+var defaultState = {
+  bass: {
+    sourceNode: undefined,
+    gainNode: undefined,
+    analyserNode: undefined
+  },
+  drums: {
+    sourceNode: undefined,
+    gainNode: undefined,
+    analyserNode: undefined
+  },
+  melody: {
+    sourceNode: undefined,
+    gainNode: undefined,
+    analyserNode: undefined
+  },
+  samples: {
+    sourceNode: undefined,
+    gainNode: undefined,
+    analyserNode: undefined
+  },
+  master: {
+    gainNode: undefined,
+    audioContext: undefined
+  }
+};
+
+var TracksApiDataReducer = function TracksApiDataReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
+  var action = arguments[1];
+
+  Object.freeze(state);
+  var nextState = void 0;
+
+  switch (action.type) {
+    case _web_audio_actions.RECEIVE_BASS_PATH:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['bass']['sourceNode'] = action.sourceNode;
+      nextState['bass']['gainNode'] = action.gainNode;
+      nextState['bass']['analyserNode'] = action.analyserNode;
+      return nextState;
+    case _web_audio_actions.RECEIVE_DRUMS_PATH:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['drums']['sourceNode'] = action.sourceNode;
+      nextState['drums']['gainNode'] = action.gainNode;
+      nextState['drums']['analyserNode'] = action.analyserNode;
+      return nextState;
+    case _web_audio_actions.RECEIVE_MELODY_PATH:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['melody']['sourceNode'] = action.sourceNode;
+      nextState['melody']['gainNode'] = action.gainNode;
+      nextState['melody']['analyserNode'] = action.analyserNode;
+      return nextState;
+    case _web_audio_actions.RECEIVE_SAMPLES_PATH:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['samples']['sourceNode'] = action.sourceNode;
+      nextState['samples']['gainNode'] = action.gainNode;
+      nextState['samples']['analyserNode'] = action.analyserNode;
+      return nextState;
+    case _web_audio_actions.RECEIVE_MASTER_NODES:
+      nextState = (0, _merge2.default)({}, state);
+      nextState['master']['gainNode'] = action.gainNode;
+      nextState['master']['audioContext'] = action.audioContext;
+      return nextState;
+    default:
+      return state;
+  }
+};
+
+exports.default = TracksApiDataReducer;
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var RECEIVE_BASS_PATH = exports.RECEIVE_BASS_PATH = 'RECEIVE_BASS_PATH';
+var RECEIVE_DRUMS_PATH = exports.RECEIVE_DRUMS_PATH = 'RECEIVE_DRUMS_PATH';
+var RECEIVE_SAMPLES_PATH = exports.RECEIVE_SAMPLES_PATH = 'RECEIVE_SAMPLES_PATH';
+var RECEIVE_MELODY_PATH = exports.RECEIVE_MELODY_PATH = 'RECEIVE_MELODY_PATH';
+var RECEIVE_MASTER_NODES = exports.RECEIVE_MASTER_NODES = 'RECEIVE_MASTER_NODES';
+
+var sendAudioPathToStore = exports.sendAudioPathToStore = function sendAudioPathToStore(type, sourceNode, gainNode, analyserNode) {
+  var actionType = void 0;
+  switch (type) {
+    case 'drums':
+      actionType = RECEIVE_DRUMS_PATH;
+      break;
+    case 'bass':
+      actionType = RECEIVE_BASS_PATH;
+      break;
+    case 'samples':
+      actionType = RECEIVE_SAMPLES_PATH;
+      break;
+    case 'melody':
+      actionType = RECEIVE_MELODY_PATH;
+      break;
+  }
+  return {
+    type: actionType,
+    sourceNode: sourceNode,
+    gainNode: gainNode,
+    analyserNode: analyserNode
+  };
+};
+
+var sendMasterNodesToStore = exports.sendMasterNodesToStore = function sendMasterNodesToStore(gainNode, audioContext) {
+  return {
+    type: RECEIVE_MASTER_NODES,
+    gainNode: gainNode,
+    audioContext: audioContext
+  };
 };
 
 /***/ }),
-/* 225 */
+/* 230 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(176);
+
+var _app = __webpack_require__(231);
+
+var _app2 = _interopRequireDefault(_app);
+
+var _reactRouterDom = __webpack_require__(191);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// root.jsx
+var Root = function Root(_ref) {
+  var store = _ref.store;
+  return _react2.default.createElement(
+    _reactRouterDom.HashRouter,
+    null,
+    _react2.default.createElement(
+      _reactRedux.Provider,
+      { store: store },
+      _react2.default.createElement(_app2.default, null)
+    )
+  );
+};
+
+exports.default = Root;
+
+/***/ }),
+/* 231 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _three_world = __webpack_require__(232);
+
+var _three_world2 = _interopRequireDefault(_three_world);
+
+var _audio_tracks_container = __webpack_require__(237);
+
+var _audio_tracks_container2 = _interopRequireDefault(_audio_tracks_container);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var App = function App() {
+  return _react2.default.createElement(
+    'div',
+    { className: 'app' },
+    _react2.default.createElement(_three_world2.default, null),
+    _react2.default.createElement(_audio_tracks_container2.default, null)
+  );
+}; // app.jsx
+exports.default = App;
+
+/***/ }),
+/* 232 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _world = __webpack_require__(233);
+
+var _world2 = _interopRequireDefault(_world);
+
+var _lighting = __webpack_require__(234);
+
+var _lighting2 = _interopRequireDefault(_lighting);
+
+var _floor = __webpack_require__(235);
+
+var _floor2 = _interopRequireDefault(_floor);
+
+var _boomblock = __webpack_require__(236);
+
+var _boomblock2 = _interopRequireDefault(_boomblock);
+
+var _traintrack = __webpack_require__(239);
+
+var _traintrack2 = _interopRequireDefault(_traintrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ThreeWorld = function (_React$Component) {
+  _inherits(ThreeWorld, _React$Component);
+
+  function ThreeWorld(props) {
+    _classCallCheck(this, ThreeWorld);
+
+    return _possibleConstructorReturn(this, (ThreeWorld.__proto__ || Object.getPrototypeOf(ThreeWorld)).call(this, props));
+  }
+
+  _createClass(ThreeWorld, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.world = new _world2.default();
+      this.lighting = new _lighting2.default(this.world.scene);
+      this.floor = new _floor2.default(this.world.scene);
+      this.boomblock = new _boomblock2.default(this.world.scene);
+      this.traintrack = new _traintrack2.default(this.world.scene);
+      this.world.loop();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('div', { id: 'world', className: 'world' });
+    }
+  }]);
+
+  return ThreeWorld;
+}(_react2.default.Component);
+
+exports.default = ThreeWorld;
+
+/***/ }),
+/* 233 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(69);
+
+var THREE = _interopRequireWildcard(_three);
+
+var _threeOrbitcontrols = __webpack_require__(190);
+
+var _threeOrbitcontrols2 = _interopRequireDefault(_threeOrbitcontrols);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var World = function () {
+  _createClass(World, [{
+    key: 'initialize',
+    value: function initialize() {
+      this.scene = new THREE.Scene();
+      this.height = window.innerHeight;
+      this.width = window.innerWidth;
+      this.fieldOfView = 60;
+      this.aspectRatio = this.width / this.height;
+      this.nearPlane = 1;
+      this.farPlane = 20000;
+      this.mousePos = { x: 0, y: 0 };
+    }
+  }, {
+    key: 'createCamera',
+    value: function createCamera() {
+      this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, this.nearPlane, this.farPlane);
+      this.camera.position.z = 700;
+      this.camera.position.y = 325;
+      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    }
+  }, {
+    key: 'createRenderer',
+    value: function createRenderer() {
+      this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      this.renderer.setSize(this.width, this.height);
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      this.renderer.physicallyCorrectLights = true;
+      this.world = document.getElementById('world');
+      this.world.appendChild(this.renderer.domElement);
+    }
+  }, {
+    key: 'createControls',
+    value: function createControls() {
+      this.controls = new _threeOrbitcontrols2.default(this.camera, this.renderer.domElement);
+      this.controls.minDistance = 0;
+      this.controls.maxDistance = Infinity;
+      this.controls.enableZoom = true;
+      this.controls.zoomSpeed = 1.0;
+    }
+  }, {
+    key: 'onWindowResize',
+    value: function onWindowResize() {
+      this.height = window.innerHeight;
+      this.width = window.innerWidth;
+      this.renderer.setSize(this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+    }
+  }, {
+    key: 'handleMouseMove',
+    value: function handleMouseMove(event) {
+      this.mousePos = { x: event.clientX, y: event.clientY };
+    }
+  }]);
+
+  function World() {
+    _classCallCheck(this, World);
+
+    this.initialize();
+    this.createCamera();
+    this.createRenderer();
+    this.createControls();
+    window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('mousemove', this.handleMouseMove);
+  }
+
+  _createClass(World, [{
+    key: 'update',
+    value: function update() {}
+  }, {
+    key: 'render',
+    value: function render() {
+      this.renderer.render(this.scene, this.camera);
+    }
+  }, {
+    key: 'loop',
+    value: function loop() {
+      var _this = this;
+
+      requestAnimationFrame(function () {
+        return _this.loop();
+      });
+      this.update();
+      this.render();
+    }
+  }]);
+
+  return World;
+}();
+
+exports.default = World;
+
+/***/ }),
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(69);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Lighting = function () {
+  _createClass(Lighting, [{
+    key: 'createAmbientLight',
+    value: function createAmbientLight(scene) {
+      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
+      scene.add(this.ambientLight);
+    }
+  }, {
+    key: 'createSpotLight',
+    value: function createSpotLight(scene) {
+      this.spotLight = new THREE.SpotLight(0xffffff, 2);
+      this.spotLight.position.set(200, 500, 500);
+      this.spotLight.castShadow = true;
+      this.spotLight.shadow.mapSize.width = 1024;
+      this.spotLight.shadow.mapSize.height = 1024;
+      this.spotLight.shadow.camera.near = 500;
+      this.spotLight.shadow.camera.far = 4000;
+      this.spotLight.shadow.camera.fov = 30;
+      this.spotLight.angle = Math.PI / 5;
+      scene.add(this.spotLight);
+    }
+  }]);
+
+  function Lighting(scene) {
+    _classCallCheck(this, Lighting);
+
+    this.createAmbientLight(scene);
+    this.createSpotLight(scene);
+  }
+
+  return Lighting;
+}();
+
+exports.default = Lighting;
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(69);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Floor = function () {
+  _createClass(Floor, [{
+    key: 'createFloor',
+    value: function createFloor(scene) {
+      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0xcccccc }));
+      this.floor.rotation.x = -Math.PI / 2;
+      this.floor.position.y = -180;
+      this.floor.receiveShadow = true;
+      scene.add(this.floor);
+    }
+  }]);
+
+  function Floor(scene) {
+    _classCallCheck(this, Floor);
+
+    this.createFloor(scene);
+  }
+
+  return Floor;
+}();
+
+exports.default = Floor;
+
+/***/ }),
+/* 236 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(69);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BoomBlock = function () {
+  _createClass(BoomBlock, [{
+    key: 'createBase',
+    value: function createBase(boombox) {
+      var baseGeometry = new THREE.BoxGeometry(480, 360, 200);
+      var baseMaterial = new THREE.MeshPhongMaterial({
+        color: 0x7F00FF,
+        side: THREE.DoubleSide
+      });
+      this.base = new THREE.Mesh(baseGeometry, baseMaterial);
+      this.base.castShadow = true;
+      this.base.receiveShadow = true;
+      boombox.add(this.base);
+
+      var tapeReaderGeometry = new THREE.BoxGeometry(100, 40, 60);
+      var tapeReaderMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      this.tapeReader = new THREE.Mesh(tapeReaderGeometry, tapeReaderMaterial);
+      this.tapeReader.position.set(-20, 70, 110);
+      boombox.add(this.tapeReader);
+    }
+  }, {
+    key: 'createReels',
+    value: function createReels(boombox) {
+      var reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
+      var reelMaterial = new THREE.MeshPhongMaterial({
+        color: 0xcccccc,
+        side: THREE.DoubleSide
+      });
+
+      var spokeGeometry = new THREE.BoxGeometry(12, 50, 1);
+      var spokeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      var ringGeometry = new THREE.RingGeometry(50, 70, 32);
+      var ringMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      var reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
+      reelLeft.position.x = -140;
+      reelLeft.position.y = 160;
+      reelLeft.position.z = 120;
+      reelLeft.rotation.x = Math.PI / 2;
+
+      var spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL1.position.set(-140, 190, 140);
+      var spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL2.position.set(-114, 144, 140);
+      spokeL2.rotation.z = Math.PI / 3;
+      var spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL3.position.set(-166, 144, 140);
+      spokeL3.rotation.z = 2 * Math.PI / 3;
+
+      var frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      frontLeftRing.position.set(-140, 160, 141);
+      var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      backLeftRing.position.set(-140, 160, 99);
+
+      this.leftReel = new THREE.Group();
+      this.leftReel.add(reelLeft);
+      this.leftReel.add(spokeL1);
+      this.leftReel.add(spokeL2);
+      this.leftReel.add(spokeL3);
+      this.leftReel.add(frontLeftRing);
+      this.leftReel.add(backLeftRing);
+      this.leftReel.position.y = 20;
+      this.leftReel.position.x = 40;
+      this.leftReel.position.z = 2;
+
+      boombox.add(this.leftReel);
+
+      var reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
+      reelRight.position.x = 25;
+      reelRight.position.y = 160;
+      reelRight.position.z = 120;
+      reelRight.rotation.x = Math.PI / 2;
+
+      var spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR1.position.set(25, 190, 140);
+      var spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR2.position.set(51, 144, 140);
+      spokeR2.rotation.z = Math.PI / 3;
+      var spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR3.position.set(-1, 144, 140);
+      spokeR3.rotation.z = 2 * Math.PI / 3;
+
+      var frontRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      frontRightRing.position.set(25, 160, 141);
+      var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      backRightRing.position.set(25, 160, 99);
+
+      this.rightReel = new THREE.Group();
+      this.rightReel.add(reelRight);
+      this.rightReel.add(spokeR1);
+      this.rightReel.add(spokeR2);
+      this.rightReel.add(spokeR3);
+      this.rightReel.add(frontRightRing);
+      this.rightReel.add(backRightRing);
+      this.rightReel.position.y = 20;
+      this.rightReel.position.x = 40;
+      this.rightReel.position.z = 2;
+
+      boombox.add(this.rightReel);
+    }
+  }, {
+    key: 'createTrackButtons',
+    value: function createTrackButtons(boombox) {
+      var trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
+      var trackButtonMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
+      this.trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
+      this.trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
+      this.trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial);
+      // trackButton1.material.uniforms.transparent = true;
+      // trackButton1.material.uniforms.opacity = 0.3;
+      this.trackButton1.position.set(175, 100, 110);
+      this.trackButton2.position.set(175, 30, 110);
+      this.trackButton3.position.set(175, -40, 110);
+      this.trackButton4.position.set(175, -110, 110);
+
+      boombox.add(this.trackButton1);
+      boombox.add(this.trackButton2);
+      boombox.add(this.trackButton3);
+      boombox.add(this.trackButton4);
+    }
+  }, {
+    key: 'createPlayButtons',
+    value: function createPlayButtons(boombox) {
+      var playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
+      var playButtonMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+
+      this.playButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.playButton.position.set(-180, -10, 110);
+      this.playButton.rotation.x = Math.PI / 2;
+
+      this.pauseButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.pauseButton.position.set(-100, -10, 110);
+      this.pauseButton.rotation.x = Math.PI / 2;
+
+      this.resetButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.resetButton.position.set(-20, -10, 110);
+      this.resetButton.rotation.x = Math.PI / 2;
+
+      this.muteButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.muteButton.position.set(60, -10, 110);
+      this.muteButton.rotation.x = Math.PI / 2;
+
+      boombox.add(this.playButton);
+      boombox.add(this.pauseButton);
+      boombox.add(this.resetButton);
+      boombox.add(this.muteButton);
+    }
+  }, {
+    key: 'createFrequencyVisualizer',
+    value: function createFrequencyVisualizer(boombox) {
+      var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
+      var freqBarMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
+      for (var i = 1; i < 13; i++) {
+        this['bar' + i] = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
+        this['bar' + i].position.set(-195 + (i - 1) * 25, -110, 110);
+        boombox.add(this['bar' + i]);
+      }
+    }
+  }]);
+
+  function BoomBlock(scene) {
+    _classCallCheck(this, BoomBlock);
+
+    this.boombox = new THREE.Group();
+    this.createBase(this.boombox);
+    this.createReels(this.boombox);
+    this.createTrackButtons(this.boombox);
+    this.createPlayButtons(this.boombox);
+    this.createFrequencyVisualizer(this.boombox);
+    scene.add(this.boombox);
+  }
+
+  return BoomBlock;
+}();
+
+exports.default = BoomBlock;
+
+/***/ }),
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75337,9 +75517,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _reactRedux = __webpack_require__(176);
 
-var _tracks_actions = __webpack_require__(223);
+var _tracks_api_actions = __webpack_require__(226);
 
-var _audio_tracks = __webpack_require__(217);
+var _web_audio_actions = __webpack_require__(229);
+
+var _audio_tracks = __webpack_require__(238);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
@@ -75356,22 +75538,209 @@ var mapStateToProps = function mapStateToProps(state) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
+    sendAudioPathToStore: function sendAudioPathToStore(type, sourceNode, gainNode, analyserNode) {
+      return dispatch((0, _web_audio_actions.sendAudioPathToStore)(type, sourceNode, gainNode, analyserNode));
+    },
+    sendMasterNodesToStore: function sendMasterNodesToStore(masterGain, audioContext) {
+      return dispatch((0, _web_audio_actions.sendMasterNodesToStore)(masterGain, audioContext));
+    },
     getDrums: function getDrums() {
-      return dispatch((0, _tracks_actions.getTrack)('drums', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_drums.mp3"));
+      return dispatch((0, _tracks_api_actions.getTrack)('drums', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_drums.mp3"));
     },
     getBass: function getBass() {
-      return dispatch((0, _tracks_actions.getTrack)('bass', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_bass.mp3"));
+      return dispatch((0, _tracks_api_actions.getTrack)('bass', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_bass.mp3"));
     },
     getMelody: function getMelody() {
-      return dispatch((0, _tracks_actions.getTrack)('melody', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_melody.mp3"));
+      return dispatch((0, _tracks_api_actions.getTrack)('melody', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_melody.mp3"));
     },
     getSamples: function getSamples() {
-      return dispatch((0, _tracks_actions.getTrack)('samples', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_samples.mp3"));
+      return dispatch((0, _tracks_api_actions.getTrack)('samples', "https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_samples.mp3"));
     }
   };
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_audio_tracks2.default);
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AudioTracks = function (_React$Component) {
+  _inherits(AudioTracks, _React$Component);
+
+  function AudioTracks(props) {
+    _classCallCheck(this, AudioTracks);
+
+    var _this = _possibleConstructorReturn(this, (AudioTracks.__proto__ || Object.getPrototypeOf(AudioTracks)).call(this, props));
+
+    _this.state = {
+      drumsSource: undefined,
+      drumsGain: undefined,
+      drumsAnalyser: undefined,
+
+      bassSource: undefined,
+      bassGain: undefined,
+      bassAnalyser: undefined,
+
+      melodySource: undefined,
+      melodyGain: undefined,
+      melodyAnalyser: undefined,
+
+      samplesSource: undefined,
+      samplesGain: undefined,
+      samplesAnalyser: undefined,
+
+      audioContext: undefined,
+
+      masterGain: undefined
+    };
+    return _this;
+  }
+
+  _createClass(AudioTracks, [{
+    key: 'routeTrack',
+    value: function routeTrack(type, newProps) {
+      var _this2 = this;
+
+      var sourceNode = this.state.audioContext.createBufferSource();
+      var typeBuffer = void 0;
+      this.state.audioContext.decodeAudioData(newProps[type + 'ArrayBuffer'], function (buffer) {
+        var _this2$setState;
+
+        typeBuffer = buffer;
+        sourceNode.buffer = typeBuffer;
+        var gainNode = _this2.state.audioContext.createGain();
+        sourceNode.connect(gainNode);
+        var analyserNode = _this2.state.audioContext.createAnalyser();
+        gainNode.connect(analyserNode);
+        analyserNode.connect(_this2.state.masterGain);
+        _this2.props.sendAudioPathToStore(type, sourceNode, gainNode, analyserNode);
+        _this2.setState((_this2$setState = {}, _defineProperty(_this2$setState, type + 'Source', sourceNode), _defineProperty(_this2$setState, type + 'Gain', gainNode), _defineProperty(_this2$setState, type + 'Analyser', analyserNode), _this2$setState));
+        console.log('loaded ' + type);
+      });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (newProps.drumsArrayBuffer && !this.state.drumsSource && newProps.bassArrayBuffer && !this.state.bassSource && newProps.melodyArrayBuffer && !this.state.melodySource && newProps.samplesArrayBuffer && !this.state.samplesSource) {
+        this.routeTrack('drums', newProps);
+        this.routeTrack('bass', newProps);
+        this.routeTrack('melody', newProps);
+        this.routeTrack('samples', newProps);
+        this.state.masterGain.connect(this.state.audioContext.destination);
+        this.props.sendMasterNodesToStore(this.state.masterGain, this.state.audioContext);
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      var masterGain = audioContext.createGain();
+      this.setState({
+        audioContext: audioContext,
+        masterGain: masterGain
+      });
+      this.props.getDrums();
+      this.props.getBass();
+      this.props.getMelody();
+      this.props.getSamples();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.state.drumsSource && this.state.bassSource && this.state.melodySource && this.state.samplesSource) {
+        // this.state.drumsSource.start();
+        // this.state.bassSource.start();
+        // this.state.melodySource.start();
+        // this.state.samplesSource.start();
+        // window.setInterval(() => {
+        // const data = new Float32Array(this.state.melodyAnalyser.frequencyBinCount);
+        // this.state.melodyAnalyser.getFloatFrequencyData(data);
+        // console.log(data);
+        // this.state.drumsGain.gain.value = Math.random();
+        // this.state.bassGain.gain.value = Math.random();
+        // this.state.samplesGain.gain.value = Math.random();
+        // this.state.melodyGain.gain.value = Math.random();
+        // }, 1000);
+      }
+      return _react2.default.createElement('div', null);
+    }
+  }]);
+
+  return AudioTracks;
+}(_react2.default.Component);
+
+exports.default = AudioTracks;
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(69);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TrainTrack = function () {
+  _createClass(TrainTrack, [{
+    key: 'createTrack',
+    value: function createTrack(scene) {
+      var trackGeometry = new THREE.BoxGeometry(10000, 50, 200);
+      var trackMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+      this.trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+      this.trainTrack.position.set(0, 100, -300);
+      scene.add(this.trainTrack);
+    }
+  }]);
+
+  function TrainTrack(scene) {
+    _classCallCheck(this, TrainTrack);
+
+    this.createTrack(scene);
+  }
+
+  return TrainTrack;
+}();
+
+exports.default = TrainTrack;
 
 /***/ })
 /******/ ]);

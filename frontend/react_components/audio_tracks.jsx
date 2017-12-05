@@ -27,22 +27,28 @@ class AudioTracks extends React.Component {
   }
 
   routeTrack(type, newProps) {
-    const source = this.state.audioContext.createBufferSource();
+    const sourceNode = this.state.audioContext.createBufferSource();
     let typeBuffer;
     this.state.audioContext.decodeAudioData(
       newProps[`${type}ArrayBuffer`],
       (buffer) => {
         typeBuffer = buffer;
-        source.buffer = typeBuffer;
-        const gain = this.state.audioContext.createGain();
-        source.connect(gain);
-        const analyser = this.state.audioContext.createAnalyser();
-        gain.connect(analyser);
-        analyser.connect(this.state.masterGain);
+        sourceNode.buffer = typeBuffer;
+        const gainNode = this.state.audioContext.createGain();
+        sourceNode.connect(gainNode);
+        const analyserNode = this.state.audioContext.createAnalyser();
+        gainNode.connect(analyserNode);
+        analyserNode.connect(this.state.masterGain);
+        this.props.sendAudioPathToStore(
+          type,
+          sourceNode,
+          gainNode,
+          analyserNode
+        );
         this.setState({
-          [`${type}Source`]: source,
-          [`${type}Gain`]: gain,
-          [`${type}Analyser`]: analyser
+          [`${type}Source`]: sourceNode,
+          [`${type}Gain`]: gainNode,
+          [`${type}Analyser`]: analyserNode
         });
         console.log(`loaded ${type}`);
       }
@@ -51,16 +57,17 @@ class AudioTracks extends React.Component {
 
   componentWillReceiveProps (newProps) {
     if (
-      newProps.drumsArrayBuffer &&
-      newProps.bassArrayBuffer &&
-      newProps.melodyArrayBuffer &&
-      newProps.samplesArrayBuffer
+      newProps.drumsArrayBuffer && !this.state.drumsSource &&
+      newProps.bassArrayBuffer && !this.state.bassSource &&
+      newProps.melodyArrayBuffer && !this.state.melodySource &&
+      newProps.samplesArrayBuffer && !this.state.samplesSource
     ) {
       this.routeTrack('drums', newProps);
       this.routeTrack('bass', newProps);
       this.routeTrack('melody', newProps);
       this.routeTrack('samples', newProps);
       this.state.masterGain.connect(this.state.audioContext.destination);
+      this.props.sendMasterNodesToStore(this.state.masterGain, this.state.audioContext);
     }
   }
 

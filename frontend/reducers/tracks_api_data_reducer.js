@@ -5,9 +5,9 @@ import {
   RECEIVE_DRUMS_TRACK,
   RECEIVE_MELODY_TRACK,
   RECEIVE_SAMPLES_TRACK
-} from '../actions/tracks_actions';
+} from '../actions/tracks_api_actions';
 
-const TracksReducer = (state = {}, action) => {
+const TracksApiDataReducer = (state = {}, action) => {
   Object.freeze(state);
   let nextState;
 
@@ -33,4 +33,4 @@ const TracksReducer = (state = {}, action) => {
   }
 };
 
-export default TracksReducer;
+export default TracksApiDataReducer;

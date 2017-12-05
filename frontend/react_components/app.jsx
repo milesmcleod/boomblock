@@ -1,11 +1,11 @@
 // app.jsx
 import React from 'react';
-import BoomBlock from './boomblock';
+import ThreeWorld from './three_world';
 import AudioTracksContainer from './audio_tracks_container';
 
 const App = () => (
   <div className='app'>
-    <BoomBlock />
+    <ThreeWorld />
     <AudioTracksContainer />
   </div>
 );

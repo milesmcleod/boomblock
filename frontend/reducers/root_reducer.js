@@ -1,9 +1,11 @@
 // root_reducer.js
 import { combineReducers } from 'redux';
-import TracksReducer from './tracks_reducer.js';
+import TracksApiDataReducer from './tracks_api_data_reducer';
+import AudioNodesReducer from './audio_nodes_reducer';
 
 const rootReducer = combineReducers({
-  tracks: TracksReducer
+  tracks: TracksApiDataReducer,
+  audioNodes: AudioNodesReducer
 });
 
 export default rootReducer;

@@ -70636,17 +70636,20 @@ var _boomblock = __webpack_require__(189);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
 
+var _audio_tracks = __webpack_require__(217);
+
+var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// app.jsx
 var App = function App() {
   return _react2.default.createElement(
     'div',
     { className: 'app' },
-    _react2.default.createElement(_boomblock2.default, null)
+    _react2.default.createElement(_boomblock2.default, null),
+    _react2.default.createElement(_audio_tracks2.default, null)
   );
-};
-
+}; // app.jsx
 exports.default = App;
 
 /***/ }),
@@ -75060,6 +75063,69 @@ var withRouter = function withRouter(Component) {
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (withRouter);
+
+/***/ }),
+/* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AudioTracks = function (_React$Component) {
+  _inherits(AudioTracks, _React$Component);
+
+  function AudioTracks(props) {
+    _classCallCheck(this, AudioTracks);
+
+    return _possibleConstructorReturn(this, (AudioTracks.__proto__ || Object.getPrototypeOf(AudioTracks)).call(this, props));
+  }
+
+  _createClass(AudioTracks, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        null,
+        _react2.default.createElement(
+          "audio",
+          { controls: true,
+            src: "https://s3-us-west-1.amazonaws.com/boomblock/boomblock_beat.mp3",
+            id: "beat-master"
+          },
+          "Your browser does not support the ",
+          _react2.default.createElement(
+            "code",
+            null,
+            "audio"
+          ),
+          " element."
+        )
+      );
+    }
+  }]);
+
+  return AudioTracks;
+}(_react2.default.Component);
+
+exports.default = AudioTracks;
 
 /***/ })
 /******/ ]);

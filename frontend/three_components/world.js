@@ -43,6 +43,11 @@ class World {
     this.controls.zoomSpeed = 1.0;
   }
 
+  createRaycaster() {
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+  }
+
   onWindowResize() {
     this.height = window.innerHeight;
     this.width = window.innerWidth;
@@ -60,8 +65,8 @@ class World {
     this.createCamera();
     this.createRenderer();
     this.createControls();
-    window.addEventListener('resize', this.onWindowResize, false);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
   }
 
   update () {

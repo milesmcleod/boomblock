@@ -75133,6 +75133,12 @@ var World = function () {
       this.controls.zoomSpeed = 1.0;
     }
   }, {
+    key: 'createRaycaster',
+    value: function createRaycaster() {
+      this.raycaster = new THREE.Raycaster();
+      this.mouse = new THREE.Vector2();
+    }
+  }, {
     key: 'onWindowResize',
     value: function onWindowResize() {
       this.height = window.innerHeight;
@@ -75155,8 +75161,8 @@ var World = function () {
     this.createCamera();
     this.createRenderer();
     this.createControls();
-    window.addEventListener('resize', this.onWindowResize, false);
-    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
   }
 
   _createClass(World, [{

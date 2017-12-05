@@ -223,17 +223,18 @@ class BoomBlock {
   }
 
   createFrequencyVisualizer(boombox) {
-    const freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
-    const freqBarMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
-      side: THREE.DoubleSide
-    });
     for (let i = 1; i < 13; i++ ) {
+      const freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
+      const freqBarMaterial = new THREE.MeshPhongMaterial({
+        color: 0xfffff,
+        side: THREE.DoubleSide
+      });
       this[`bar${i}`] = new THREE.Mesh(
         freqBarGeometry,
         freqBarMaterial
       );
       this[`bar${i}`].position.set(-195 + ((i-1) * 25), -110, 110);
+      this[`bar${i}`].name = `bar${i}`;
       boombox.add(this[`bar${i}`]);
     }
   }

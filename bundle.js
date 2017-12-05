@@ -45280,7 +45280,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadCheck();
 
-  world.loop();
+  world.loop(audio);
 });
 
 /***/ }),
@@ -45387,12 +45387,22 @@ var World = function () {
 
   _createClass(World, [{
     key: 'update',
-    value: function update() {
+    value: function update(audio) {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
-      // for ( var i = 0; i < this.intersects.length; i++ ) {
-      //   this.intersects[ i ].object.material.color.set(0x000000);
-      // }
+      audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+      var bars = this.scene.children[3].children.filter(function (obj) {
+        return obj.name.match('bar');
+      });
+      for (var i = 0; i < bars.length; i++) {
+        if (audio.masterDataArray[i]) {
+          bars[i].scale.y = audio.masterDataArray[i] / 300;
+          if (!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
+          var height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
+          //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
+          bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
+        }
+      }
     }
   }, {
     key: 'render',
@@ -45401,13 +45411,13 @@ var World = function () {
     }
   }, {
     key: 'loop',
-    value: function loop() {
+    value: function loop(audio) {
       var _this = this;
 
       requestAnimationFrame(function () {
-        return _this.loop();
+        return _this.loop(audio);
       });
-      this.update();
+      this.update(audio);
       this.render();
     }
   }]);
@@ -46792,14 +46802,15 @@ var BoomBlock = function () {
   }, {
     key: 'createFrequencyVisualizer',
     value: function createFrequencyVisualizer(boombox) {
-      var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
-      var freqBarMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
-        side: THREE.DoubleSide
-      });
       for (var i = 1; i < 13; i++) {
+        var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
+        var freqBarMaterial = new THREE.MeshPhongMaterial({
+          color: 0xfffff,
+          side: THREE.DoubleSide
+        });
         this['bar' + i] = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
         this['bar' + i].position.set(-195 + (i - 1) * 25, -110, 110);
+        this['bar' + i].name = 'bar' + i;
         boombox.add(this['bar' + i]);
       }
     }
@@ -46914,8 +46925,14 @@ var AudioTracks = function () {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     this.masterGain = this.audioContext.createGain();
+    this.masterAnalyser = this.audioContext.createAnalyser();
+    this.masterGain.connect(this.masterAnalyser);
+    this.masterAnalyser.connect(this.audioContext.destination);
 
-    this.masterGain.connect(this.audioContext.destination);
+    this.masterAnalyser.fftSize = 256;
+    var bufferLength = this.masterAnalyser.frequencyBinCount;
+    // length: 128
+    this.masterDataArray = new Uint8Array(bufferLength);
 
     this.loaded = 0;
     this.playing = 0;

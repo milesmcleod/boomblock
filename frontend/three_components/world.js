@@ -70,21 +70,29 @@ class World {
     window.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
   }
 
-  update () {
+  update (audio) {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
-    // for ( var i = 0; i < this.intersects.length; i++ ) {
-    //   this.intersects[ i ].object.material.color.set(0x000000);
-    // }
+    audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+    const bars = this.scene.children[3].children.filter(obj => obj.name.match('bar'));
+    for (let i = 0; i < bars.length; i++ ) {
+      if (audio.masterDataArray[i]) {
+        bars[i].scale.y = audio.masterDataArray[i]/300;
+        if(!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
+        const height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
+        //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
+        bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
+      }
+    }
   }
 
   render () {
     this.renderer.render( this.scene, this.camera );
   }
 
-  loop () {
-    requestAnimationFrame(() => this.loop());
-    this.update();
+  loop (audio) {
+    requestAnimationFrame(() => this.loop(audio));
+    this.update(audio);
     this.render();
   }
 

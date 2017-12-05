@@ -127,5 +127,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadCheck();
 
-  world.loop();
+  world.loop(audio);
 });

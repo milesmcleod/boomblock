@@ -28,8 +28,14 @@ class AudioTracks {
     )();
 
     this.masterGain = this.audioContext.createGain();
+    this.masterAnalyser = this.audioContext.createAnalyser();
+    this.masterGain.connect(this.masterAnalyser);
+    this.masterAnalyser.connect(this.audioContext.destination);
 
-    this.masterGain.connect(this.audioContext.destination);
+    this.masterAnalyser.fftSize = 256;
+    const bufferLength = this.masterAnalyser.frequencyBinCount;
+    // length: 128
+    this.masterDataArray = new Uint8Array(bufferLength);
 
     this.loaded = 0;
     this.playing = 0;

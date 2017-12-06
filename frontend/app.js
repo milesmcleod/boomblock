@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleClick = () => {
     const clickElement = world.intersects[0];
     const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
-    switch(clickElement.object.name) {
+    if (clickElement) switch(clickElement.object.name) {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;

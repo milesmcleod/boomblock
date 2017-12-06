@@ -45177,7 +45177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var boomBlockObject = world.scene.children.filter(function (obj) {
       return obj.name === 'boombox';
     })[0];
-    switch (clickElement.object.name) {
+    if (clickElement) switch (clickElement.object.name) {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
@@ -46955,9 +46955,9 @@ var TrainTrack = function () {
   }]);
 
   function TrainTrack(scene) {
-    _classCallCheck(this, TrainTrack);
+    // this.createTrack(scene);
 
-    this.createTrack(scene);
+    _classCallCheck(this, TrainTrack);
   }
 
   return TrainTrack;

@@ -98,6 +98,7 @@ class World {
         el.rotateZ(0.5);
       }
     }); //rotateOnAxis function
+
   }
 
   render () {

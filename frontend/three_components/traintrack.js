@@ -14,7 +14,7 @@ class TrainTrack {
   }
 
   constructor(scene) {
-    this.createTrack(scene);
+    // this.createTrack(scene);
   }
 }
 

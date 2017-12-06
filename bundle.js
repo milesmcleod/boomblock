@@ -45176,6 +45176,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var buildings = new _buildings2.default(world.scene);
   window.world = world;
 
+  var set8thNotes = function set8thNotes() {
+    [0, 367, 734, 1101, 1468, 1835, 2202, 2569].forEach(function (time) {
+      window.setTimeout(function () {
+        return world.melodyStack();
+      }, time);
+    });
+  };
+
   var handleClick = function handleClick() {
     var clickElement = world.intersects[0];
     var boomBlockObject = world.scene.children.filter(function (obj) {
@@ -45189,8 +45197,16 @@ document.addEventListener('DOMContentLoaded', function () {
           world.resetMelodyStack();
           world.melodyIntervalId = window.setInterval(function () {
             world.resetMelodyStack();
-          }, 2935);
+            set8thNotes();
+          }, 2935); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
+        audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+        // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
+        //   world.melodyStack();
+        //   world.melodyStackId = window.setInterval(() => {
+        //     world.melodyStack();
+        //   }, (2935/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+        // }, beatOffset); //could have used this if 2935/8 was an integer
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           audio.start();
@@ -45202,6 +45218,7 @@ document.addEventListener('DOMContentLoaded', function () {
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           window.clearInterval(world.melodyIntervalId);
+          window.clearInterval(world.melodyStackId);
           audio.reload();
           loadCheck();
         }
@@ -45216,6 +45233,8 @@ document.addEventListener('DOMContentLoaded', function () {
         audio.reload();
         audio.pausedAt = 0;
         audio.resetting = 1;
+        window.clearInterval(world.melodyIntervalId);
+        window.clearInterval(world.melodyStackId);
         window.setTimeout(function () {
           audio.resetting = 0;
         }, 400);
@@ -45340,8 +45359,9 @@ var World = function () {
       this.nearPlane = 1;
       this.farPlane = 20000;
       this.melodyStackY = -130;
-      this.melodyStackwidth = 300;
-      this.melodyStackDepth = 200;
+      this.melodyStackwidth = 150;
+      this.melodyStackDepth = 150;
+      this.melodyStackRotation = 0;
     }
   }, {
     key: 'createCamera',
@@ -45443,39 +45463,46 @@ var World = function () {
         }
       }); //rotateOnAxis function
 
-      //log melody peaks
-      audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
-      var peak = -10000;
-      var peakIdx = 0;
-      for (var _i = 0; _i < audio.melodyDataArray.length; _i++) {
-        if (audio.melodyDataArray[_i] > peak) {
-          peak = audio.melodyDataArray[_i];
-          peakIdx = _i;
-        }
-      }
-      if (peakIdx > 1 &&
-      // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
-      peakIdx !== audio.oldMelodyPeakFreq) {
-        // console.log(`${peakIdx}, ${peak}`);
-        // console.log(audio.melodyDataArray);
-        this.melodyStack(peakIdx, peak);
-        audio.oldMelodyPeakFreq = peakIdx;
-      }
+      //melody peaks not quite functional
+      // audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
+      // let peak = -10000;
+      // let peakIdx = 0;
+      // for (let i = 0; i < audio.melodyDataArray.length; i++) {
+      //   if (audio.melodyDataArray[i] > peak) {
+      //     peak = audio.melodyDataArray[i];
+      //     peakIdx = i;
+      //   }
+      // }
+      // if (
+      //   peakIdx > 1 &&
+      //   // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
+      //   peakIdx !== audio.oldMelodyPeakFreq
+      // ) {
+      //   // console.log(`${peakIdx}, ${peak}`);
+      //   // console.log(audio.melodyDataArray);
+      //   this.melodyStack(peakIdx, peak);
+      //   audio.oldMelodyPeakFreq = peakIdx;
+      //
+      //
+      //
+      // }
+
     }
   }, {
     key: 'melodyStack',
-    value: function melodyStack(peakIdx, peak) {
-      var geometry = new THREE.BoxBufferGeometry(this.melodyStackwidth, 80, this.melodyStackDepth);
-      var material = new THREE.MeshPhongMaterial({
-        color: 0x343434
+    value: function melodyStack() {
+      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+      var geometry = new THREE.BoxBufferGeometry(this.melodyStackwidth, 150, this.melodyStackDepth);
+      var material = new THREE.MeshBasicMaterial({
+        color: rainbow[Math.floor(Math.random() * 12)]
       });
       var melodyBlock = new THREE.Mesh(geometry, material);
       melodyBlock.name = 'melodyBlock';
       melodyBlock.position.set(550, this.melodyStackY, 0);
+      melodyBlock.rotateY(this.melodyStackRotation);
       this.scene.add(melodyBlock);
-      this.melodyStackY += 80;
-      this.melodyStackwidth -= 30;
-      this.melodyStackDepth -= 30;
+      this.melodyStackY += 150;
+      this.melodyStackRotation += Math.PI / 8;
     }
   }, {
     key: 'resetMelodyStack',
@@ -45483,8 +45510,7 @@ var World = function () {
       var _this = this;
 
       this.melodyStackY = -130;
-      this.melodyStackwidth = 300;
-      this.melodyStackDepth = 200;
+      this.melodyStackRotation = 0;
       this.scene.children.filter(function (obj) {
         return obj.name === 'melodyBlock';
       }).forEach(function (el) {
@@ -47324,7 +47350,7 @@ var Buildings = function () {
   }, {
     key: 'tower3',
     value: function tower3(scene) {
-      var building3Geometry = new THREE.BoxBufferGeometry(400, 20, 300);
+      var building3Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
       var building3Material = new THREE.MeshPhongMaterial({
         color: 0x343434,
         side: THREE.DoubleSide

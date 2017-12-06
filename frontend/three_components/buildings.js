@@ -29,7 +29,7 @@ class Buildings {
   }
 
   tower3 (scene) {
-    const building3Geometry = new THREE.BoxBufferGeometry(400, 20, 300);
+    const building3Geometry = new THREE.BoxBufferGeometry(400, 20,400);
     const building3Material = new THREE.MeshPhongMaterial({
       color: 0x343434,
       side: THREE.DoubleSide

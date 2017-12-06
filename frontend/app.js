@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const buildings = new Buildings(world.scene);
   window.world = world;
 
+  const set8thNotes = () => {
+    [0, 367, 734, 1101, 1468, 1835, 2202, 2569].forEach(time => {
+      window.setTimeout(() => world.melodyStack(), time);
+    });
+  };
+
   const handleClick = () => {
     const clickElement = world.intersects[0];
     const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
@@ -32,8 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
           world.resetMelodyStack();
           world.melodyIntervalId = window.setInterval(() => {
             world.resetMelodyStack();
-          }, 2935);
+            set8thNotes();
+          }, 2935); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
+        audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+        // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
+        //   world.melodyStack();
+        //   world.melodyStackId = window.setInterval(() => {
+        //     world.melodyStack();
+        //   }, (2935/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+        // }, beatOffset); //could have used this if 2935/8 was an integer
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           audio.start();
@@ -45,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           window.clearInterval(world.melodyIntervalId);
+          window.clearInterval(world.melodyStackId);
           audio.reload();
           loadCheck();
         }
@@ -59,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.reload();
         audio.pausedAt = 0;
         audio.resetting = 1;
+        window.clearInterval(world.melodyIntervalId);
+        window.clearInterval(world.melodyStackId);
         window.setTimeout(() => { audio.resetting = 0; }, 400);
         loadCheck();
         break;

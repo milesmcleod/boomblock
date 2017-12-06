@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.world = world;
 
   const set8thNotes = () => {
-    [0, 367, 734, 1101, 1468, 1835, 2202, 2569].forEach(time => {
+    [0, 366, 735, 1100, 1467, 1834, 2201, 2568].forEach(time => {
       window.setTimeout(() => world.melodyStack(), time);
     });
   };
@@ -32,21 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
     if (clickElement) switch(clickElement.object.name) {
       case 'play':
-        const beatOffset = audio.pausedAt ? (2935 - ((audio.pausedAt) % 2935)) : 0;
+        const beatOffset = audio.pausedAt ? (2934 - ((audio.pausedAt) % 2934)) : 0;
         console.log(beatOffset); //this is the coolest thing ever
         window.setTimeout(() => {
           world.resetMelodyStack();
           world.melodyIntervalId = window.setInterval(() => {
             world.resetMelodyStack();
             set8thNotes();
-          }, 2935); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+          }, 2934); //2934 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
-        audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+        // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
         // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
         //   world.melodyStack();
         //   world.melodyStackId = window.setInterval(() => {
         //     world.melodyStack();
-        //   }, (2935/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+        //   }, (2934/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
         // }, beatOffset); //could have used this if 2935/8 was an integer
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;

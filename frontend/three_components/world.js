@@ -14,6 +14,7 @@ class World {
     this.melodyStackwidth = 150;
     this.melodyStackDepth = 150;
     this.melodyStackRotation = 0;
+    this.melodyStackColors = undefined;
   }
 
   createCamera() {
@@ -145,13 +146,19 @@ class World {
       0x7f00ff,
       0xff00ff
     ];
+    if (!this.melodyStackColors) {
+      this.melodyStackColors = [
+        rainbow[Math.floor(Math.random()*12)],
+        rainbow[Math.floor(Math.random()*12)]
+      ];
+    }
     const geometry = new THREE.BoxBufferGeometry(
       this.melodyStackwidth,
       150,
       this.melodyStackDepth
     );
     const material = new THREE.MeshBasicMaterial({
-      color: rainbow[Math.floor(Math.random()*12)]
+      color: this.melodyStackColors[Math.floor(Math.random()*2)]
     });
     const melodyBlock = new THREE.Mesh(geometry, material);
     melodyBlock.name = 'melodyBlock';
@@ -165,6 +172,7 @@ class World {
   resetMelodyStack() {
     this.melodyStackY = -130;
     this.melodyStackRotation = 0;
+    this.melodyStackColors = undefined;
     this.scene.children.filter(obj => (
       obj.name === 'melodyBlock'
     )).forEach(el => this.scene.remove(el));

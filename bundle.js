@@ -45177,7 +45177,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.world = world;
 
   var set8thNotes = function set8thNotes() {
-    [0, 367, 734, 1101, 1468, 1835, 2202, 2569].forEach(function (time) {
+    [0, 366, 735, 1100, 1467, 1834, 2201, 2568].forEach(function (time) {
       window.setTimeout(function () {
         return world.melodyStack();
       }, time);
@@ -45191,21 +45191,21 @@ document.addEventListener('DOMContentLoaded', function () {
     })[0];
     if (clickElement) switch (clickElement.object.name) {
       case 'play':
-        var beatOffset = audio.pausedAt ? 2935 - audio.pausedAt % 2935 : 0;
+        var beatOffset = audio.pausedAt ? 2934 - audio.pausedAt % 2934 : 0;
         console.log(beatOffset); //this is the coolest thing ever
         window.setTimeout(function () {
           world.resetMelodyStack();
           world.melodyIntervalId = window.setInterval(function () {
             world.resetMelodyStack();
             set8thNotes();
-          }, 2935); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+          }, 2934); //2934 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
-        audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
+        // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
         // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
         //   world.melodyStack();
         //   world.melodyStackId = window.setInterval(() => {
         //     world.melodyStack();
-        //   }, (2935/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
+        //   }, (2934/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
         // }, beatOffset); //could have used this if 2935/8 was an integer
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
@@ -45362,6 +45362,7 @@ var World = function () {
       this.melodyStackwidth = 150;
       this.melodyStackDepth = 150;
       this.melodyStackRotation = 0;
+      this.melodyStackColors = undefined;
     }
   }, {
     key: 'createCamera',
@@ -45492,9 +45493,12 @@ var World = function () {
     key: 'melodyStack',
     value: function melodyStack() {
       var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+      if (!this.melodyStackColors) {
+        this.melodyStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
+      }
       var geometry = new THREE.BoxBufferGeometry(this.melodyStackwidth, 150, this.melodyStackDepth);
       var material = new THREE.MeshBasicMaterial({
-        color: rainbow[Math.floor(Math.random() * 12)]
+        color: this.melodyStackColors[Math.floor(Math.random() * 2)]
       });
       var melodyBlock = new THREE.Mesh(geometry, material);
       melodyBlock.name = 'melodyBlock';
@@ -45511,6 +45515,7 @@ var World = function () {
 
       this.melodyStackY = -130;
       this.melodyStackRotation = 0;
+      this.melodyStackColors = undefined;
       this.scene.children.filter(function (obj) {
         return obj.name === 'melodyBlock';
       }).forEach(function (el) {

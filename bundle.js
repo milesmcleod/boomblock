@@ -45181,23 +45181,12 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
-          // clickElement.object.material.color.set(0x00ff00);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'pause'
-          // ))[0].material.color.set(0xff0000);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'reset'
-          // ))[0].material.color.set(0xffff00);
           audio.start();
         }
         break;
       case 'pause':
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
-          // clickElement.object.material.color.set(0x00ffff);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'play'
-          // ))[0].material.color.set(0x66ff66);
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           audio.reload();
@@ -45208,13 +45197,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           audio.stop();
-          // clickElement.object.material.color.set(0xffff00);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'pause'
-          // ))[0].material.color.set(0xff0000);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'play'
-          // ))[0].material.color.set(0x66ff66);
         }
         audio.masterGain.gain.value = 1;
         window.removeEventListener('mouseup', handleClick, false);
@@ -45226,19 +45208,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 400);
         loadCheck();
         break;
+      case 'muteButton':
       case 'mute':
         if (audio.masterGain.gain.value) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x00ffff);
+          boomBlockObject.children.filter(function (obj) {
+            return obj.name === 'muteButton';
+          })[0].material.color.set(0x0000ff);
+          // clickElement.object.material.color.set(0x00ffff);
         } else {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0x0000ff);
+          boomBlockObject.children.filter(function (obj) {
+            return obj.name === 'muteButton';
+          })[0].material.color.set(0x00ffff);
         }
         break;
       case 'track1':
         if (audio.drumsGain.gain.value) {
           audio.drumsGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.drumsGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -45247,7 +45235,7 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'track2':
         if (audio.bassGain.gain.value) {
           audio.bassGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.bassGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -45256,7 +45244,7 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'track3':
         if (audio.melodyGain.gain.value) {
           audio.melodyGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.melodyGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -45265,7 +45253,7 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'track4':
         if (audio.samplesGain.gain.value) {
           audio.samplesGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.samplesGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -45274,10 +45262,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
+  var handleMove = function handleMove() {
+    var worldEl = document.getElementById('world');
+    var hoverElement = world.intersects[0];
+    if (['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
+      worldEl.classList.add('world-click');
+    } else {
+      worldEl.classList.remove('world-click');
+    }
+  };
+
   var loadCheck = function loadCheck() {
     window.setTimeout(function () {
       if (audio.loaded === 1) {
         window.addEventListener('mouseup', handleClick, false);
+        window.addEventListener('mousemove', handleMove, false);
       } else {
         loadCheck();
       }
@@ -46528,7 +46527,7 @@ var Lighting = function () {
   _createClass(Lighting, [{
     key: 'createAmbientLight',
     value: function createAmbientLight(scene) {
-      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
+      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
       scene.add(this.ambientLight);
     }
   }, {
@@ -46651,7 +46650,7 @@ var BoomBlock = function () {
   }, {
     key: 'createReels',
     value: function createReels(scene) {
-      var reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
+      var reelGeometry = new THREE.CylinderBufferGeometry(60, 60, 40, 32);
       var reelMaterial = new THREE.MeshPhongMaterial({
         color: 0x000000,
         side: THREE.DoubleSide
@@ -46808,7 +46807,7 @@ var BoomBlock = function () {
   }, {
     key: 'createPlayButtons',
     value: function createPlayButtons(boombox) {
-      var playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
+      var playButtonGeometry = new THREE.CylinderBufferGeometry(30, 30, 20, 32);
       var playButtonMaterial = new THREE.MeshBasicMaterial({
         color: 0x66ff66,
         side: THREE.DoubleSide
@@ -46822,7 +46821,7 @@ var BoomBlock = function () {
         side: THREE.DoubleSide
       });
       var muteButtonMaterial = new THREE.MeshBasicMaterial({
-        color: 0x0000ff,
+        color: 0x00ffff,
         side: THREE.DoubleSide
       });
 
@@ -46830,22 +46829,86 @@ var BoomBlock = function () {
       this.playButton.position.set(-180, -10, 110);
       this.playButton.rotation.x = Math.PI / 2;
 
+      var coneGeometry = new THREE.ConeGeometry(16, 24, 2);
+      var labelMaterial = new THREE.MeshBasicMaterial({ color: 0x343434 });
+      var cone = new THREE.Mesh(coneGeometry, labelMaterial);
+      cone.position.set(-176, -10, 121);
+      cone.rotateX(-Math.PI / 2);
+      cone.rotateZ(-Math.PI / 2);
+      cone.name = 'play';
+      boombox.add(cone);
+
       this.pauseButton = new THREE.Mesh(playButtonGeometry, pauseButtonMaterial);
       this.pauseButton.position.set(-100, -10, 110);
       this.pauseButton.rotation.x = Math.PI / 2;
+
+      var pausePlaneGeometry = new THREE.PlaneBufferGeometry(25, 9);
+      var pauseLeft = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+      pauseLeft.position.set(-106, -10, 121);
+      pauseLeft.rotateZ(Math.PI / 2);
+      var pauseRight = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+      pauseRight.position.set(-94, -10, 121);
+      pauseRight.rotateZ(Math.PI / 2);
+      pauseLeft.name = 'pause';
+      pauseRight.name = 'pause';
+      boombox.add(pauseLeft);
+      boombox.add(pauseRight);
 
       this.resetButton = new THREE.Mesh(playButtonGeometry, resetButtonMaterial);
       this.resetButton.position.set(-20, -10, 110);
       this.resetButton.rotation.x = Math.PI / 2;
 
+      var rewindGeometry = new THREE.ConeGeometry(12, 18, 2);
+      var cone1 = new THREE.Mesh(rewindGeometry, labelMaterial);
+      cone1.position.set(-12, -10, 121);
+      cone1.rotateX(-Math.PI / 2);
+      cone1.rotateZ(Math.PI / 2);
+      cone1.name = 'reset';
+      boombox.add(cone1);
+      var cone2 = new THREE.Mesh(rewindGeometry, labelMaterial);
+      cone2.position.set(-25, -10, 121);
+      cone2.rotateX(-Math.PI / 2);
+      cone2.rotateZ(Math.PI / 2);
+      cone2.name = 'reset';
+      boombox.add(cone2);
+      var resetPlaneGeometry = new THREE.PlaneBufferGeometry(24, 5);
+      var resetBar = new THREE.Mesh(resetPlaneGeometry, labelMaterial);
+      resetBar.position.set(-33, -10, 121);
+      resetBar.rotateZ(Math.PI / 2);
+      resetBar.name = 'reset';
+      boombox.add(resetBar);
+
       this.muteButton = new THREE.Mesh(playButtonGeometry, muteButtonMaterial);
       this.muteButton.position.set(60, -10, 110);
       this.muteButton.rotation.x = Math.PI / 2;
 
+      var cone3 = new THREE.Mesh(coneGeometry, labelMaterial);
+      cone3.position.set(51, -10, 121);
+      cone3.rotateX(-Math.PI / 2);
+      cone3.rotateZ(Math.PI / 2);
+      cone3.name = 'mute';
+      boombox.add(cone3);
+      var mutePlaneGeometry = new THREE.PlaneBufferGeometry(14, 14);
+      var mutePlane = new THREE.Mesh(mutePlaneGeometry, labelMaterial);
+      mutePlane.position.set(44, -10, 121);
+      mutePlane.name = 'mute';
+      boombox.add(mutePlane);
+      var mutePlane2Geometry = new THREE.PlaneBufferGeometry(16, 3);
+      var mutePlaneX1 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+      mutePlaneX1.position.set(70, -10, 121);
+      mutePlaneX1.rotateZ(Math.PI / 4);
+      mutePlaneX1.name = 'mute';
+      boombox.add(mutePlaneX1);
+      var mutePlaneX2 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+      mutePlaneX2.position.set(70, -10, 121);
+      mutePlaneX2.rotateZ(-Math.PI / 4);
+      mutePlaneX2.name = 'mute';
+      boombox.add(mutePlaneX2);
+
       this.playButton.name = 'play';
       this.pauseButton.name = 'pause';
       this.resetButton.name = 'reset';
-      this.muteButton.name = 'mute';
+      this.muteButton.name = 'muteButton';
 
       var playLight = new THREE.PointLight(0x66ff66, 0.7, 0, 2);
       playLight.position.set(-180, -10, 150);

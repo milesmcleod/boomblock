@@ -28,23 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
-          // clickElement.object.material.color.set(0x00ff00);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'pause'
-          // ))[0].material.color.set(0xff0000);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'reset'
-          // ))[0].material.color.set(0xffff00);
           audio.start();
         }
         break;
       case 'pause':
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
-          // clickElement.object.material.color.set(0x00ffff);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'play'
-          // ))[0].material.color.set(0x66ff66);
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           audio.reload();
@@ -55,13 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           audio.stop();
-          // clickElement.object.material.color.set(0xffff00);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'pause'
-          // ))[0].material.color.set(0xff0000);
-          // boomBlockObject.children.filter(obj => (
-          //   obj.name === 'play'
-          // ))[0].material.color.set(0x66ff66);
         }
         audio.masterGain.gain.value = 1;
         window.removeEventListener('mouseup', handleClick, false);
@@ -71,19 +53,25 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setTimeout(() => { audio.resetting = 0; }, 400);
         loadCheck();
         break;
+      case 'muteButton':
       case 'mute':
         if (audio.masterGain.gain.value) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x00ffff);
+          boomBlockObject.children.filter(obj => (
+            obj.name === 'muteButton'
+          ))[0].material.color.set(0x0000ff);
+          // clickElement.object.material.color.set(0x00ffff);
         } else {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0x0000ff);
+          boomBlockObject.children.filter(obj => (
+            obj.name === 'muteButton'
+          ))[0].material.color.set(0x00ffff);
         }
         break;
       case 'track1':
         if (audio.drumsGain.gain.value) {
           audio.drumsGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.drumsGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -92,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'track2':
         if (audio.bassGain.gain.value) {
           audio.bassGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.bassGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -101,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'track3':
         if (audio.melodyGain.gain.value) {
           audio.melodyGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.melodyGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -110,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'track4':
         if (audio.samplesGain.gain.value) {
           audio.samplesGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x0000ff);
         } else {
           audio.samplesGain.gain.value = 1;
           clickElement.object.material.color.set(0x00ffff);
@@ -119,10 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const handleMove = () => {
+    const worldEl = document.getElementById('world');
+    const hoverElement = world.intersects[0];
+    if (['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
+      worldEl.classList.add('world-click');
+    } else {
+      worldEl.classList.remove('world-click');
+    }
+  };
+
   const loadCheck = () => {
     window.setTimeout(() => {
       if (audio.loaded === 1) {
         window.addEventListener('mouseup', handleClick, false);
+        window.addEventListener('mousemove', handleMove, false);
       } else {
         loadCheck();
       }

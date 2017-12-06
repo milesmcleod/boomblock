@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 class Lighting {
   createAmbientLight(scene) {
-    this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
+    this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
     scene.add(this.ambientLight);
   }
 

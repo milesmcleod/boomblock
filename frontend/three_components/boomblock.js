@@ -27,7 +27,7 @@ class BoomBlock {
   }
 
   createReels(scene) {
-    const reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
+    const reelGeometry = new THREE.CylinderBufferGeometry(60, 60, 40, 32);
     const reelMaterial = new THREE.MeshPhongMaterial({
       color: 0x000000,
       side: THREE.DoubleSide
@@ -194,7 +194,7 @@ class BoomBlock {
   }
 
   createPlayButtons(boombox) {
-    const playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
+    const playButtonGeometry = new THREE.CylinderBufferGeometry(30, 30, 20, 32);
     const playButtonMaterial = new THREE.MeshBasicMaterial({
       color: 0x66ff66,
       side: THREE.DoubleSide
@@ -208,7 +208,7 @@ class BoomBlock {
       side: THREE.DoubleSide
     });
     const muteButtonMaterial = new THREE.MeshBasicMaterial({
-      color: 0x0000ff,
+      color: 0x00ffff,
       side: THREE.DoubleSide
     });
 
@@ -219,12 +219,33 @@ class BoomBlock {
     this.playButton.position.set(-180, -10, 110);
     this.playButton.rotation.x = Math.PI/2;
 
+    const coneGeometry = new THREE.ConeGeometry(16, 24, 2);
+    const labelMaterial = new THREE.MeshBasicMaterial( {color: 0x343434} );
+    const cone = new THREE.Mesh( coneGeometry, labelMaterial );
+    cone.position.set(-176, -10, 121);
+    cone.rotateX(-Math.PI/2);
+    cone.rotateZ(-Math.PI/2);
+    cone.name = 'play';
+    boombox.add( cone );
+
     this.pauseButton = new THREE.Mesh(
       playButtonGeometry,
       pauseButtonMaterial
     );
     this.pauseButton.position.set(-100, -10, 110);
     this.pauseButton.rotation.x = Math.PI/2;
+
+    const pausePlaneGeometry = new THREE.PlaneBufferGeometry(25, 9);
+    const pauseLeft = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+    pauseLeft.position.set(-106, -10, 121);
+    pauseLeft.rotateZ(Math.PI/2);
+    const pauseRight = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+    pauseRight.position.set(-94, -10, 121);
+    pauseRight.rotateZ(Math.PI/2);
+    pauseLeft.name = 'pause';
+    pauseRight.name = 'pause';
+    boombox.add(pauseLeft);
+    boombox.add(pauseRight);
 
     this.resetButton = new THREE.Mesh(
       playButtonGeometry,
@@ -233,6 +254,26 @@ class BoomBlock {
     this.resetButton.position.set(-20, -10, 110);
     this.resetButton.rotation.x = Math.PI/2;
 
+    const rewindGeometry = new THREE.ConeGeometry(12, 18, 2);
+    const cone1 = new THREE.Mesh( rewindGeometry, labelMaterial );
+    cone1.position.set(-12, -10, 121);
+    cone1.rotateX(-Math.PI/2);
+    cone1.rotateZ(Math.PI/2);
+    cone1.name = 'reset';
+    boombox.add(cone1);
+    const cone2 = new THREE.Mesh( rewindGeometry, labelMaterial );
+    cone2.position.set(-25, -10, 121);
+    cone2.rotateX(-Math.PI/2);
+    cone2.rotateZ(Math.PI/2);
+    cone2.name = 'reset';
+    boombox.add(cone2);
+    const resetPlaneGeometry = new THREE.PlaneBufferGeometry(24, 5);
+    const resetBar = new THREE.Mesh(resetPlaneGeometry, labelMaterial);
+    resetBar.position.set(-33, -10, 121);
+    resetBar.rotateZ(Math.PI/2);
+    resetBar.name = 'reset';
+    boombox.add(resetBar);
+
     this.muteButton = new THREE.Mesh(
       playButtonGeometry,
       muteButtonMaterial
@@ -240,10 +281,35 @@ class BoomBlock {
     this.muteButton.position.set(60, -10, 110);
     this.muteButton.rotation.x = Math.PI/2;
 
+
+    const cone3 = new THREE.Mesh( coneGeometry, labelMaterial );
+    cone3.position.set(51, -10, 121);
+    cone3.rotateX(-Math.PI/2);
+    cone3.rotateZ(Math.PI/2);
+    cone3.name = 'mute';
+    boombox.add(cone3);
+    const mutePlaneGeometry = new THREE.PlaneBufferGeometry(14, 14);
+    const mutePlane = new THREE.Mesh(mutePlaneGeometry, labelMaterial);
+    mutePlane.position.set(44, -10, 121);
+    mutePlane.name = 'mute';
+    boombox.add(mutePlane);
+    const mutePlane2Geometry = new THREE.PlaneBufferGeometry(16, 3);
+    const mutePlaneX1 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+    mutePlaneX1.position.set(70, -10, 121);
+    mutePlaneX1.rotateZ(Math.PI/4);
+    mutePlaneX1.name = 'mute';
+    boombox.add(mutePlaneX1);
+    const mutePlaneX2 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+    mutePlaneX2.position.set(70, -10, 121);
+    mutePlaneX2.rotateZ(-Math.PI/4);
+    mutePlaneX2.name = 'mute';
+    boombox.add(mutePlaneX2);
+
+
     this.playButton.name = 'play';
     this.pauseButton.name = 'pause';
     this.resetButton.name = 'reset';
-    this.muteButton.name = 'mute';
+    this.muteButton.name = 'muteButton';
 
     const playLight = new THREE.PointLight( 0x66ff66, 0.7, 0, 2 );
     playLight.position.set(-180, -10, 150);

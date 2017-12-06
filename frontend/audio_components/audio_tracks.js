@@ -18,6 +18,9 @@ class AudioTracks {
     this.melodySource = undefined;
     this.melodyGain = undefined;
     this.melodyAnalyser = undefined;
+    this.melodyBufferLength = undefined;
+    // length: 128
+    this.melodyDataArray = undefined;
 
     this.samplesSource = undefined;
     this.samplesGain = undefined;
@@ -107,6 +110,10 @@ class AudioTracks {
         this[`${type}Source`] = sourceNode;
         this[`${type}Gain`] = gainNode;
         this[`${type}Analyser`] = analyserNode;
+        this[`${type}Analyser`].fftSize = 2048;
+        this[`${type}BufferLength`] = this[`${type}Analyser`].frequencyBinCount;
+        // length: 128
+        this[`${type}DataArray`] = new Float32Array(this[`${type}BufferLength`]);
         console.log(`loaded ${type}`);
         this.loaded += 0.25;
       }

@@ -5,8 +5,7 @@ import Floor from './three_components/floor';
 import BoomBlock from './three_components/boomblock';
 import TrainTrack from './three_components/traintrack';
 import AudioTracks from './audio_components/audio_tracks';
-
-
+import Buildings from './three_components/buildings';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -19,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const floor = new Floor(world.scene);
   const boomblock = new BoomBlock(world.scene);
   const traintrack = new TrainTrack(world.scene);
+  const buildings = new Buildings(world.scene);
   window.world = world;
 
   const handleClick = () => {
@@ -26,6 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
     if (clickElement) switch(clickElement.object.name) {
       case 'play':
+        const beatOffset = audio.pausedAt ? (2935 - ((audio.pausedAt) % 2935)) : 0;
+        console.log(beatOffset); //this is the coolest thing ever
+        window.setTimeout(() => {
+          world.resetMelodyStack();
+          world.melodyIntervalId = window.setInterval(() => {
+            world.resetMelodyStack();
+          }, 2935);
+        }, beatOffset);
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           audio.start();
@@ -36,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
           audio.masterGain.gain.value = 0;
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
+          window.clearInterval(world.melodyIntervalId);
           audio.reload();
           loadCheck();
         }
@@ -110,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const handleMove = () => {
     const worldEl = document.getElementById('world');
     const hoverElement = world.intersects[0];
-    if (['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
+    if (hoverElement && [
+      'mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'
+    ].includes(hoverElement.object.name)) {
       worldEl.classList.add('world-click');
     } else {
       worldEl.classList.remove('world-click');

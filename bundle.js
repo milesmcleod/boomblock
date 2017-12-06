@@ -45156,9 +45156,12 @@ var _audio_tracks = __webpack_require__(8);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
+var _buildings = __webpack_require__(9);
+
+var _buildings2 = _interopRequireDefault(_buildings);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -45170,6 +45173,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var floor = new _floor2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
   var traintrack = new _traintrack2.default(world.scene);
+  var buildings = new _buildings2.default(world.scene);
   window.world = world;
 
   var handleClick = function handleClick() {
@@ -45179,6 +45183,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })[0];
     if (clickElement) switch (clickElement.object.name) {
       case 'play':
+        var beatOffset = audio.pausedAt ? 2935 - audio.pausedAt % 2935 : 0;
+        console.log(beatOffset); //this is the coolest thing ever
+        window.setTimeout(function () {
+          world.resetMelodyStack();
+          world.melodyIntervalId = window.setInterval(function () {
+            world.resetMelodyStack();
+          }, 2935);
+        }, beatOffset);
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           audio.start();
@@ -45189,6 +45201,7 @@ document.addEventListener('DOMContentLoaded', function () {
           audio.masterGain.gain.value = 0;
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
+          window.clearInterval(world.melodyIntervalId);
           audio.reload();
           loadCheck();
         }
@@ -45265,7 +45278,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var handleMove = function handleMove() {
     var worldEl = document.getElementById('world');
     var hoverElement = world.intersects[0];
-    if (['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
+    if (hoverElement && ['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
       worldEl.classList.add('world-click');
     } else {
       worldEl.classList.remove('world-click');
@@ -45286,7 +45299,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadCheck();
 
   world.loop(audio);
-});
+}); // entry.jsx
 
 /***/ }),
 /* 2 */
@@ -45326,6 +45339,9 @@ var World = function () {
       this.aspectRatio = this.width / this.height;
       this.nearPlane = 1;
       this.farPlane = 20000;
+      this.melodyStackY = -130;
+      this.melodyStackwidth = 300;
+      this.melodyStackDepth = 200;
     }
   }, {
     key: 'createCamera',
@@ -45426,6 +45442,54 @@ var World = function () {
           el.rotateZ(0.5);
         }
       }); //rotateOnAxis function
+
+      //log melody peaks
+      audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
+      var peak = -10000;
+      var peakIdx = 0;
+      for (var _i = 0; _i < audio.melodyDataArray.length; _i++) {
+        if (audio.melodyDataArray[_i] > peak) {
+          peak = audio.melodyDataArray[_i];
+          peakIdx = _i;
+        }
+      }
+      if (peakIdx > 1 &&
+      // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
+      peakIdx !== audio.oldMelodyPeakFreq) {
+        // console.log(`${peakIdx}, ${peak}`);
+        // console.log(audio.melodyDataArray);
+        this.melodyStack(peakIdx, peak);
+        audio.oldMelodyPeakFreq = peakIdx;
+      }
+    }
+  }, {
+    key: 'melodyStack',
+    value: function melodyStack(peakIdx, peak) {
+      var geometry = new THREE.BoxBufferGeometry(this.melodyStackwidth, 80, this.melodyStackDepth);
+      var material = new THREE.MeshPhongMaterial({
+        color: 0x343434
+      });
+      var melodyBlock = new THREE.Mesh(geometry, material);
+      melodyBlock.name = 'melodyBlock';
+      melodyBlock.position.set(550, this.melodyStackY, 0);
+      this.scene.add(melodyBlock);
+      this.melodyStackY += 80;
+      this.melodyStackwidth -= 30;
+      this.melodyStackDepth -= 30;
+    }
+  }, {
+    key: 'resetMelodyStack',
+    value: function resetMelodyStack() {
+      var _this = this;
+
+      this.melodyStackY = -130;
+      this.melodyStackwidth = 300;
+      this.melodyStackDepth = 200;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'melodyBlock';
+      }).forEach(function (el) {
+        return _this.scene.remove(el);
+      });
     }
   }, {
     key: 'render',
@@ -45435,10 +45499,10 @@ var World = function () {
   }, {
     key: 'loop',
     value: function loop(audio) {
-      var _this = this;
+      var _this2 = this;
 
       requestAnimationFrame(function () {
-        return _this.loop(audio);
+        return _this2.loop(audio);
       });
       this.update(audio);
       this.render();
@@ -47065,6 +47129,9 @@ var AudioTracks = function () {
     this.melodySource = undefined;
     this.melodyGain = undefined;
     this.melodyAnalyser = undefined;
+    this.melodyBufferLength = undefined;
+    // length: 128
+    this.melodyDataArray = undefined;
 
     this.samplesSource = undefined;
     this.samplesGain = undefined;
@@ -47143,6 +47210,10 @@ var AudioTracks = function () {
         _this2[type + "Source"] = sourceNode;
         _this2[type + "Gain"] = gainNode;
         _this2[type + "Analyser"] = analyserNode;
+        _this2[type + "Analyser"].fftSize = 2048;
+        _this2[type + "BufferLength"] = _this2[type + "Analyser"].frequencyBinCount;
+        // length: 128
+        _this2[type + "DataArray"] = new Float32Array(_this2[type + "BufferLength"]);
         console.log("loaded " + type);
         _this2.loaded += 0.25;
       });
@@ -47199,6 +47270,100 @@ var AudioTracks = function () {
 }();
 
 exports.default = AudioTracks;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Buildings = function () {
+  _createClass(Buildings, [{
+    key: 'create1',
+    value: function create1(scene) {
+      var building1Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
+      var building1Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building1 = new THREE.Mesh(building1Geometry, building1Material);
+      building1.position.set(-1050, -100, 0);
+      building1.castShadow = true;
+      building1.receiveShadow = true;
+      scene.add(building1);
+    }
+  }, {
+    key: 'create2',
+    value: function create2(scene) {
+      var building2Geometry = new THREE.BoxBufferGeometry(320, 2000, 200);
+      var building2Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building2 = new THREE.Mesh(building2Geometry, building2Material);
+      building2.position.set(-550, -50, 0);
+      building2.castShadow = true;
+      building2.receiveShadow = true;
+      scene.add(building2);
+    }
+  }, {
+    key: 'tower3',
+    value: function tower3(scene) {
+      var building3Geometry = new THREE.BoxBufferGeometry(400, 20, 300);
+      var building3Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building3 = new THREE.Mesh(building3Geometry, building3Material);
+      building3.position.set(550, -180, 0);
+      building3.castShadow = true;
+      building3.receiveShadow = true;
+      scene.add(building3);
+    }
+  }, {
+    key: 'create4',
+    value: function create4(scene) {
+      var building4Geometry = new THREE.BoxBufferGeometry(320, 1600, 200);
+      var building4Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building4 = new THREE.Mesh(building4Geometry, building4Material);
+      building4.position.set(1050, -50, 0);
+      building4.castShadow = true;
+      building4.receiveShadow = true;
+      scene.add(building4);
+    }
+  }]);
+
+  function Buildings(scene) {
+    _classCallCheck(this, Buildings);
+
+    this.create1(scene);
+    this.create2(scene);
+    this.tower3(scene);
+    this.create4(scene);
+  }
+
+  return Buildings;
+}();
+
+exports.default = Buildings;
 
 /***/ })
 /******/ ]);

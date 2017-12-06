@@ -10,6 +10,9 @@ class World {
     this.aspectRatio = this.width/this.height;
     this.nearPlane = 1;
     this.farPlane = 20000;
+    this.melodyStackY = -130;
+    this.melodyStackwidth = 300;
+    this.melodyStackDepth = 200;
   }
 
   createCamera() {
@@ -99,6 +102,58 @@ class World {
       }
     }); //rotateOnAxis function
 
+    //log melody peaks
+    audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
+    let peak = -10000;
+    let peakIdx = 0;
+    for (let i = 0; i < audio.melodyDataArray.length; i++) {
+      if (audio.melodyDataArray[i] > peak) {
+        peak = audio.melodyDataArray[i];
+        peakIdx = i;
+      }
+    }
+    if (
+      peakIdx > 1 &&
+      // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
+      peakIdx !== audio.oldMelodyPeakFreq
+    ) {
+      // console.log(`${peakIdx}, ${peak}`);
+      // console.log(audio.melodyDataArray);
+      this.melodyStack(peakIdx, peak);
+      audio.oldMelodyPeakFreq = peakIdx;
+
+
+
+    }
+
+
+  }
+
+  melodyStack(peakIdx, peak) {
+    const geometry = new THREE.BoxBufferGeometry(
+      this.melodyStackwidth,
+      80,
+      this.melodyStackDepth
+    );
+    const material = new THREE.MeshPhongMaterial({
+      color: 0x343434
+    });
+    const melodyBlock = new THREE.Mesh(geometry, material);
+    melodyBlock.name = 'melodyBlock';
+    melodyBlock.position.set(550, this.melodyStackY, 0);
+    this.scene.add(melodyBlock);
+    this.melodyStackY += 80;
+    this.melodyStackwidth -= 30;
+    this.melodyStackDepth -= 30;
+  }
+
+  resetMelodyStack() {
+    this.melodyStackY = -130;
+    this.melodyStackwidth = 300;
+    this.melodyStackDepth = 200;
+    this.scene.children.filter(obj => (
+      obj.name === 'melodyBlock'
+    )).forEach(el => this.scene.remove(el));
   }
 
   render () {

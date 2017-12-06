@@ -29,7 +29,7 @@ class BoomBlock {
   createReels(scene) {
     const reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
     const reelMaterial = new THREE.MeshPhongMaterial({
-      color: 0xcccccc,
+      color: 0x000000,
       side: THREE.DoubleSide
     });
 
@@ -100,11 +100,37 @@ class BoomBlock {
     this.rightReel.add(spokeR3);
     this.rightReel.add(frontRightRing);
     this.rightReel.add(backRightRing);
-    this.rightReel.position.set(70, 200, 122);
+    this.rightReel.position.set(80, 200, 122);
 
     this.rightReel.name = 'reelRight';
 
     scene.add(this.rightReel);
+  }
+
+  createTape(boombox) {
+    const tapeGeometry = new THREE.PlaneGeometry(154, 80);
+    const tapeMaterial = new THREE.MeshPhongMaterial({
+      color: 0x000000,
+      side: THREE.DoubleSide
+    });
+    const tapeLeft = new THREE.Mesh(tapeGeometry, tapeMaterial);
+    tapeLeft.position.set(-120, 108, 100);
+    tapeLeft.rotation.x = Math.PI/2;
+    tapeLeft.rotation.y = -Math.PI/3.60;
+    const tapeRight = new THREE.Mesh(tapeGeometry, tapeMaterial);
+    tapeRight.position.set(80, 108, 100);
+    tapeRight.rotation.x = Math.PI/2;
+    tapeRight.rotation.y = Math.PI/3.60;
+
+    const tapeBottomGeometry = new THREE.PlaneGeometry(101, 80);
+    const tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
+    tapeBottom.position.set(-20, 49, 100);
+    tapeBottom.rotation.x = Math.PI/2;
+
+    boombox.add(tapeLeft);
+    boombox.add(tapeRight);
+    boombox.add(tapeBottom);
+
   }
 
   createTrackButtons(boombox) {
@@ -218,6 +244,14 @@ class BoomBlock {
   }
 
   createFrequencyVisualizer(boombox) {
+    const freqBottomGeometry = new THREE.BoxGeometry(310, 15, 25);
+    const freqBottomMaterial = new THREE.MeshPhongMaterial({
+      color: 0x7F00FF,
+      side: THREE.DoubleSide
+    });
+    const bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
+    bottomBar.position.set(-58, -155, 110);
+    boombox.add(bottomBar);
     for (let i = 1; i < 13; i++ ) {
       const freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
       const freqBarMaterial = new THREE.MeshPhongMaterial({
@@ -238,6 +272,7 @@ class BoomBlock {
     this.boombox = new THREE.Group();
     this.createBase(this.boombox);
     this.createReels(scene);
+    this.createTape(this.boombox);
     this.createTrackButtons(this.boombox);
     this.createPlayButtons(this.boombox);
     this.createFrequencyVisualizer(this.boombox);

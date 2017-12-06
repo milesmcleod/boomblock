@@ -78,12 +78,14 @@ class World {
     audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
     const bars = boomBlockObject.children.filter(obj => obj.name.match('bar'));
     for (let i = 0; i < bars.length; i++ ) {
+      if(!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
+      const height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
+      //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
+      bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
       if (audio.masterDataArray[i]) {
         bars[i].scale.y = audio.masterDataArray[i]/300;
-        if(!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
-        const height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
-        //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
-        bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
+      } else {
+        bars[i].scale.y = 0;
       }
     }
     //

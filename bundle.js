@@ -45406,12 +45406,14 @@ var World = function () {
         return obj.name.match('bar');
       });
       for (var i = 0; i < bars.length; i++) {
+        if (!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
+        var height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
+        //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
+        bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
         if (audio.masterDataArray[i]) {
           bars[i].scale.y = audio.masterDataArray[i] / 300;
-          if (!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
-          var height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
-          //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
-          bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
+        } else {
+          bars[i].scale.y = 0;
         }
       }
       //
@@ -46651,7 +46653,7 @@ var BoomBlock = function () {
     value: function createReels(scene) {
       var reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
       var reelMaterial = new THREE.MeshPhongMaterial({
-        color: 0xcccccc,
+        color: 0x000000,
         side: THREE.DoubleSide
       });
 
@@ -46722,11 +46724,37 @@ var BoomBlock = function () {
       this.rightReel.add(spokeR3);
       this.rightReel.add(frontRightRing);
       this.rightReel.add(backRightRing);
-      this.rightReel.position.set(70, 200, 122);
+      this.rightReel.position.set(80, 200, 122);
 
       this.rightReel.name = 'reelRight';
 
       scene.add(this.rightReel);
+    }
+  }, {
+    key: 'createTape',
+    value: function createTape(boombox) {
+      var tapeGeometry = new THREE.PlaneGeometry(154, 80);
+      var tapeMaterial = new THREE.MeshPhongMaterial({
+        color: 0x000000,
+        side: THREE.DoubleSide
+      });
+      var tapeLeft = new THREE.Mesh(tapeGeometry, tapeMaterial);
+      tapeLeft.position.set(-120, 108, 100);
+      tapeLeft.rotation.x = Math.PI / 2;
+      tapeLeft.rotation.y = -Math.PI / 3.60;
+      var tapeRight = new THREE.Mesh(tapeGeometry, tapeMaterial);
+      tapeRight.position.set(80, 108, 100);
+      tapeRight.rotation.x = Math.PI / 2;
+      tapeRight.rotation.y = Math.PI / 3.60;
+
+      var tapeBottomGeometry = new THREE.PlaneGeometry(101, 80);
+      var tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
+      tapeBottom.position.set(-20, 49, 100);
+      tapeBottom.rotation.x = Math.PI / 2;
+
+      boombox.add(tapeLeft);
+      boombox.add(tapeRight);
+      boombox.add(tapeBottom);
     }
   }, {
     key: 'createTrackButtons',
@@ -46819,6 +46847,14 @@ var BoomBlock = function () {
   }, {
     key: 'createFrequencyVisualizer',
     value: function createFrequencyVisualizer(boombox) {
+      var freqBottomGeometry = new THREE.BoxGeometry(310, 15, 25);
+      var freqBottomMaterial = new THREE.MeshPhongMaterial({
+        color: 0x7F00FF,
+        side: THREE.DoubleSide
+      });
+      var bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
+      bottomBar.position.set(-58, -155, 110);
+      boombox.add(bottomBar);
       for (var i = 1; i < 13; i++) {
         var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
         var freqBarMaterial = new THREE.MeshPhongMaterial({
@@ -46839,6 +46875,7 @@ var BoomBlock = function () {
     this.boombox = new THREE.Group();
     this.createBase(this.boombox);
     this.createReels(scene);
+    this.createTape(this.boombox);
     this.createTrackButtons(this.boombox);
     this.createPlayButtons(this.boombox);
     this.createFrequencyVisualizer(this.boombox);

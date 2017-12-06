@@ -6,6 +6,8 @@ import BoomBlock from './three_components/boomblock';
 import TrainTrack from './three_components/traintrack';
 import AudioTracks from './audio_components/audio_tracks';
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const audio = new AudioTracks();
@@ -26,24 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(obj => (
-            obj.name === 'pause'
-          ))[0].material.color.set(0xffffff);
-          audio.start();
-          boomBlockObject.children.filter(obj => (
-            obj.name === 'reset'
-          ))[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0x00ff00);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'pause'
+          // ))[0].material.color.set(0xff0000);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'reset'
+          // ))[0].material.color.set(0xffff00);
           audio.start();
         }
         break;
       case 'pause':
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(obj => (
-            obj.name === 'play'
-          ))[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0x00ffff);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'play'
+          // ))[0].material.color.set(0x66ff66);
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           audio.reload();
@@ -54,13 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           audio.stop();
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(obj => (
-            obj.name === 'pause'
-          ))[0].material.color.set(0xffffff);
-          boomBlockObject.children.filter(obj => (
-            obj.name === 'play'
-          ))[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0xffff00);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'pause'
+          // ))[0].material.color.set(0xff0000);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'play'
+          // ))[0].material.color.set(0x66ff66);
         }
         audio.masterGain.gain.value = 1;
         window.removeEventListener('mouseup', handleClick, false);
@@ -73,10 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'mute':
         if (audio.masterGain.gain.value) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x00ffff);
         } else {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x0000ff);
         }
         break;
       case 'track1':
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.drumsGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track2':
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.bassGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track3':
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.melodyGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track4':
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.samplesGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
     }

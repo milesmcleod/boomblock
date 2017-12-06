@@ -45181,24 +45181,23 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'pause';
-          })[0].material.color.set(0xffffff);
-          audio.start();
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'reset';
-          })[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0x00ff00);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'pause'
+          // ))[0].material.color.set(0xff0000);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'reset'
+          // ))[0].material.color.set(0xffff00);
           audio.start();
         }
         break;
       case 'pause':
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'play';
-          })[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0x00ffff);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'play'
+          // ))[0].material.color.set(0x66ff66);
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
           audio.reload();
@@ -45209,13 +45208,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           audio.stop();
-          clickElement.object.material.color.set(0x000000);
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'pause';
-          })[0].material.color.set(0xffffff);
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'play';
-          })[0].material.color.set(0xffffff);
+          // clickElement.object.material.color.set(0xffff00);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'pause'
+          // ))[0].material.color.set(0xff0000);
+          // boomBlockObject.children.filter(obj => (
+          //   obj.name === 'play'
+          // ))[0].material.color.set(0x66ff66);
         }
         audio.masterGain.gain.value = 1;
         window.removeEventListener('mouseup', handleClick, false);
@@ -45230,10 +45229,10 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'mute':
         if (audio.masterGain.gain.value) {
           audio.masterGain.gain.value = 0;
-          clickElement.object.material.color.set(0x000000);
+          clickElement.object.material.color.set(0x00ffff);
         } else {
           audio.masterGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x0000ff);
         }
         break;
       case 'track1':
@@ -45242,7 +45241,7 @@ document.addEventListener('DOMContentLoaded', function () {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.drumsGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track2':
@@ -45251,7 +45250,7 @@ document.addEventListener('DOMContentLoaded', function () {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.bassGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track3':
@@ -45260,7 +45259,7 @@ document.addEventListener('DOMContentLoaded', function () {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.melodyGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
       case 'track4':
@@ -45269,7 +45268,7 @@ document.addEventListener('DOMContentLoaded', function () {
           clickElement.object.material.color.set(0x000000);
         } else {
           audio.samplesGain.gain.value = 1;
-          clickElement.object.material.color.set(0xffffff);
+          clickElement.object.material.color.set(0x00ffff);
         }
         break;
     }
@@ -45409,11 +45408,12 @@ var World = function () {
         if (!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
         var height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
         //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
-        bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
-        if (audio.masterDataArray[i]) {
+        bars[i].position.y = -150;
+        if (audio.masterDataArray[i] > 0) {
+          bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
           bars[i].scale.y = audio.masterDataArray[i] / 300;
         } else {
-          bars[i].scale.y = 0;
+          bars[i].scale.y = 0.00001;
         }
       }
       //
@@ -46534,7 +46534,7 @@ var Lighting = function () {
   }, {
     key: 'createSpotLight',
     value: function createSpotLight(scene) {
-      this.spotLight = new THREE.SpotLight(0xffffff, 2);
+      this.spotLight = new THREE.SpotLight(0xffffff, 0.8);
       this.spotLight.position.set(200, 500, 500);
       this.spotLight.castShadow = true;
       this.spotLight.shadow.mapSize.width = 1024;
@@ -46584,7 +46584,7 @@ var Floor = function () {
   _createClass(Floor, [{
     key: 'createFloor',
     value: function createFloor(scene) {
-      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0xcccccc }));
+      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0x000000 }));
       this.floor.rotation.x = -Math.PI / 2;
       this.floor.position.y = -180;
       this.floor.receiveShadow = true;
@@ -46628,9 +46628,9 @@ var BoomBlock = function () {
   _createClass(BoomBlock, [{
     key: 'createBase',
     value: function createBase(boombox) {
-      var baseGeometry = new THREE.BoxGeometry(480, 360, 200);
+      var baseGeometry = new THREE.BoxBufferGeometry(480, 360, 200);
       var baseMaterial = new THREE.MeshPhongMaterial({
-        color: 0x7F00FF,
+        color: 0x343434,
         side: THREE.DoubleSide
       });
       this.base = new THREE.Mesh(baseGeometry, baseMaterial);
@@ -46638,7 +46638,7 @@ var BoomBlock = function () {
       this.base.receiveShadow = true;
       boombox.add(this.base);
 
-      var tapeReaderGeometry = new THREE.BoxGeometry(100, 40, 60);
+      var tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
       var tapeReaderMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
@@ -46657,14 +46657,14 @@ var BoomBlock = function () {
         side: THREE.DoubleSide
       });
 
-      var spokeGeometry = new THREE.BoxGeometry(12, 50, 1);
-      var spokeMaterial = new THREE.MeshBasicMaterial({
+      var spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
+      var spokeMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
       });
 
       var ringGeometry = new THREE.RingGeometry(50, 70, 32);
-      var ringMaterial = new THREE.MeshBasicMaterial({
+      var ringMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
       });
@@ -46733,7 +46733,7 @@ var BoomBlock = function () {
   }, {
     key: 'createTape',
     value: function createTape(boombox) {
-      var tapeGeometry = new THREE.PlaneGeometry(154, 80);
+      var tapeGeometry = new THREE.PlaneBufferGeometry(154, 80);
       var tapeMaterial = new THREE.MeshPhongMaterial({
         color: 0x000000,
         side: THREE.DoubleSide
@@ -46747,7 +46747,7 @@ var BoomBlock = function () {
       tapeRight.rotation.x = Math.PI / 2;
       tapeRight.rotation.y = Math.PI / 3.60;
 
-      var tapeBottomGeometry = new THREE.PlaneGeometry(101, 80);
+      var tapeBottomGeometry = new THREE.PlaneBufferGeometry(101, 80);
       var tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
       tapeBottom.position.set(-20, 49, 100);
       tapeBottom.rotation.x = Math.PI / 2;
@@ -46759,21 +46759,21 @@ var BoomBlock = function () {
   }, {
     key: 'createTrackButtons',
     value: function createTrackButtons(boombox) {
-      var trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
-      var trackButtonMaterial1 = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var trackButtonGeometry = new THREE.BoxBufferGeometry(50, 50, 20);
+      var trackButtonMaterial1 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
         side: THREE.DoubleSide
       });
-      var trackButtonMaterial2 = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var trackButtonMaterial2 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
         side: THREE.DoubleSide
       });
-      var trackButtonMaterial3 = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var trackButtonMaterial3 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
         side: THREE.DoubleSide
       });
-      var trackButtonMaterial4 = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var trackButtonMaterial4 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
         side: THREE.DoubleSide
       });
       this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial1);
@@ -46786,6 +46786,14 @@ var BoomBlock = function () {
       this.trackButton2.position.set(175, 30, 110);
       this.trackButton3.position.set(175, -40, 110);
       this.trackButton4.position.set(175, -110, 110);
+
+      var light = new THREE.PointLight(0x00ffff, 0.6, 0, 2);
+      light.position.set(175, 0, 110);
+      light.castShadow = true;
+      light.shadow.mapSize.width = 1024;
+      light.shadow.mapSize.height = 1024;
+      light.shadow.camera.far = 2000;
+      boombox.add(light);
 
       this.trackButton1.name = 'track1';
       this.trackButton2.name = 'track2';
@@ -46801,20 +46809,20 @@ var BoomBlock = function () {
     key: 'createPlayButtons',
     value: function createPlayButtons(boombox) {
       var playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
-      var playButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var playButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0x66ff66,
         side: THREE.DoubleSide
       });
-      var pauseButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var pauseButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
         side: THREE.DoubleSide
       });
-      var resetButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var resetButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
         side: THREE.DoubleSide
       });
-      var muteButtonMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      var muteButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0x0000ff,
         side: THREE.DoubleSide
       });
 
@@ -46839,6 +46847,23 @@ var BoomBlock = function () {
       this.resetButton.name = 'reset';
       this.muteButton.name = 'mute';
 
+      var playLight = new THREE.PointLight(0x66ff66, 0.7, 0, 2);
+      playLight.position.set(-180, -10, 150);
+      var pauseLight = new THREE.PointLight(0xff0000, 0.7, 0, 2);
+      pauseLight.position.set(-100, -10, 150);
+      var resetLight = new THREE.PointLight(0xffff00, 0.7, 0, 2);
+      resetLight.position.set(-20, -10, 150);
+      var muteLight = new THREE.PointLight(0x0000ff, 0.7, 0, 2);
+      muteLight.position.set(60, -10, 150);
+
+      [playLight, pauseLight, resetLight, muteLight].forEach(function (light) {
+        light.castShadow = true;
+        light.shadow.mapSize.width = 1024;
+        light.shadow.mapSize.height = 1024;
+        light.shadow.camera.far = 2000;
+        boombox.add(light);
+      });
+
       boombox.add(this.playButton);
       boombox.add(this.pauseButton);
       boombox.add(this.resetButton);
@@ -46847,18 +46872,22 @@ var BoomBlock = function () {
   }, {
     key: 'createFrequencyVisualizer',
     value: function createFrequencyVisualizer(boombox) {
-      var freqBottomGeometry = new THREE.BoxGeometry(310, 15, 25);
+      var freqBottomGeometry = new THREE.BoxBufferGeometry(310, 15, 25);
       var freqBottomMaterial = new THREE.MeshPhongMaterial({
-        color: 0x7F00FF,
+        color: 0x343434,
         side: THREE.DoubleSide
       });
       var bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
       bottomBar.position.set(-58, -155, 110);
       boombox.add(bottomBar);
+
+      var rainbowBarColors = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+
       for (var i = 1; i < 13; i++) {
-        var freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
-        var freqBarMaterial = new THREE.MeshPhongMaterial({
-          color: 0xfffff,
+        var color = 0x00ffff;
+        var freqBarGeometry = new THREE.BoxBufferGeometry(20, 90, 20);
+        var freqBarMaterial = new THREE.MeshBasicMaterial({
+          color: color,
           side: THREE.DoubleSide
         });
         this['bar' + i] = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
@@ -46913,13 +46942,14 @@ var TrainTrack = function () {
   _createClass(TrainTrack, [{
     key: 'createTrack',
     value: function createTrack(scene) {
-      var trackGeometry = new THREE.BoxGeometry(10000, 50, 200);
+      var trackGeometry = new THREE.BoxBufferGeometry(10000, 50, 200);
       var trackMaterial = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
       });
       this.trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
       this.trainTrack.position.set(0, 100, -300);
+      this.trainTrack.receiveShadow = true;
       scene.add(this.trainTrack);
     }
   }]);

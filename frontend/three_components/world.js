@@ -81,11 +81,12 @@ class World {
       if(!bars[i].geometry.boundingBox) bars[i].geometry.computeBoundingBox();
       const height = bars[i].geometry.boundingBox.max.y - bars[i].geometry.boundingBox.min.y;
       //from https://stackoverflow.com/questions/33454919/scaling-a-three-js-geometry-only-up
-      bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
-      if (audio.masterDataArray[i]) {
+      bars[i].position.y = -150 ;
+      if (audio.masterDataArray[i] > 0) {
+        bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
         bars[i].scale.y = audio.masterDataArray[i]/300;
       } else {
-        bars[i].scale.y = 0;
+        bars[i].scale.y = 0.00001;
       }
     }
     //

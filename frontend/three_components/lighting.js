@@ -7,7 +7,7 @@ class Lighting {
   }
 
   createSpotLight(scene) {
-    this.spotLight = new THREE.SpotLight( 0xffffff, 2 );
+    this.spotLight = new THREE.SpotLight( 0xffffff, 0.8 );
     this.spotLight.position.set( 200, 500, 500 );
     this.spotLight.castShadow = true;
     this.spotLight.shadow.mapSize.width = 1024;

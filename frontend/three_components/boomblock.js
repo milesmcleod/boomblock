@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 class BoomBlock {
   createBase(boombox) {
-    const baseGeometry = new THREE.BoxGeometry(480, 360, 200);
+    const baseGeometry = new THREE.BoxBufferGeometry(480, 360, 200);
     const baseMaterial = new THREE.MeshPhongMaterial({
-      color: 0x7F00FF,
+      color: 0x343434,
       side: THREE.DoubleSide
     });
     this.base = new THREE.Mesh(baseGeometry, baseMaterial);
@@ -12,7 +12,7 @@ class BoomBlock {
     this.base.receiveShadow = true;
     boombox.add(this.base);
 
-    const tapeReaderGeometry = new THREE.BoxGeometry(100, 40, 60);
+    const tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
     const tapeReaderMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide
@@ -33,14 +33,14 @@ class BoomBlock {
       side: THREE.DoubleSide
     });
 
-    const spokeGeometry = new THREE.BoxGeometry(12, 50, 1);
-    const spokeMaterial = new THREE.MeshBasicMaterial({
+    const spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
+    const spokeMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide
     });
 
     const ringGeometry = new THREE.RingGeometry( 50, 70, 32 );
-    const ringMaterial = new THREE.MeshBasicMaterial({
+    const ringMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide
     });
@@ -108,7 +108,7 @@ class BoomBlock {
   }
 
   createTape(boombox) {
-    const tapeGeometry = new THREE.PlaneGeometry(154, 80);
+    const tapeGeometry = new THREE.PlaneBufferGeometry(154, 80);
     const tapeMaterial = new THREE.MeshPhongMaterial({
       color: 0x000000,
       side: THREE.DoubleSide
@@ -122,7 +122,7 @@ class BoomBlock {
     tapeRight.rotation.x = Math.PI/2;
     tapeRight.rotation.y = Math.PI/3.60;
 
-    const tapeBottomGeometry = new THREE.PlaneGeometry(101, 80);
+    const tapeBottomGeometry = new THREE.PlaneBufferGeometry(101, 80);
     const tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
     tapeBottom.position.set(-20, 49, 100);
     tapeBottom.rotation.x = Math.PI/2;
@@ -134,21 +134,21 @@ class BoomBlock {
   }
 
   createTrackButtons(boombox) {
-    const trackButtonGeometry = new THREE.BoxGeometry(50, 50, 20);
-    const trackButtonMaterial1 = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const trackButtonGeometry = new THREE.BoxBufferGeometry(50, 50, 20);
+    const trackButtonMaterial1 = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
       side: THREE.DoubleSide
     });
-    const trackButtonMaterial2 = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const trackButtonMaterial2 = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
       side: THREE.DoubleSide
     });
-    const trackButtonMaterial3 = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const trackButtonMaterial3 = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
       side: THREE.DoubleSide
     });
-    const trackButtonMaterial4 = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const trackButtonMaterial4 = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
       side: THREE.DoubleSide
     });
     this.trackButton1 = new THREE.Mesh(
@@ -174,6 +174,14 @@ class BoomBlock {
     this.trackButton3.position.set(175, -40, 110);
     this.trackButton4.position.set(175, -110, 110);
 
+    const light = new THREE.PointLight( 0x00ffff, 0.6, 0, 2 );
+    light.position.set(175, 0, 110);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    light.shadow.camera.far = 2000;
+    boombox.add(light);
+
     this.trackButton1.name = 'track1';
     this.trackButton2.name = 'track2';
     this.trackButton3.name = 'track3';
@@ -187,20 +195,20 @@ class BoomBlock {
 
   createPlayButtons(boombox) {
     const playButtonGeometry = new THREE.CylinderGeometry(30, 30, 20, 32);
-    const playButtonMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const playButtonMaterial = new THREE.MeshBasicMaterial({
+      color: 0x66ff66,
       side: THREE.DoubleSide
     });
-    const pauseButtonMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const pauseButtonMaterial = new THREE.MeshBasicMaterial({
+      color: 0xff0000,
       side: THREE.DoubleSide
     });
-    const resetButtonMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const resetButtonMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffff00,
       side: THREE.DoubleSide
     });
-    const muteButtonMaterial = new THREE.MeshPhongMaterial({
-      color: 0xfffff,
+    const muteButtonMaterial = new THREE.MeshBasicMaterial({
+      color: 0x0000ff,
       side: THREE.DoubleSide
     });
 
@@ -237,6 +245,23 @@ class BoomBlock {
     this.resetButton.name = 'reset';
     this.muteButton.name = 'mute';
 
+    const playLight = new THREE.PointLight( 0x66ff66, 0.7, 0, 2 );
+    playLight.position.set(-180, -10, 150);
+    const pauseLight = new THREE.PointLight( 0xff0000, 0.7, 0, 2 );
+    pauseLight.position.set(-100, -10, 150);
+    const resetLight = new THREE.PointLight( 0xffff00, 0.7, 0, 2 );
+    resetLight.position.set(-20, -10, 150);
+    const muteLight = new THREE.PointLight( 0x0000ff, 0.7, 0, 2 );
+    muteLight.position.set(60, -10, 150);
+
+    [playLight, pauseLight, resetLight, muteLight].forEach(light => {
+      light.castShadow = true;
+      light.shadow.mapSize.width = 1024;
+      light.shadow.mapSize.height = 1024;
+      light.shadow.camera.far = 2000;
+      boombox.add(light);
+    });
+
     boombox.add(this.playButton);
     boombox.add(this.pauseButton);
     boombox.add(this.resetButton);
@@ -244,18 +269,35 @@ class BoomBlock {
   }
 
   createFrequencyVisualizer(boombox) {
-    const freqBottomGeometry = new THREE.BoxGeometry(310, 15, 25);
+    const freqBottomGeometry = new THREE.BoxBufferGeometry(310, 15, 25);
     const freqBottomMaterial = new THREE.MeshPhongMaterial({
-      color: 0x7F00FF,
+      color: 0x343434,
       side: THREE.DoubleSide
     });
     const bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
     bottomBar.position.set(-58, -155, 110);
     boombox.add(bottomBar);
+
+    const rainbowBarColors = [
+      0xcc0000,
+      0xff3300,
+      0xff9933,
+      0xffcc00,
+      0xffff00,
+      0x66ff33,
+      0x66ff66,
+      0x00ff99,
+      0x00ccff,
+      0x0066ff,
+      0x7f00ff,
+      0xff00ff
+    ];
+
     for (let i = 1; i < 13; i++ ) {
-      const freqBarGeometry = new THREE.BoxGeometry(20, 90, 20);
-      const freqBarMaterial = new THREE.MeshPhongMaterial({
-        color: 0xfffff,
+      const color = 0x00ffff;
+      const freqBarGeometry = new THREE.BoxBufferGeometry(20, 90, 20);
+      const freqBarMaterial = new THREE.MeshBasicMaterial({
+        color,
         side: THREE.DoubleSide
       });
       this[`bar${i}`] = new THREE.Mesh(

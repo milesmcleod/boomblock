@@ -45174,16 +45174,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var handleClick = function handleClick() {
     var clickElement = world.intersects[0];
+    var boomBlockObject = world.scene.children.filter(function (obj) {
+      return obj.name === 'boombox';
+    })[0];
     switch (clickElement.object.name) {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(function (obj) {
+          boomBlockObject.children.filter(function (obj) {
             return obj.name === 'pause';
           })[0].material.color.set(0xffffff);
           audio.start();
-          world.scene.children[3].children.filter(function (obj) {
+          boomBlockObject.children.filter(function (obj) {
             return obj.name === 'reset';
           })[0].material.color.set(0xffffff);
           audio.start();
@@ -45193,7 +45196,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(function (obj) {
+          boomBlockObject.children.filter(function (obj) {
             return obj.name === 'play';
           })[0].material.color.set(0xffffff);
           audio.stop();
@@ -45207,10 +45210,10 @@ document.addEventListener('DOMContentLoaded', function () {
           audio.masterGain.gain.value = 0;
           audio.stop();
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(function (obj) {
+          boomBlockObject.children.filter(function (obj) {
             return obj.name === 'pause';
           })[0].material.color.set(0xffffff);
-          world.scene.children[3].children.filter(function (obj) {
+          boomBlockObject.children.filter(function (obj) {
             return obj.name === 'play';
           })[0].material.color.set(0xffffff);
         }
@@ -45218,6 +45221,10 @@ document.addEventListener('DOMContentLoaded', function () {
         window.removeEventListener('mouseup', handleClick, false);
         audio.reload();
         audio.pausedAt = 0;
+        audio.resetting = 1;
+        window.setTimeout(function () {
+          audio.resetting = 0;
+        }, 400);
         loadCheck();
         break;
       case 'mute':
@@ -45389,9 +45396,13 @@ var World = function () {
     key: 'update',
     value: function update(audio) {
       this.raycaster.setFromCamera(this.mouse, this.camera);
-      this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
+      var boomBlockObject = this.scene.children.filter(function (obj) {
+        return obj.name === 'boombox';
+      })[0];
+      this.intersects = this.raycaster.intersectObjects(boomBlockObject.children);
+      //
       audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
-      var bars = this.scene.children[3].children.filter(function (obj) {
+      var bars = boomBlockObject.children.filter(function (obj) {
         return obj.name.match('bar');
       });
       for (var i = 0; i < bars.length; i++) {
@@ -45403,6 +45414,17 @@ var World = function () {
           bars[i].position.y = height * audio.masterDataArray[i] / 300 / 2 - 150;
         }
       }
+      //
+      var reels = this.scene.children.filter(function (obj) {
+        return obj.name.match("reel");
+      });
+      reels.forEach(function (el) {
+        if (audio.playing) {
+          el.rotateZ(-0.04);
+        } else if (audio.resetting) {
+          el.rotateZ(0.5);
+        }
+      }); //rotateOnAxis function
     }
   }, {
     key: 'render',
@@ -46626,7 +46648,7 @@ var BoomBlock = function () {
     }
   }, {
     key: 'createReels',
-    value: function createReels(boombox) {
+    value: function createReels(scene) {
       var reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
       var reelMaterial = new THREE.MeshPhongMaterial({
         color: 0xcccccc,
@@ -46646,24 +46668,21 @@ var BoomBlock = function () {
       });
 
       var reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelLeft.position.x = -140;
-      reelLeft.position.y = 160;
-      reelLeft.position.z = 120;
-      reelLeft.rotation.x = Math.PI / 2;
+      reelLeft.rotateX(Math.PI / 2);
 
       var spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL1.position.set(-140, 190, 140);
+      spokeL1.position.set(0, 32, 21);
       var spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL2.position.set(-114, 144, 140);
+      spokeL2.position.set(26, -12, 21);
       spokeL2.rotation.z = Math.PI / 3;
       var spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL3.position.set(-166, 144, 140);
+      spokeL3.position.set(-26, -12, 21);
       spokeL3.rotation.z = 2 * Math.PI / 3;
 
       var frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontLeftRing.position.set(-140, 160, 141);
+      frontLeftRing.position.set(0, 0, 21);
       var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backLeftRing.position.set(-140, 160, 99);
+      backLeftRing.position.set(0, 0, -21);
 
       this.leftReel = new THREE.Group();
       this.leftReel.add(reelLeft);
@@ -46672,31 +46691,29 @@ var BoomBlock = function () {
       this.leftReel.add(spokeL3);
       this.leftReel.add(frontLeftRing);
       this.leftReel.add(backLeftRing);
-      this.leftReel.position.y = 20;
-      this.leftReel.position.x = 40;
-      this.leftReel.position.z = 2;
+      this.leftReel.position.set(-120, 200, 122);
+      // this.leftReel.rotation.x = Math.PI/2;
 
-      boombox.add(this.leftReel);
+      this.leftReel.name = 'reelLeft';
+
+      scene.add(this.leftReel);
 
       var reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelRight.position.x = 25;
-      reelRight.position.y = 160;
-      reelRight.position.z = 120;
-      reelRight.rotation.x = Math.PI / 2;
+      reelRight.rotateX(Math.PI / 2);
 
       var spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR1.position.set(25, 190, 140);
+      spokeR1.position.set(0, 32, 21);
       var spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR2.position.set(51, 144, 140);
+      spokeR2.position.set(26, -12, 21);
       spokeR2.rotation.z = Math.PI / 3;
       var spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR3.position.set(-1, 144, 140);
+      spokeR3.position.set(-26, -12, 21);
       spokeR3.rotation.z = 2 * Math.PI / 3;
 
       var frontRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontRightRing.position.set(25, 160, 141);
+      frontRightRing.position.set(0, 0, 21);
       var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backRightRing.position.set(25, 160, 99);
+      backRightRing.position.set(0, 0, -21);
 
       this.rightReel = new THREE.Group();
       this.rightReel.add(reelRight);
@@ -46705,11 +46722,11 @@ var BoomBlock = function () {
       this.rightReel.add(spokeR3);
       this.rightReel.add(frontRightRing);
       this.rightReel.add(backRightRing);
-      this.rightReel.position.y = 20;
-      this.rightReel.position.x = 40;
-      this.rightReel.position.z = 2;
+      this.rightReel.position.set(70, 200, 122);
 
-      boombox.add(this.rightReel);
+      this.rightReel.name = 'reelRight';
+
+      scene.add(this.rightReel);
     }
   }, {
     key: 'createTrackButtons',
@@ -46821,10 +46838,11 @@ var BoomBlock = function () {
 
     this.boombox = new THREE.Group();
     this.createBase(this.boombox);
-    this.createReels(this.boombox);
+    this.createReels(scene);
     this.createTrackButtons(this.boombox);
     this.createPlayButtons(this.boombox);
     this.createFrequencyVisualizer(this.boombox);
+    this.boombox.name = 'boombox';
     scene.add(this.boombox);
   }
 

@@ -26,7 +26,7 @@ class BoomBlock {
     boombox.add(this.tapeReader);
   }
 
-  createReels(boombox) {
+  createReels(scene) {
     const reelGeometry = new THREE.CylinderGeometry(60, 60, 40, 32);
     const reelMaterial = new THREE.MeshPhongMaterial({
       color: 0xcccccc,
@@ -46,24 +46,21 @@ class BoomBlock {
     });
 
     const reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
-    reelLeft.position.x = -140;
-    reelLeft.position.y = 160;
-    reelLeft.position.z = 120;
-    reelLeft.rotation.x = Math.PI/2;
+    reelLeft.rotateX(Math.PI/2);
 
     const spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeL1.position.set( -140, 190, 140 );
+    spokeL1.position.set( 0, 32, 21 );
     const spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeL2.position.set( -114, 144, 140 );
+    spokeL2.position.set( 26, -12, 21 );
     spokeL2.rotation.z = Math.PI/3;
     const spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeL3.position.set( -166, 144, 140 );
+    spokeL3.position.set( -26, -12, 21 );
     spokeL3.rotation.z = 2 * Math.PI/3;
 
     const frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-    frontLeftRing.position.set(-140, 160, 141);
+    frontLeftRing.position.set(0, 0, 21);
     const backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-    backLeftRing.position.set(-140, 160, 99);
+    backLeftRing.position.set(0, 0, -21);
 
     this.leftReel = new THREE.Group();
     this.leftReel.add(reelLeft);
@@ -72,31 +69,29 @@ class BoomBlock {
     this.leftReel.add(spokeL3);
     this.leftReel.add(frontLeftRing);
     this.leftReel.add(backLeftRing);
-    this.leftReel.position.y = 20;
-    this.leftReel.position.x = 40;
-    this.leftReel.position.z = 2;
+    this.leftReel.position.set(-120, 200, 122);
+    // this.leftReel.rotation.x = Math.PI/2;
 
-    boombox.add(this.leftReel);
+    this.leftReel.name = 'reelLeft';
+
+    scene.add(this.leftReel);
 
     const reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
-    reelRight.position.x = 25;
-    reelRight.position.y = 160;
-    reelRight.position.z = 120;
-    reelRight.rotation.x = Math.PI/2;
+    reelRight.rotateX(Math.PI/2);
 
     const spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeR1.position.set( 25, 190, 140 );
+    spokeR1.position.set( 0, 32, 21 );
     const spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeR2.position.set( 51, 144, 140 );
+    spokeR2.position.set( 26, -12, 21 );
     spokeR2.rotation.z = Math.PI/3;
     const spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-    spokeR3.position.set( -1, 144, 140 );
+    spokeR3.position.set( -26, -12, 21 );
     spokeR3.rotation.z = 2 * Math.PI/3;
 
     const frontRightRing = new THREE.Mesh( ringGeometry, ringMaterial );
-    frontRightRing.position.set(25, 160, 141);
+    frontRightRing.position.set(0, 0, 21);
     const backRightRing = new THREE.Mesh( ringGeometry, ringMaterial );
-    backRightRing.position.set(25, 160, 99);
+    backRightRing.position.set(0, 0, -21);
 
     this.rightReel = new THREE.Group();
     this.rightReel.add(reelRight);
@@ -105,11 +100,11 @@ class BoomBlock {
     this.rightReel.add(spokeR3);
     this.rightReel.add(frontRightRing);
     this.rightReel.add(backRightRing);
-    this.rightReel.position.y = 20;
-    this.rightReel.position.x = 40;
-    this.rightReel.position.z = 2;
+    this.rightReel.position.set(70, 200, 122);
 
-    boombox.add(this.rightReel);
+    this.rightReel.name = 'reelRight';
+
+    scene.add(this.rightReel);
   }
 
   createTrackButtons(boombox) {
@@ -242,10 +237,11 @@ class BoomBlock {
   constructor(scene) {
     this.boombox = new THREE.Group();
     this.createBase(this.boombox);
-    this.createReels(this.boombox);
+    this.createReels(scene);
     this.createTrackButtons(this.boombox);
     this.createPlayButtons(this.boombox);
     this.createFrequencyVisualizer(this.boombox);
+    this.boombox.name = 'boombox';
     scene.add(this.boombox);
   }
 }

@@ -72,9 +72,11 @@ class World {
 
   update (audio) {
     this.raycaster.setFromCamera(this.mouse, this.camera);
-    this.intersects = this.raycaster.intersectObjects(this.scene.children[3].children);
+    const boomBlockObject = this.scene.children.filter(obj => obj.name === 'boombox')[0];
+    this.intersects = this.raycaster.intersectObjects(boomBlockObject.children);
+    //
     audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
-    const bars = this.scene.children[3].children.filter(obj => obj.name.match('bar'));
+    const bars = boomBlockObject.children.filter(obj => obj.name.match('bar'));
     for (let i = 0; i < bars.length; i++ ) {
       if (audio.masterDataArray[i]) {
         bars[i].scale.y = audio.masterDataArray[i]/300;
@@ -84,6 +86,15 @@ class World {
         bars[i].position.y = (height * audio.masterDataArray[i]/300 / 2) - 150 ;
       }
     }
+    //
+    const reels = this.scene.children.filter(obj => obj.name.match("reel"));
+    reels.forEach(el => {
+      if (audio.playing) {
+        el.rotateZ(-0.04);
+      } else if (audio.resetting) {
+        el.rotateZ(0.5);
+      }
+    }); //rotateOnAxis function
   }
 
   render () {

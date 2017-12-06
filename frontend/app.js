@@ -21,16 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const handleClick = () => {
     const clickElement = world.intersects[0];
+    const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
     switch(clickElement.object.name) {
       case 'play':
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(obj => (
+          boomBlockObject.children.filter(obj => (
             obj.name === 'pause'
           ))[0].material.color.set(0xffffff);
           audio.start();
-          world.scene.children[3].children.filter(obj => (
+          boomBlockObject.children.filter(obj => (
             obj.name === 'reset'
           ))[0].material.color.set(0xffffff);
           audio.start();
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audio.playing) {
           audio.masterGain.gain.value = 0;
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(obj => (
+          boomBlockObject.children.filter(obj => (
             obj.name === 'play'
           ))[0].material.color.set(0xffffff);
           audio.stop();
@@ -54,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
           audio.masterGain.gain.value = 0;
           audio.stop();
           clickElement.object.material.color.set(0x000000);
-          world.scene.children[3].children.filter(obj => (
+          boomBlockObject.children.filter(obj => (
             obj.name === 'pause'
           ))[0].material.color.set(0xffffff);
-          world.scene.children[3].children.filter(obj => (
+          boomBlockObject.children.filter(obj => (
             obj.name === 'play'
           ))[0].material.color.set(0xffffff);
         }
@@ -65,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.removeEventListener('mouseup', handleClick, false);
         audio.reload();
         audio.pausedAt = 0;
+        audio.resetting = 1;
+        window.setTimeout(() => { audio.resetting = 0; }, 400);
         loadCheck();
         break;
       case 'mute':

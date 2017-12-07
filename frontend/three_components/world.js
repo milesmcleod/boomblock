@@ -10,11 +10,11 @@ class World {
     this.aspectRatio = this.width/this.height;
     this.nearPlane = 1;
     this.farPlane = 20000;
-    this.melodyStackY = -130;
-    this.melodyStackwidth = 150;
-    this.melodyStackDepth = 150;
-    this.melodyStackRotation = 0;
-    this.melodyStackColors = undefined;
+    this.drumStackY = -130;
+    this.drumStackwidth = 150;
+    this.drumStackDepth = 150;
+    this.drumStackRotation = 0;
+    this.drumStackColors = undefined;
   }
 
   createCamera() {
@@ -104,34 +104,11 @@ class World {
       }
     }); //rotateOnAxis function
 
-    //melody peaks not quite functional
-    // audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
-    // let peak = -10000;
-    // let peakIdx = 0;
-    // for (let i = 0; i < audio.melodyDataArray.length; i++) {
-    //   if (audio.melodyDataArray[i] > peak) {
-    //     peak = audio.melodyDataArray[i];
-    //     peakIdx = i;
-    //   }
-    // }
-    // if (
-    //   peakIdx > 1 &&
-    //   // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
-    //   peakIdx !== audio.oldMelodyPeakFreq
-    // ) {
-    //   // console.log(`${peakIdx}, ${peak}`);
-    //   // console.log(audio.melodyDataArray);
-    //   this.melodyStack(peakIdx, peak);
-    //   audio.oldMelodyPeakFreq = peakIdx;
-    //
-    //
-    //
-    // }
-
-
   }
 
-  melodyStack() {
+  //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
+
+  drumStack() {
     const rainbow = [
       0xcc0000,
       0xff3300,
@@ -146,35 +123,35 @@ class World {
       0x7f00ff,
       0xff00ff
     ];
-    if (!this.melodyStackColors) {
-      this.melodyStackColors = [
+    if (!this.drumStackColors) {
+      this.drumStackColors = [
         rainbow[Math.floor(Math.random()*12)],
         rainbow[Math.floor(Math.random()*12)]
       ];
     }
     const geometry = new THREE.BoxBufferGeometry(
-      this.melodyStackwidth,
+      this.drumStackwidth,
       150,
-      this.melodyStackDepth
+      this.drumStackDepth
     );
     const material = new THREE.MeshBasicMaterial({
-      color: this.melodyStackColors[Math.floor(Math.random()*2)]
+      color: this.drumStackColors[Math.floor(Math.random()*2)]
     });
-    const melodyBlock = new THREE.Mesh(geometry, material);
-    melodyBlock.name = 'melodyBlock';
-    melodyBlock.position.set(550, this.melodyStackY, 0);
-    melodyBlock.rotateY(this.melodyStackRotation);
-    this.scene.add(melodyBlock);
-    this.melodyStackY += 150;
-    this.melodyStackRotation += Math.PI/8;
+    const drumBlock = new THREE.Mesh(geometry, material);
+    drumBlock.name = 'drumBlock';
+    drumBlock.position.set(-1050, this.drumStackY, 0);
+    drumBlock.rotateY(this.drumStackRotation);
+    this.scene.add(drumBlock);
+    this.drumStackY += 150;
+    this.drumStackRotation += Math.PI/8;
   }
 
-  resetMelodyStack() {
-    this.melodyStackY = -130;
-    this.melodyStackRotation = 0;
-    this.melodyStackColors = undefined;
+  resetDrumStack() {
+    this.drumStackY = -130;
+    this.drumStackRotation = 0;
+    this.drumStackColors = undefined;
     this.scene.children.filter(obj => (
-      obj.name === 'melodyBlock'
+      obj.name === 'drumBlock'
     )).forEach(el => this.scene.remove(el));
   }
 

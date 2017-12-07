@@ -45179,7 +45179,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var set8thNotes = function set8thNotes() {
     [0, 366, 735, 1100, 1467, 1834, 2201, 2568].forEach(function (time) {
       window.setTimeout(function () {
-        return world.melodyStack();
+        return world.drumStack();
       }, time);
     });
   };
@@ -45191,22 +45191,22 @@ document.addEventListener('DOMContentLoaded', function () {
     })[0];
     if (clickElement) switch (clickElement.object.name) {
       case 'play':
-        var beatOffset = audio.pausedAt ? 2934 - audio.pausedAt % 2934 : 0;
+        var beatOffset = audio.pausedAt ? 2932 - audio.pausedAt % 2932 : 0;
         console.log(beatOffset); //this is the coolest thing ever
         window.setTimeout(function () {
-          world.resetMelodyStack();
-          world.melodyIntervalId = window.setInterval(function () {
-            world.resetMelodyStack();
+          world.resetDrumStack();
+          world.drumIntervalId = window.setInterval(function () {
+            world.resetDrumStack();
             set8thNotes();
-          }, 2934); //2934 is my calculated value in ms for the length of 1 measure; i should automate this
+          }, 2932); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
         // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
         // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
-        //   world.melodyStack();
-        //   world.melodyStackId = window.setInterval(() => {
-        //     world.melodyStack();
-        //   }, (2934/8)); //2935 is my calculated value in ms for the length of 1 measure; i should automate this
-        // }, beatOffset); //could have used this if 2935/8 was an integer
+        //   world.drumStack();
+        //   world.drumStackId = window.setInterval(() => {
+        //     world.drumStack();
+        //   }, (2932/8)); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
+        // }, beatOffset); //could have used this if 2932/8 was an integer
         if (!audio.playing) {
           audio.masterGain.gain.value = 1;
           audio.start();
@@ -45217,8 +45217,8 @@ document.addEventListener('DOMContentLoaded', function () {
           audio.masterGain.gain.value = 0;
           audio.stop();
           window.removeEventListener('mouseup', handleClick, false);
-          window.clearInterval(world.melodyIntervalId);
-          window.clearInterval(world.melodyStackId);
+          window.clearInterval(world.drumIntervalId);
+          window.clearInterval(world.drumStackId);
           audio.reload();
           loadCheck();
         }
@@ -45233,8 +45233,8 @@ document.addEventListener('DOMContentLoaded', function () {
         audio.reload();
         audio.pausedAt = 0;
         audio.resetting = 1;
-        window.clearInterval(world.melodyIntervalId);
-        window.clearInterval(world.melodyStackId);
+        window.clearInterval(world.drumIntervalId);
+        window.clearInterval(world.drumStackId);
         window.setTimeout(function () {
           audio.resetting = 0;
         }, 400);
@@ -45315,6 +45315,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 10);
   };
 
+  window.addEventListener("click", function () {
+    console.log(audio.drumsBuffer.sampleRate);
+    console.log(audio.drumsBuffer.length);
+    console.log(audio.drumsBuffer.duration);
+    console.log(audio.drumsBuffer.numberOfChannels);
+    var data = audio.drumsBuffer.getChannelData(0);
+    console.log(data.length);
+    console.log(data[0]);
+    console.log(data[1000000]);
+    console.log(data[2000000]);
+    console.log(data[3000000]);
+    console.log(data[4000000]);
+  });
+
   loadCheck();
 
   world.loop(audio);
@@ -45358,11 +45372,11 @@ var World = function () {
       this.aspectRatio = this.width / this.height;
       this.nearPlane = 1;
       this.farPlane = 20000;
-      this.melodyStackY = -130;
-      this.melodyStackwidth = 150;
-      this.melodyStackDepth = 150;
-      this.melodyStackRotation = 0;
-      this.melodyStackColors = undefined;
+      this.drumStackY = -130;
+      this.drumStackwidth = 150;
+      this.drumStackDepth = 150;
+      this.drumStackRotation = 0;
+      this.drumStackColors = undefined;
     }
   }, {
     key: 'createCamera',
@@ -45463,61 +45477,39 @@ var World = function () {
           el.rotateZ(0.5);
         }
       }); //rotateOnAxis function
-
-      //melody peaks not quite functional
-      // audio.melodyAnalyser.getFloatFrequencyData(audio.melodyDataArray);
-      // let peak = -10000;
-      // let peakIdx = 0;
-      // for (let i = 0; i < audio.melodyDataArray.length; i++) {
-      //   if (audio.melodyDataArray[i] > peak) {
-      //     peak = audio.melodyDataArray[i];
-      //     peakIdx = i;
-      //   }
-      // }
-      // if (
-      //   peakIdx > 1 &&
-      //   // Math.abs(peakIdx - audio.oldMelodyPeakFreq) > 1
-      //   peakIdx !== audio.oldMelodyPeakFreq
-      // ) {
-      //   // console.log(`${peakIdx}, ${peak}`);
-      //   // console.log(audio.melodyDataArray);
-      //   this.melodyStack(peakIdx, peak);
-      //   audio.oldMelodyPeakFreq = peakIdx;
-      //
-      //
-      //
-      // }
-
     }
+
+    //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
+
   }, {
-    key: 'melodyStack',
-    value: function melodyStack() {
+    key: 'drumStack',
+    value: function drumStack() {
       var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
-      if (!this.melodyStackColors) {
-        this.melodyStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
+      if (!this.drumStackColors) {
+        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
       }
-      var geometry = new THREE.BoxBufferGeometry(this.melodyStackwidth, 150, this.melodyStackDepth);
+      var geometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
       var material = new THREE.MeshBasicMaterial({
-        color: this.melodyStackColors[Math.floor(Math.random() * 2)]
+        color: this.drumStackColors[Math.floor(Math.random() * 2)]
       });
-      var melodyBlock = new THREE.Mesh(geometry, material);
-      melodyBlock.name = 'melodyBlock';
-      melodyBlock.position.set(550, this.melodyStackY, 0);
-      melodyBlock.rotateY(this.melodyStackRotation);
-      this.scene.add(melodyBlock);
-      this.melodyStackY += 150;
-      this.melodyStackRotation += Math.PI / 8;
+      var drumBlock = new THREE.Mesh(geometry, material);
+      drumBlock.name = 'drumBlock';
+      drumBlock.position.set(-1050, this.drumStackY, 0);
+      drumBlock.rotateY(this.drumStackRotation);
+      this.scene.add(drumBlock);
+      this.drumStackY += 150;
+      this.drumStackRotation += Math.PI / 8;
     }
   }, {
-    key: 'resetMelodyStack',
-    value: function resetMelodyStack() {
+    key: 'resetDrumStack',
+    value: function resetDrumStack() {
       var _this = this;
 
-      this.melodyStackY = -130;
-      this.melodyStackRotation = 0;
-      this.melodyStackColors = undefined;
+      this.drumStackY = -130;
+      this.drumStackRotation = 0;
+      this.drumStackColors = undefined;
       this.scene.children.filter(function (obj) {
-        return obj.name === 'melodyBlock';
+        return obj.name === 'drumBlock';
       }).forEach(function (el) {
         return _this.scene.remove(el);
       });
@@ -46645,7 +46637,7 @@ var Lighting = function () {
     _classCallCheck(this, Lighting);
 
     this.createAmbientLight(scene);
-    this.createSpotLight(scene);
+    // this.createSpotLight(scene);
   }
 
   return Lighting;
@@ -47238,10 +47230,11 @@ var AudioTracks = function () {
         var analyserNode = _this2.audioContext.createAnalyser();
         gainNode.connect(analyserNode);
         analyserNode.connect(_this2.masterGain);
+        _this2[type + "Buffer"] = typeBuffer;
         _this2[type + "Source"] = sourceNode;
         _this2[type + "Gain"] = gainNode;
         _this2[type + "Analyser"] = analyserNode;
-        _this2[type + "Analyser"].fftSize = 2048;
+        _this2[type + "Analyser"].fftSize = 16384;
         _this2[type + "BufferLength"] = _this2[type + "Analyser"].frequencyBinCount;
         // length: 128
         _this2[type + "DataArray"] = new Float32Array(_this2[type + "BufferLength"]);
@@ -47266,15 +47259,6 @@ var AudioTracks = function () {
         this.melodySource.start(0);
         this.samplesSource.start(0);
       }
-      // window.setInterval(() => {
-      // const data = new Float32Array(this.melodyAnalyser.frequencyBinCount);
-      // this.melodyAnalyser.getFloatFrequencyData(data);
-      // console.log(data);
-      // this.drumsGain.gain.value = Math.random();
-      // this.bassGain.gain.value = Math.random();
-      // this.samplesGain.gain.value = Math.random();
-      // this.melodyGain.gain.value = Math.random();
-      // }, 1000);
     }
   }, {
     key: "stop",
@@ -47325,15 +47309,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Buildings = function () {
   _createClass(Buildings, [{
-    key: 'create1',
-    value: function create1(scene) {
-      var building1Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
+    key: 'tower1',
+    value: function tower1(scene) {
+      var building1Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
       var building1Material = new THREE.MeshPhongMaterial({
         color: 0x343434,
         side: THREE.DoubleSide
       });
       var building1 = new THREE.Mesh(building1Geometry, building1Material);
-      building1.position.set(-1050, -100, 0);
+      building1.position.set(-1050, -180, 0);
       building1.castShadow = true;
       building1.receiveShadow = true;
       scene.add(building1);
@@ -47353,15 +47337,15 @@ var Buildings = function () {
       scene.add(building2);
     }
   }, {
-    key: 'tower3',
-    value: function tower3(scene) {
-      var building3Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
+    key: 'create3',
+    value: function create3(scene) {
+      var building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
       var building3Material = new THREE.MeshPhongMaterial({
         color: 0x343434,
         side: THREE.DoubleSide
       });
       var building3 = new THREE.Mesh(building3Geometry, building3Material);
-      building3.position.set(550, -180, 0);
+      building3.position.set(550, -100, 0);
       building3.castShadow = true;
       building3.receiveShadow = true;
       scene.add(building3);
@@ -47385,9 +47369,9 @@ var Buildings = function () {
   function Buildings(scene) {
     _classCallCheck(this, Buildings);
 
-    this.create1(scene);
+    this.tower1(scene);
     this.create2(scene);
-    this.tower3(scene);
+    this.create3(scene);
     this.create4(scene);
   }
 

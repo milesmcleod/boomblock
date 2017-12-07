@@ -21,7 +21,7 @@ class Lighting {
 
   constructor(scene) {
     this.createAmbientLight(scene);
-    this.createSpotLight(scene);
+    // this.createSpotLight(scene);
   }
 }
 

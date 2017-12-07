@@ -107,10 +107,11 @@ class AudioTracks {
         const analyserNode = this.audioContext.createAnalyser();
         gainNode.connect(analyserNode);
         analyserNode.connect(this.masterGain);
+        this[`${type}Buffer`] = typeBuffer;
         this[`${type}Source`] = sourceNode;
         this[`${type}Gain`] = gainNode;
         this[`${type}Analyser`] = analyserNode;
-        this[`${type}Analyser`].fftSize = 2048;
+        this[`${type}Analyser`].fftSize = 16384;
         this[`${type}BufferLength`] = this[`${type}Analyser`].frequencyBinCount;
         // length: 128
         this[`${type}DataArray`] = new Float32Array(this[`${type}BufferLength`]);
@@ -135,15 +136,6 @@ class AudioTracks {
       this.melodySource.start(0);
       this.samplesSource.start(0);
     }
-    // window.setInterval(() => {
-      // const data = new Float32Array(this.melodyAnalyser.frequencyBinCount);
-      // this.melodyAnalyser.getFloatFrequencyData(data);
-      // console.log(data);
-      // this.drumsGain.gain.value = Math.random();
-      // this.bassGain.gain.value = Math.random();
-      // this.samplesGain.gain.value = Math.random();
-      // this.melodyGain.gain.value = Math.random();
-    // }, 1000);
   }
 
   stop() {

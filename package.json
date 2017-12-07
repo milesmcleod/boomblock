@@ -14,6 +14,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
+    "fft": "^0.2.1",
     "three": "^0.88.0",
     "three-orbitcontrols": "^2.0.0",
     "three-orbitcontrols-ts": "^0.1.2",

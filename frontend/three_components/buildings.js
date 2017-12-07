@@ -2,14 +2,14 @@ import * as THREE from 'three';
 
 class Buildings {
 
-  create1 (scene) {
-    const building1Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
+  tower1 (scene) {
+    const building1Geometry = new THREE.BoxBufferGeometry(400, 20,400);
     const building1Material = new THREE.MeshPhongMaterial({
       color: 0x343434,
       side: THREE.DoubleSide
     });
     const building1 = new THREE.Mesh(building1Geometry, building1Material);
-    building1.position.set(-1050, -100, 0);
+    building1.position.set(-1050, -180, 0);
     building1.castShadow = true;
     building1.receiveShadow = true;
     scene.add(building1);
@@ -28,14 +28,14 @@ class Buildings {
     scene.add(building2);
   }
 
-  tower3 (scene) {
-    const building3Geometry = new THREE.BoxBufferGeometry(400, 20,400);
+  create3 (scene) {
+    const building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
     const building3Material = new THREE.MeshPhongMaterial({
       color: 0x343434,
       side: THREE.DoubleSide
     });
     const building3 = new THREE.Mesh(building3Geometry, building3Material);
-    building3.position.set(550, -180, 0);
+    building3.position.set(550, -100, 0);
     building3.castShadow = true;
     building3.receiveShadow = true;
     scene.add(building3);
@@ -57,9 +57,9 @@ class Buildings {
 
 
   constructor(scene) {
-    this.create1(scene);
+    this.tower1(scene);
     this.create2(scene);
-    this.tower3(scene);
+    this.create3(scene);
     this.create4(scene);
   }
 }

@@ -1,5 +1,6 @@
 body {
   font-family: 'Ranchers', cursive;
+  letter-spacing: 1px;
 }
 
 #world {
@@ -71,15 +72,15 @@ img {
 }
 
 .hover-portfolio {
-  left: 25px;
+  left: 62px;
 }
 
 .hover-linkedin {
-  left: 143px;
+  left: 180px;
 }
 
 .hover-github {
-  left: 240px;
+  left: 277px;
 }
 
 .icon-portfolio:hover .hover-portfolio  {
@@ -96,6 +97,7 @@ img {
 
 .about-link {
   font-size: 24px;
+  margin-right: 10px;
 }
 
 .about-modal {
@@ -119,6 +121,10 @@ img {
   margin: 50px;
   font-size: 32px;
   width: 500px;
+}
+
+.about-modal:hover {
+  cursor: pointer;
 }
 
 .show-modal {

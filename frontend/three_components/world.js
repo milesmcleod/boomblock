@@ -10,11 +10,6 @@ class World {
     this.aspectRatio = this.width/this.height;
     this.nearPlane = 1;
     this.farPlane = 20000;
-    this.drumStackY = -130;
-    this.drumStackwidth = 150;
-    this.drumStackDepth = 150;
-    this.drumStackRotation = 0;
-    this.drumStackColors = undefined;
   }
 
   createCamera() {
@@ -24,9 +19,8 @@ class World {
       this.nearPlane,
       this.farPlane
     );
-    this.camera.position.z = 700;
-    this.camera.position.y = 325;
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.camera.position.set(0, 200, 1800);
+    this.camera.lookAt(0, 300, 0);
   }
 
   createRenderer() {
@@ -107,53 +101,6 @@ class World {
   }
 
   //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
-
-  drumStack() {
-    const rainbow = [
-      0xcc0000,
-      0xff3300,
-      0xff9933,
-      0xffcc00,
-      0xffff00,
-      0x66ff33,
-      0x66ff66,
-      0x00ff99,
-      0x00ccff,
-      0x0066ff,
-      0x7f00ff,
-      0xff00ff
-    ];
-    if (!this.drumStackColors) {
-      this.drumStackColors = [
-        rainbow[Math.floor(Math.random()*12)],
-        rainbow[Math.floor(Math.random()*12)]
-      ];
-    }
-    const geometry = new THREE.BoxBufferGeometry(
-      this.drumStackwidth,
-      150,
-      this.drumStackDepth
-    );
-    const material = new THREE.MeshBasicMaterial({
-      color: this.drumStackColors[Math.floor(Math.random()*2)]
-    });
-    const drumBlock = new THREE.Mesh(geometry, material);
-    drumBlock.name = 'drumBlock';
-    drumBlock.position.set(-1050, this.drumStackY, 0);
-    drumBlock.rotateY(this.drumStackRotation);
-    this.scene.add(drumBlock);
-    this.drumStackY += 150;
-    this.drumStackRotation += Math.PI/8;
-  }
-
-  resetDrumStack() {
-    this.drumStackY = -130;
-    this.drumStackRotation = 0;
-    this.drumStackColors = undefined;
-    this.scene.children.filter(obj => (
-      obj.name === 'drumBlock'
-    )).forEach(el => this.scene.remove(el));
-  }
 
   render () {
     this.renderer.render( this.scene, this.camera );

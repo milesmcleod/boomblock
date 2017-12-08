@@ -45148,6 +45148,10 @@ var _boomblock = __webpack_require__(6);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
 
+var _drum_stack = __webpack_require__(18);
+
+var _drum_stack2 = _interopRequireDefault(_drum_stack);
+
 var _traintrack = __webpack_require__(7);
 
 var _traintrack2 = _interopRequireDefault(_traintrack);
@@ -45164,6 +45168,10 @@ var _buildings = __webpack_require__(9);
 
 var _buildings2 = _interopRequireDefault(_buildings);
 
+var _handlers = __webpack_require__(19);
+
+var _handlers2 = _interopRequireDefault(_handlers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // entry.jsx
@@ -45179,150 +45187,11 @@ document.addEventListener('DOMContentLoaded', function () {
   var boomblock = new _boomblock2.default(world.scene);
   var traintrack = new _traintrack2.default(world.scene);
   var buildings = new _buildings2.default(world.scene);
+  var drumStack = new _drum_stack2.default(audio, world.scene);
+  var handlers = new _handlers2.default(audio, world, drumStack);
   window.world = world;
 
-  var set8thNotes = function set8thNotes() {
-    [0, audio.globalTempo / 8, 2 * audio.globalTempo / 8, 3 * audio.globalTempo / 8, 4 * audio.globalTempo / 8, 5 * audio.globalTempo / 8, 6 * audio.globalTempo / 8, 7 * audio.globalTempo / 8].forEach(function (time) {
-      window.setTimeout(function () {
-        return world.drumStack();
-      }, time);
-    });
-  };
-
-  var handleClick = function handleClick() {
-    var clickElement = world.intersects[0];
-    var boomBlockObject = world.scene.children.filter(function (obj) {
-      return obj.name === 'boombox';
-    })[0];
-    if (clickElement) switch (clickElement.object.name) {
-      case 'play':
-        var beatOffset = audio.pausedAt ? audio.globalTempo - audio.pausedAt % audio.globalTempo : 0;
-        console.log(beatOffset); //this is the coolest thing ever
-        window.setTimeout(function () {
-          world.resetDrumStack();
-          world.drumIntervalId = window.setInterval(function () {
-            world.resetDrumStack();
-            set8thNotes();
-          }, audio.globalTempo); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
-        }, beatOffset);
-        // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
-        // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
-        //   world.drumStack();
-        //   world.drumStackId = window.setInterval(() => {
-        //     world.drumStack();
-        //   }, (2932/8)); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
-        // }, beatOffset); //could have used this if 2932/8 was an integer
-        if (!audio.playing) {
-          audio.masterGain.gain.value = 1;
-          audio.start();
-        }
-        break;
-      case 'pause':
-        if (audio.playing) {
-          audio.masterGain.gain.value = 0;
-          audio.stop();
-          window.removeEventListener('mouseup', handleClick, false);
-          window.clearInterval(world.drumIntervalId);
-          window.clearInterval(world.drumStackId);
-          audio.reload();
-          loadCheck();
-        }
-        break;
-      case 'reset':
-        if (audio.playing) {
-          audio.masterGain.gain.value = 0;
-          audio.stop();
-        }
-        audio.masterGain.gain.value = 1;
-        window.removeEventListener('mouseup', handleClick, false);
-        audio.reload();
-        audio.pausedAt = 0;
-        audio.resetting = 1;
-        window.clearInterval(world.drumIntervalId);
-        window.clearInterval(world.drumStackId);
-        window.setTimeout(function () {
-          audio.resetting = 0;
-        }, 400);
-        loadCheck();
-        break;
-      case 'muteButton':
-      case 'mute':
-        if (audio.masterGain.gain.value) {
-          audio.masterGain.gain.value = 0;
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'muteButton';
-          })[0].material.color.set(0x0000ff);
-          // clickElement.object.material.color.set(0x00ffff);
-        } else {
-          audio.masterGain.gain.value = 1;
-          boomBlockObject.children.filter(function (obj) {
-            return obj.name === 'muteButton';
-          })[0].material.color.set(0x00ffff);
-        }
-        break;
-      case 'track1':
-        if (audio.drumsGain.gain.value) {
-          audio.drumsGain.gain.value = 0;
-          clickElement.object.material.color.set(0x0000ff);
-        } else {
-          audio.drumsGain.gain.value = 1;
-          clickElement.object.material.color.set(0x00ffff);
-        }
-        break;
-      case 'track2':
-        if (audio.bassGain.gain.value) {
-          audio.bassGain.gain.value = 0;
-          clickElement.object.material.color.set(0x0000ff);
-        } else {
-          audio.bassGain.gain.value = 1;
-          clickElement.object.material.color.set(0x00ffff);
-        }
-        break;
-      case 'track3':
-        if (audio.melodyGain.gain.value) {
-          audio.melodyGain.gain.value = 0;
-          clickElement.object.material.color.set(0x0000ff);
-        } else {
-          audio.melodyGain.gain.value = 1;
-          clickElement.object.material.color.set(0x00ffff);
-        }
-        break;
-      case 'track4':
-        if (audio.samplesGain.gain.value) {
-          audio.samplesGain.gain.value = 0;
-          clickElement.object.material.color.set(0x0000ff);
-        } else {
-          audio.samplesGain.gain.value = 1;
-          clickElement.object.material.color.set(0x00ffff);
-        }
-        break;
-    }
-  };
-
-  var handleMove = function handleMove() {
-    var worldEl = document.getElementById('world');
-    var hoverElement = world.intersects[0];
-    if (hoverElement && ['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
-      worldEl.classList.add('world-click');
-    } else {
-      worldEl.classList.remove('world-click');
-    }
-  };
-
-  var loadCheck = function loadCheck() {
-    window.setTimeout(function () {
-      if (audio.loaded === 1) {
-        window.addEventListener('mouseup', handleClick, false);
-        window.addEventListener('mousemove', handleMove, false);
-        audio.beatAnalyser = new _beat_analysis2.default(audio.drumsBuffer);
-        audio.globalTempo = Math.round(audio.beatAnalyser.getIntervalInMilliseconds());
-      } else {
-        loadCheck();
-      }
-    }, 10);
-  };
-
-  loadCheck();
+  handlers.loadCheck();
 
   world.loop(audio);
 });
@@ -45365,19 +45234,13 @@ var World = function () {
       this.aspectRatio = this.width / this.height;
       this.nearPlane = 1;
       this.farPlane = 20000;
-      this.drumStackY = -130;
-      this.drumStackwidth = 150;
-      this.drumStackDepth = 150;
-      this.drumStackRotation = 0;
-      this.drumStackColors = undefined;
     }
   }, {
     key: 'createCamera',
     value: function createCamera() {
       this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, this.nearPlane, this.farPlane);
-      this.camera.position.z = 700;
-      this.camera.position.y = 325;
-      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+      this.camera.position.set(0, 200, 1800);
+      this.camera.lookAt(0, 300, 0);
     }
   }, {
     key: 'createRenderer',
@@ -45475,39 +45338,6 @@ var World = function () {
     //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
 
   }, {
-    key: 'drumStack',
-    value: function drumStack() {
-      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
-      if (!this.drumStackColors) {
-        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
-      }
-      var geometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
-      var material = new THREE.MeshBasicMaterial({
-        color: this.drumStackColors[Math.floor(Math.random() * 2)]
-      });
-      var drumBlock = new THREE.Mesh(geometry, material);
-      drumBlock.name = 'drumBlock';
-      drumBlock.position.set(-1050, this.drumStackY, 0);
-      drumBlock.rotateY(this.drumStackRotation);
-      this.scene.add(drumBlock);
-      this.drumStackY += 150;
-      this.drumStackRotation += Math.PI / 8;
-    }
-  }, {
-    key: 'resetDrumStack',
-    value: function resetDrumStack() {
-      var _this = this;
-
-      this.drumStackY = -130;
-      this.drumStackRotation = 0;
-      this.drumStackColors = undefined;
-      this.scene.children.filter(function (obj) {
-        return obj.name === 'drumBlock';
-      }).forEach(function (el) {
-        return _this.scene.remove(el);
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
       this.renderer.render(this.scene, this.camera);
@@ -45515,10 +45345,10 @@ var World = function () {
   }, {
     key: 'loop',
     value: function loop(audio) {
-      var _this2 = this;
+      var _this = this;
 
       requestAnimationFrame(function () {
-        return _this2.loop(audio);
+        return _this.loop(audio);
       });
       this.update(audio);
       this.render();
@@ -47518,6 +47348,297 @@ that interval occurs between adjacent values in the peaksArray
 
 
 */
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DrumStack = function () {
+  function DrumStack(audio, scene) {
+    _classCallCheck(this, DrumStack);
+
+    this.audio = audio;
+    this.scene = scene;
+    this.drumStackY = -130;
+    this.drumStackwidth = 150;
+    this.drumStackDepth = 150;
+    this.drumStackRotation = 0;
+    this.drumStackColors = undefined;
+  }
+
+  _createClass(DrumStack, [{
+    key: 'set8thNotes',
+    value: function set8thNotes() {
+      var _this = this;
+
+      [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8].forEach(function (time) {
+        window.setTimeout(function () {
+          return _this.stack();
+        }, time);
+      });
+    }
+  }, {
+    key: 'stack',
+    value: function stack() {
+      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+      if (!this.drumStackColors) {
+        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
+      }
+      var geometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
+      var material = new THREE.MeshBasicMaterial({
+        color: this.drumStackColors[Math.floor(Math.random() * 2)]
+      });
+      var drumBlock = new THREE.Mesh(geometry, material);
+      drumBlock.name = 'drumBlock';
+      drumBlock.position.set(-1050, this.drumStackY, 0);
+      drumBlock.rotateY(this.drumStackRotation);
+      this.scene.add(drumBlock);
+      this.drumStackY += 150;
+      this.drumStackRotation += Math.PI / 8;
+    }
+  }, {
+    key: 'resetStack',
+    value: function resetStack() {
+      var _this2 = this;
+
+      this.drumStackY = -130;
+      this.drumStackRotation = 0;
+      this.drumStackColors = undefined;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'drumBlock';
+      }).forEach(function (el) {
+        return _this2.scene.remove(el);
+      });
+    }
+  }]);
+
+  return DrumStack;
+}();
+
+exports.default = DrumStack;
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _world = __webpack_require__(2);
+
+var _world2 = _interopRequireDefault(_world);
+
+var _lighting = __webpack_require__(4);
+
+var _lighting2 = _interopRequireDefault(_lighting);
+
+var _floor = __webpack_require__(5);
+
+var _floor2 = _interopRequireDefault(_floor);
+
+var _boomblock = __webpack_require__(6);
+
+var _boomblock2 = _interopRequireDefault(_boomblock);
+
+var _drum_stack = __webpack_require__(18);
+
+var _drum_stack2 = _interopRequireDefault(_drum_stack);
+
+var _traintrack = __webpack_require__(7);
+
+var _traintrack2 = _interopRequireDefault(_traintrack);
+
+var _audio_tracks = __webpack_require__(8);
+
+var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
+
+var _beat_analysis = __webpack_require__(17);
+
+var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
+
+var _buildings = __webpack_require__(9);
+
+var _buildings2 = _interopRequireDefault(_buildings);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Handlers = function () {
+  function Handlers(audio, world, drumStack) {
+    _classCallCheck(this, Handlers);
+
+    this.audio = audio;
+    this.world = world;
+    this.drumStack = drumStack;
+  }
+
+  _createClass(Handlers, [{
+    key: 'handlePlay',
+    value: function handlePlay() {
+      var _this = this;
+
+      var beatOffset = this.audio.pausedAt ? this.audio.globalTempo - this.audio.pausedAt % this.audio.globalTempo : 0;
+      console.log(beatOffset); //this is the coolest thing ever
+      window.setTimeout(function () {
+        _this.drumStack.resetStack(_this.world.scene);
+        _this.drumStackIntervalId = window.setInterval(function () {
+          _this.drumStack.resetStack(_this.world.scene);
+          _this.drumStack.set8thNotes();
+        }, _this.audio.globalTempo);
+      }, beatOffset);
+      if (!this.audio.playing) {
+        this.audio.masterGain.gain.value = 1;
+        this.audio.start();
+      }
+    }
+  }, {
+    key: 'handlePause',
+    value: function handlePause() {
+      if (this.audio.playing) {
+        this.audio.masterGain.gain.value = 0;
+        this.audio.stop();
+        window.removeEventListener('mouseup', this.handleClick.bind(this), false);
+        window.clearInterval(this.drumStackIntervalId);
+        this.audio.reload();
+        this.loadCheck();
+      }
+    }
+  }, {
+    key: 'handleReset',
+    value: function handleReset() {
+      var _this2 = this;
+
+      if (this.audio.playing) {
+        this.audio.masterGain.gain.value = 0;
+        this.audio.stop();
+      }
+      this.audio.masterGain.gain.value = 1;
+      window.removeEventListener('mouseup', this.handleClick.bind(this), false);
+      this.audio.reload();
+      this.audio.pausedAt = 0;
+      this.audio.resetting = 1;
+      window.clearInterval(this.drumStackIntervalId);
+      window.setTimeout(function () {
+        _this2.audio.resetting = 0;
+      }, 400);
+      this.loadCheck();
+    }
+  }, {
+    key: 'handleMute',
+    value: function handleMute() {
+      var boomBlockObject = this.world.scene.children.filter(function (obj) {
+        return obj.name === 'boombox';
+      })[0];
+      if (this.audio.masterGain.gain.value) {
+        this.audio.masterGain.gain.value = 0;
+        boomBlockObject.children.filter(function (obj) {
+          return obj.name === 'muteButton';
+        })[0].material.color.set(0x0000ff);
+        // clickElement.object.material.color.set(0x00ffff);
+      } else {
+        this.audio.masterGain.gain.value = 1;
+        boomBlockObject.children.filter(function (obj) {
+          return obj.name === 'muteButton';
+        })[0].material.color.set(0x00ffff);
+      }
+    }
+  }, {
+    key: 'handleTrackMute',
+    value: function handleTrackMute(trackNum) {
+      var clickElement = this.world.intersects[0];
+      var tracks = [null, 'drums', 'bass', 'melody', 'samples'];
+      var gain = this.audio[tracks[trackNum] + 'Gain'].gain;
+      if (gain.value) {
+        gain.value = 0;
+        clickElement.object.material.color.set(0x0000ff);
+      } else {
+        gain.value = 1;
+        clickElement.object.material.color.set(0x00ffff);
+      }
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      var clickElement = this.world.intersects[0];
+      if (clickElement) switch (clickElement.object.name) {
+        case 'play':
+          this.handlePlay();
+          break;
+        case 'pause':
+          this.handlePause();
+          break;
+        case 'reset':
+          this.handleReset();
+          break;
+        case 'muteButton':
+        case 'mute':
+          this.handleMute();
+          break;
+        case 'track1':
+        case 'track2':
+        case 'track3':
+        case 'track4':
+          this.handleTrackMute(clickElement.object.name.slice(5));
+          break;
+      }
+    }
+  }, {
+    key: 'handleMove',
+    value: function handleMove() {
+      var worldEl = document.getElementById('world');
+      var hoverElement = this.world.intersects[0];
+      if (hoverElement && ['mute', 'play', 'pause', 'reset', 'muteButton', 'track1', 'track2', 'track3', 'track4'].includes(hoverElement.object.name)) {
+        worldEl.classList.add('world-click');
+      } else {
+        worldEl.classList.remove('world-click');
+      }
+    }
+  }, {
+    key: 'loadCheck',
+    value: function loadCheck() {
+      var _this3 = this;
+
+      window.setTimeout(function () {
+        if (_this3.audio.loaded === 1) {
+          window.addEventListener('mouseup', _this3.handleClick.bind(_this3), false);
+          window.addEventListener('mousemove', _this3.handleMove.bind(_this3), false);
+          _this3.audio.beatAnalyser = new _beat_analysis2.default(_this3.audio.drumsBuffer);
+          _this3.audio.globalTempo = Math.round(_this3.audio.beatAnalyser.getIntervalInMilliseconds());
+        } else {
+          _this3.loadCheck();
+        }
+      }, 10);
+    }
+  }]);
+
+  return Handlers;
+}();
+
+exports.default = Handlers;
 
 /***/ })
 /******/ ]);

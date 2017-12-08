@@ -46565,6 +46565,7 @@ var BoomBlock = function () {
         color: 0x000000,
         side: THREE.DoubleSide
       });
+      var miniReelGeometry = new THREE.CylinderBufferGeometry(20, 20, 60, 32);
 
       var spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
       var spokeMaterial = new THREE.MeshPhongMaterial({
@@ -46595,7 +46596,11 @@ var BoomBlock = function () {
       var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
       backLeftRing.position.set(0, 0, -21);
 
+      var miniReelL = new THREE.Mesh(miniReelGeometry, ringMaterial);
+      miniReelL.rotateX(Math.PI / 2);
+
       this.leftReel = new THREE.Group();
+      this.leftReel.add(miniReelL);
       this.leftReel.add(reelLeft);
       this.leftReel.add(spokeL1);
       this.leftReel.add(spokeL2);
@@ -46626,7 +46631,11 @@ var BoomBlock = function () {
       var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
       backRightRing.position.set(0, 0, -21);
 
+      var miniReelR = new THREE.Mesh(miniReelGeometry, ringMaterial);
+      miniReelR.rotateX(Math.PI / 2);
+
       this.rightReel = new THREE.Group();
+      this.rightReel.add(miniReelR);
       this.rightReel.add(reelRight);
       this.rightReel.add(spokeR1);
       this.rightReel.add(spokeR2);
@@ -47010,10 +47019,10 @@ var AudioTracks = function () {
     value: function load() {
       var _this = this;
 
-      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_drums.mp3");
-      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_bass.mp3");
-      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_samples.mp3");
-      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_melody.mp3");
+      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3");
+      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3");
+      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3");
+      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3");
       Promise.all([getDrums, getBass, getSamples, getMelody]).then(function (results) {
         ['drums', 'bass', 'samples', 'melody'].forEach(function (type, idx) {
           _this.arrayBufferCollection[type + "ArrayBuffer"] = results[idx];
@@ -47164,62 +47173,76 @@ var Buildings = function () {
         side: THREE.DoubleSide
       });
       var building1 = new THREE.Mesh(building1Geometry, building1Material);
-      building1.position.set(-1050, -180, 0);
+      building1.position.set(-650, -180, 0);
       building1.castShadow = true;
       building1.receiveShadow = true;
       scene.add(building1);
     }
   }, {
-    key: 'create2',
-    value: function create2(scene) {
-      var building2Geometry = new THREE.BoxBufferGeometry(320, 2000, 200);
+    key: 'tower2',
+    value: function tower2(scene) {
+      var building2Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
       var building2Material = new THREE.MeshPhongMaterial({
         color: 0x343434,
         side: THREE.DoubleSide
       });
       var building2 = new THREE.Mesh(building2Geometry, building2Material);
-      building2.position.set(-550, -50, 0);
+      building2.position.set(650, -180, 0);
       building2.castShadow = true;
       building2.receiveShadow = true;
       scene.add(building2);
     }
-  }, {
-    key: 'create3',
-    value: function create3(scene) {
-      var building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
-      var building3Material = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      var building3 = new THREE.Mesh(building3Geometry, building3Material);
-      building3.position.set(550, -100, 0);
-      building3.castShadow = true;
-      building3.receiveShadow = true;
-      scene.add(building3);
-    }
-  }, {
-    key: 'create4',
-    value: function create4(scene) {
-      var building4Geometry = new THREE.BoxBufferGeometry(320, 1600, 200);
-      var building4Material = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      var building4 = new THREE.Mesh(building4Geometry, building4Material);
-      building4.position.set(1050, -50, 0);
-      building4.castShadow = true;
-      building4.receiveShadow = true;
-      scene.add(building4);
-    }
+
+    // create2 (scene) {
+    //   const building2Geometry = new THREE.BoxBufferGeometry(320, 2000, 200);
+    //   const building2Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building2 = new THREE.Mesh(building2Geometry, building2Material);
+    //   building2.position.set(-550, -50, 0);
+    //   building2.castShadow = true;
+    //   building2.receiveShadow = true;
+    //   scene.add(building2);
+    // }
+
+    // create3 (scene) {
+    //   const building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
+    //   const building3Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building3 = new THREE.Mesh(building3Geometry, building3Material);
+    //   building3.position.set(550, -100, 0);
+    //   building3.castShadow = true;
+    //   building3.receiveShadow = true;
+    //   scene.add(building3);
+    // }
+    //
+    // create4 (scene) {
+    //   const building4Geometry = new THREE.BoxBufferGeometry(320, 1600, 200);
+    //   const building4Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building4 = new THREE.Mesh(building4Geometry, building4Material);
+    //   building4.position.set(1050, -50, 0);
+    //   building4.castShadow = true;
+    //   building4.receiveShadow = true;
+    //   scene.add(building4);
+    // }
+
+
   }]);
 
   function Buildings(scene) {
     _classCallCheck(this, Buildings);
 
     this.tower1(scene);
-    this.create2(scene);
-    this.create3(scene);
-    this.create4(scene);
+    this.tower2(scene);
+    // this.create2(scene);
+    // this.create3(scene);
+    // this.create4(scene);
   }
 
   return Buildings;
@@ -47398,7 +47421,7 @@ var DrumStack = function () {
 
     this.audio = audio;
     this.scene = scene;
-    this.drumStackY = -130;
+    this.drumStackY = -100;
     this.drumStackwidth = 150;
     this.drumStackDepth = 150;
     this.drumStackRotation = 0;
@@ -47467,7 +47490,10 @@ var DrumStack = function () {
   }, {
     key: 'stack',
     value: function stack() {
+      var _this3 = this;
+
       var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+      var positions = [650, -650];
       if (!this.drumStackColors) {
         this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
       }
@@ -47475,26 +47501,28 @@ var DrumStack = function () {
       var material = new THREE.MeshBasicMaterial({
         color: this.drumStackColors[Math.floor(Math.random() * 2)]
       });
-      var drumBlock = new THREE.Mesh(geometry, material);
-      drumBlock.name = 'drumBlock';
-      drumBlock.position.set(-1050, this.drumStackY, 0);
-      drumBlock.rotateY(this.drumStackRotation);
-      this.scene.add(drumBlock);
+      positions.forEach(function (position) {
+        var drumBlock = new THREE.Mesh(geometry, material);
+        drumBlock.name = 'drumBlock';
+        drumBlock.position.set(position, _this3.drumStackY, 0);
+        drumBlock.rotateY(_this3.drumStackRotation);
+        _this3.scene.add(drumBlock);
+      });
       this.drumStackY += 150;
       this.drumStackRotation += Math.PI / 8;
     }
   }, {
     key: 'resetStack',
     value: function resetStack() {
-      var _this3 = this;
+      var _this4 = this;
 
-      this.drumStackY = -130;
+      this.drumStackY = -100;
       this.drumStackRotation = 0;
       this.drumStackColors = undefined;
       this.scene.children.filter(function (obj) {
         return obj.name === 'drumBlock';
       }).forEach(function (el) {
-        return _this3.scene.remove(el);
+        return _this4.scene.remove(el);
       });
     }
   }]);
@@ -47600,18 +47628,19 @@ var Handlers = function () {
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
-        this.audio.masterGain.gain.value = 1;
-        window.removeEventListener('mouseup', this.handleClick, false);
-        this.audio.pausedAt = 0;
-        this.audio.resetting = 1;
-        this.drumStack.resetInterval();
-        this.drumStack.reset8thNoteTimeouts();
-        window.setTimeout(function () {
-          _this.audio.resetting = 0;
-        }, 400);
-        this.audio.reload();
-        this.loadCheck();
       }
+      this.audio.masterGain.gain.value = 1;
+      window.removeEventListener('mouseup', this.handleClick, false);
+      this.audio.pausedAt = 0;
+      this.audio.resetting = 1;
+      this.drumStack.resetStack();
+      this.drumStack.resetInterval();
+      this.drumStack.reset8thNoteTimeouts();
+      window.setTimeout(function () {
+        _this.audio.resetting = 0;
+      }, 400);
+      this.audio.reload();
+      this.loadCheck();
     }
   }, {
     key: 'handleMute',

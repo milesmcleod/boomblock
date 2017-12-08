@@ -4,7 +4,7 @@ class DrumStack {
   constructor(audio, scene) {
     this.audio = audio;
     this.scene = scene;
-    this.drumStackY = -130;
+    this.drumStackY = -100;
     this.drumStackwidth = 150;
     this.drumStackDepth = 150;
     this.drumStackRotation = 0;
@@ -80,6 +80,7 @@ class DrumStack {
       0x7f00ff,
       0xff00ff
     ];
+    const positions = [650, -650];
     if (!this.drumStackColors) {
       this.drumStackColors = [
         rainbow[Math.floor(Math.random()*12)],
@@ -94,17 +95,19 @@ class DrumStack {
     const material = new THREE.MeshBasicMaterial({
       color: this.drumStackColors[Math.floor(Math.random()*2)]
     });
-    const drumBlock = new THREE.Mesh(geometry, material);
-    drumBlock.name = 'drumBlock';
-    drumBlock.position.set(-1050, this.drumStackY, 0);
-    drumBlock.rotateY(this.drumStackRotation);
-    this.scene.add(drumBlock);
+    positions.forEach(position => {
+      const drumBlock = new THREE.Mesh(geometry, material);
+      drumBlock.name = 'drumBlock';
+      drumBlock.position.set(position, this.drumStackY, 0);
+      drumBlock.rotateY(this.drumStackRotation);
+      this.scene.add(drumBlock);
+    });
     this.drumStackY += 150;
     this.drumStackRotation += Math.PI/8;
   }
 
   resetStack() {
-    this.drumStackY = -130;
+    this.drumStackY = -100;
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
     this.scene.children.filter(obj => (

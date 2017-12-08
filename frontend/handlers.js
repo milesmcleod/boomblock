@@ -45,18 +45,19 @@ class Handlers {
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
       this.audio.stop();
-      this.audio.masterGain.gain.value = 1;
-      window.removeEventListener(
-        'mouseup', this.handleClick, false
-      );
-      this.audio.pausedAt = 0;
-      this.audio.resetting = 1;
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
-      window.setTimeout(() => { this.audio.resetting = 0; }, 400);
-      this.audio.reload();
-      this.loadCheck();
     }
+    this.audio.masterGain.gain.value = 1;
+    window.removeEventListener(
+      'mouseup', this.handleClick, false
+    );
+    this.audio.pausedAt = 0;
+    this.audio.resetting = 1;
+    this.drumStack.resetStack();
+    this.drumStack.resetInterval();
+    this.drumStack.reset8thNoteTimeouts();
+    window.setTimeout(() => { this.audio.resetting = 0; }, 400);
+    this.audio.reload();
+    this.loadCheck();
   }
 
   handleMute() {

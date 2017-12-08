@@ -32,6 +32,7 @@ class BoomBlock {
       color: 0x000000,
       side: THREE.DoubleSide
     });
+    const miniReelGeometry = new THREE.CylinderBufferGeometry(20, 20, 60, 32);
 
     const spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
     const spokeMaterial = new THREE.MeshPhongMaterial({
@@ -62,7 +63,11 @@ class BoomBlock {
     const backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
     backLeftRing.position.set(0, 0, -21);
 
+    const miniReelL = new THREE.Mesh(miniReelGeometry, ringMaterial);
+    miniReelL.rotateX(Math.PI/2);
+
     this.leftReel = new THREE.Group();
+    this.leftReel.add(miniReelL);
     this.leftReel.add(reelLeft);
     this.leftReel.add(spokeL1);
     this.leftReel.add(spokeL2);
@@ -93,7 +98,11 @@ class BoomBlock {
     const backRightRing = new THREE.Mesh( ringGeometry, ringMaterial );
     backRightRing.position.set(0, 0, -21);
 
+    const miniReelR = new THREE.Mesh(miniReelGeometry, ringMaterial);
+    miniReelR.rotateX(Math.PI/2);
+
     this.rightReel = new THREE.Group();
+    this.rightReel.add(miniReelR);
     this.rightReel.add(reelRight);
     this.rightReel.add(spokeR1);
     this.rightReel.add(spokeR2);

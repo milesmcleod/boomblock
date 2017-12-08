@@ -52,16 +52,16 @@ class AudioTracks {
 
   load() {
     const getDrums = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/lux_2_drums.mp3"
+      "https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3"
     );
     const getBass = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/lux_2_bass.mp3"
+      "https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3"
     );
     const getSamples = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/lux_2_samples.mp3"
+      "https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3"
     );
     const getMelody = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/lux_2_melody.mp3"
+      "https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3"
     );
     Promise.all([
       getDrums,

@@ -9,21 +9,61 @@ class DrumStack {
     this.drumStackDepth = 150;
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
+    this.intervalId = undefined;
+    this.timeoutIds = [];
   }
 
-  set8thNotes () {
-  [
-    0,
-    this.audio.globalTempo/8,
-    2 * this.audio.globalTempo/8,
-    3 * this.audio.globalTempo/8,
-    4 * this.audio.globalTempo/8,
-    5 * this.audio.globalTempo/8,
-    6 * this.audio.globalTempo/8,
-    7 * this.audio.globalTempo/8
-  ].forEach(time => {
-      window.setTimeout(() => this.stack(), time);
+  set8thNoteTimeouts (beatOffset) {
+    let eighthNotes = [
+      0,
+      (this.audio.globalTempo/8),
+      (2 * this.audio.globalTempo/8),
+      (3 * this.audio.globalTempo/8),
+      (4 * this.audio.globalTempo/8),
+      (5 * this.audio.globalTempo/8),
+      (6 * this.audio.globalTempo/8),
+      (7 * this.audio.globalTempo/8)
+    ];
+    if (beatOffset) {
+      eighthNotes = eighthNotes.map(el => (
+        beatOffset - el
+      ));
+      eighthNotes = eighthNotes.filter(el => el >= 0 && el < beatOffset);
+    }
+    console.log(eighthNotes);
+    eighthNotes.forEach(note => {
+      const id = window.setTimeout(() => this.stack(), note);
+      this.timeoutIds.push(id);
     });
+  }
+
+  reset8thNoteTimeouts() {
+    this.timeoutIds.forEach(id => window.clearTimeout(id));
+  }
+
+  setInterval() {
+    const tempo = this.audio.globalTempo;
+    const pausedAt = this.audio.pausedAt;
+    //this is the coolest thing ever
+    const beatOffset = pausedAt ? (tempo - ((pausedAt) % tempo)) : 0;
+    this.set8thNoteTimeouts(beatOffset);
+    window.setTimeout(() => {
+      if (beatOffset) {
+        this.reset8thNoteTimeouts();
+        this.resetStack(this.scene);
+        this.set8thNoteTimeouts(0);
+      }
+      this.intervalId = window.setInterval(() => {
+        this.reset8thNoteTimeouts();
+        this.resetStack(this.scene);
+        this.set8thNoteTimeouts(0);
+      }, this.audio.globalTempo);
+    }, beatOffset);
+    console.log(beatOffset);
+  }
+
+  resetInterval() {
+    window.clearInterval(this.intervalId);
   }
 
   stack() {

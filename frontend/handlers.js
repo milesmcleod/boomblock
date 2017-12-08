@@ -13,18 +13,13 @@ class Handlers {
     this.audio = audio;
     this.world = world;
     this.drumStack = drumStack;
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMove = this.handleMove.bind(this);
   }
 
   handlePlay() {
-    const beatOffset = this.audio.pausedAt ? (this.audio.globalTempo - ((this.audio.pausedAt) % this.audio.globalTempo)) : 0;
-    console.log(beatOffset); //this is the coolest thing ever
-    window.setTimeout(() => {
-      this.drumStack.resetStack(this.world.scene);
-      this.drumStackIntervalId = window.setInterval(() => {
-        this.drumStack.resetStack(this.world.scene);
-        this.drumStack.set8thNotes();
-      }, this.audio.globalTempo);
-    }, beatOffset);
+    // this.drumStack.resetStack();
+    this.drumStack.setInterval();
     if (!this.audio.playing) {
       this.audio.masterGain.gain.value = 1;
       this.audio.start();
@@ -32,32 +27,34 @@ class Handlers {
   }
 
   handlePause() {
+    this.drumStack.resetInterval();
+    this.drumStack.reset8thNoteTimeouts();
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
       this.audio.stop();
       window.removeEventListener(
-        'mouseup', this.handleClick.bind(this), false
+        'mouseup', this.handleClick, false
       );
-      window.clearInterval(this.drumStackIntervalId);
       this.audio.reload();
       this.loadCheck();
     }
   }
 
   handleReset() {
+    this.drumStack.resetInterval();
+    this.drumStack.reset8thNoteTimeouts();
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
       this.audio.stop();
     }
     this.audio.masterGain.gain.value = 1;
     window.removeEventListener(
-      'mouseup', this.handleClick.bind(this), false
+      'mouseup', this.handleClick, false
     );
-    this.audio.reload();
     this.audio.pausedAt = 0;
     this.audio.resetting = 1;
-    window.clearInterval(this.drumStackIntervalId);
     window.setTimeout(() => { this.audio.resetting = 0; }, 400);
+    this.audio.reload();
     this.loadCheck();
   }
 
@@ -133,8 +130,8 @@ class Handlers {
   loadCheck () {
     window.setTimeout(() => {
       if (this.audio.loaded === 1) {
-        window.addEventListener('mouseup', this.handleClick.bind(this), false);
-        window.addEventListener('mousemove', this.handleMove.bind(this), false);
+        window.addEventListener('mouseup', this.handleClick, false);
+        window.addEventListener('mousemove', this.handleMove, false);
         this.audio.beatAnalyser = new BeatAnalyser(this.audio.drumsBuffer);
         this.audio.globalTempo = Math.round(
           this.audio.beatAnalyser.getIntervalInMilliseconds()

@@ -47381,18 +47381,67 @@ var DrumStack = function () {
     this.drumStackDepth = 150;
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
+    this.intervalId = undefined;
+    this.timeoutIds = [];
   }
 
   _createClass(DrumStack, [{
-    key: 'set8thNotes',
-    value: function set8thNotes() {
+    key: 'set8thNoteTimeouts',
+    value: function set8thNoteTimeouts(beatOffset) {
       var _this = this;
 
-      [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8].forEach(function (time) {
-        window.setTimeout(function () {
+      var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
+      if (beatOffset) {
+        eighthNotes = eighthNotes.map(function (el) {
+          return beatOffset - el;
+        });
+        eighthNotes = eighthNotes.filter(function (el) {
+          return el >= 0 && el < beatOffset;
+        });
+      }
+      console.log(eighthNotes);
+      eighthNotes.forEach(function (note) {
+        var id = window.setTimeout(function () {
           return _this.stack();
-        }, time);
+        }, note);
+        _this.timeoutIds.push(id);
       });
+    }
+  }, {
+    key: 'reset8thNoteTimeouts',
+    value: function reset8thNoteTimeouts() {
+      this.timeoutIds.forEach(function (id) {
+        return window.clearTimeout(id);
+      });
+    }
+  }, {
+    key: 'setInterval',
+    value: function setInterval() {
+      var _this2 = this;
+
+      var tempo = this.audio.globalTempo;
+      var pausedAt = this.audio.pausedAt;
+      //this is the coolest thing ever
+      var beatOffset = pausedAt ? tempo - pausedAt % tempo : 0;
+      this.set8thNoteTimeouts(beatOffset);
+      window.setTimeout(function () {
+        if (beatOffset) {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }
+        _this2.intervalId = window.setInterval(function () {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }, _this2.audio.globalTempo);
+      }, beatOffset);
+      console.log(beatOffset);
+    }
+  }, {
+    key: 'resetInterval',
+    value: function resetInterval() {
+      window.clearInterval(this.intervalId);
     }
   }, {
     key: 'stack',
@@ -47416,7 +47465,7 @@ var DrumStack = function () {
   }, {
     key: 'resetStack',
     value: function resetStack() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.drumStackY = -130;
       this.drumStackRotation = 0;
@@ -47424,7 +47473,7 @@ var DrumStack = function () {
       this.scene.children.filter(function (obj) {
         return obj.name === 'drumBlock';
       }).forEach(function (el) {
-        return _this2.scene.remove(el);
+        return _this3.scene.remove(el);
       });
     }
   }]);
@@ -47494,22 +47543,15 @@ var Handlers = function () {
     this.audio = audio;
     this.world = world;
     this.drumStack = drumStack;
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMove = this.handleMove.bind(this);
   }
 
   _createClass(Handlers, [{
     key: 'handlePlay',
     value: function handlePlay() {
-      var _this = this;
-
-      var beatOffset = this.audio.pausedAt ? this.audio.globalTempo - this.audio.pausedAt % this.audio.globalTempo : 0;
-      console.log(beatOffset); //this is the coolest thing ever
-      window.setTimeout(function () {
-        _this.drumStack.resetStack(_this.world.scene);
-        _this.drumStackIntervalId = window.setInterval(function () {
-          _this.drumStack.resetStack(_this.world.scene);
-          _this.drumStack.set8thNotes();
-        }, _this.audio.globalTempo);
-      }, beatOffset);
+      // this.drumStack.resetStack();
+      this.drumStack.setInterval();
       if (!this.audio.playing) {
         this.audio.masterGain.gain.value = 1;
         this.audio.start();
@@ -47518,11 +47560,12 @@ var Handlers = function () {
   }, {
     key: 'handlePause',
     value: function handlePause() {
+      this.drumStack.resetInterval();
+      this.drumStack.reset8thNoteTimeouts();
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
-        window.removeEventListener('mouseup', this.handleClick.bind(this), false);
-        window.clearInterval(this.drumStackIntervalId);
+        window.removeEventListener('mouseup', this.handleClick, false);
         this.audio.reload();
         this.loadCheck();
       }
@@ -47530,21 +47573,22 @@ var Handlers = function () {
   }, {
     key: 'handleReset',
     value: function handleReset() {
-      var _this2 = this;
+      var _this = this;
 
+      this.drumStack.resetInterval();
+      this.drumStack.reset8thNoteTimeouts();
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
       }
       this.audio.masterGain.gain.value = 1;
-      window.removeEventListener('mouseup', this.handleClick.bind(this), false);
-      this.audio.reload();
+      window.removeEventListener('mouseup', this.handleClick, false);
       this.audio.pausedAt = 0;
       this.audio.resetting = 1;
-      window.clearInterval(this.drumStackIntervalId);
       window.setTimeout(function () {
-        _this2.audio.resetting = 0;
+        _this.audio.resetting = 0;
       }, 400);
+      this.audio.reload();
       this.loadCheck();
     }
   }, {
@@ -47620,16 +47664,16 @@ var Handlers = function () {
   }, {
     key: 'loadCheck',
     value: function loadCheck() {
-      var _this3 = this;
+      var _this2 = this;
 
       window.setTimeout(function () {
-        if (_this3.audio.loaded === 1) {
-          window.addEventListener('mouseup', _this3.handleClick.bind(_this3), false);
-          window.addEventListener('mousemove', _this3.handleMove.bind(_this3), false);
-          _this3.audio.beatAnalyser = new _beat_analysis2.default(_this3.audio.drumsBuffer);
-          _this3.audio.globalTempo = Math.round(_this3.audio.beatAnalyser.getIntervalInMilliseconds());
+        if (_this2.audio.loaded === 1) {
+          window.addEventListener('mouseup', _this2.handleClick, false);
+          window.addEventListener('mousemove', _this2.handleMove, false);
+          _this2.audio.beatAnalyser = new _beat_analysis2.default(_this2.audio.drumsBuffer);
+          _this2.audio.globalTempo = Math.round(_this2.audio.beatAnalyser.getIntervalInMilliseconds());
         } else {
-          _this3.loadCheck();
+          _this2.loadCheck();
         }
       }, 10);
     }

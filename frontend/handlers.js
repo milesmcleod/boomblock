@@ -28,8 +28,8 @@ class Handlers {
   }
 
   handlePause() {
-    const killId = setTimeout(function() {
-      for (let i = killId; i > 0; i--) window.clearInterval(i);
+    const killId = setTimeout(function() { //this little function comes from mplungjan's post on stack overflow:
+      for (let i = killId; i > 0; i--) window.clearInterval(i); //https://stackoverflow.com/questions/3141064/how-to-stop-all-timeouts-and-intervals-using-javascript
     }, 15);
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
@@ -45,6 +45,9 @@ class Handlers {
   }
 
   handleReset() {
+    const killId = setTimeout(function() {
+      for (let i = killId; i > 0; i--) window.clearInterval(i);
+    }, 15);
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
       this.audio.stop();

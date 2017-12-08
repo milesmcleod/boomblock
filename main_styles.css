@@ -1,3 +1,7 @@
+body {
+  font-family: 'Ranchers', cursive;
+}
+
 #world {
   position: absolute;
   left: 0;
@@ -13,4 +17,111 @@
 
 .world-click {
   cursor: pointer;
+}
+
+nav {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 60px;
+  background: none;
+  display: flex;
+  justify-content: space-between;
+  min-width: 520px;
+  margin: 0px 20px;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  width: 30%;
+}
+
+[class*="nav-"] li {
+  margin-top: 10px;
+  margin-left: 80px;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+[class*="nav-"] li:hover {
+  cursor: pointer;
+}
+
+img {
+   -webkit-filter: invert(1);
+   filter: invert(1);
+}
+
+.nav-left img {
+  height: 40px;
+}
+
+[class*="hover-"] {
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: black;
+  background: whitesmoke;
+  border-radius: 3px;
+  position: absolute;
+  top: 60px;
+  padding: 5px;
+}
+
+.hover-portfolio {
+  left: 25px;
+}
+
+.hover-linkedin {
+  left: 143px;
+}
+
+.hover-github {
+  left: 240px;
+}
+
+.icon-portfolio:hover .hover-portfolio  {
+  opacity: 1;
+}
+
+.icon-linkedin:hover .hover-linkedin  {
+  opacity: 1;
+}
+
+.icon-github:hover .hover-github  {
+  opacity: 1;
+}
+
+.about-link {
+  font-size: 24px;
+}
+
+.about-modal {
+  z-index: -5;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000000;
+  transition: all 0.4s ease;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-modal p {
+  color: whitesmoke;
+  margin: 50px;
+  font-size: 32px;
+  width: 500px;
+}
+
+.show-modal {
+  z-index: 500;
+  opacity: 0.95;
 }

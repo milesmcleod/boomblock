@@ -45193,6 +45193,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   handlers.loadCheck();
 
+  var about = document.getElementsByClassName('about-link')[0];
+  about.addEventListener("click", function () {
+    var modal = document.getElementsByClassName('about-modal')[0];
+    modal.classList.add('show-modal');
+    modal.addEventListener("click", function () {
+      modal.classList.remove('show-modal');
+    });
+  });
+
   world.loop(audio);
 });
 
@@ -47611,9 +47620,10 @@ var Handlers = function () {
     key: 'handlePause',
     value: function handlePause() {
       var killId = setTimeout(function () {
+        //this little function comes from mplungjan's post on stack overflow:
         for (var i = killId; i > 0; i--) {
           window.clearInterval(i);
-        }
+        } //https://stackoverflow.com/questions/3141064/how-to-stop-all-timeouts-and-intervals-using-javascript
       }, 15);
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
@@ -47630,6 +47640,11 @@ var Handlers = function () {
     value: function handleReset() {
       var _this = this;
 
+      var killId = setTimeout(function () {
+        for (var i = killId; i > 0; i--) {
+          window.clearInterval(i);
+        }
+      }, 15);
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();

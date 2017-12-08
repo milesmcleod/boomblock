@@ -28,5 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handlers.loadCheck();
 
+  const about = document.getElementsByClassName('about-link')[0];
+  about.addEventListener("click", () => {
+    const modal = document.getElementsByClassName('about-modal')[0];
+    modal.classList.add('show-modal');
+    modal.addEventListener("click", () => {
+      modal.classList.remove('show-modal');
+    });
+  });
+
   world.loop(audio);
 });

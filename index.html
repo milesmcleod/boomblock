@@ -4,13 +4,51 @@
     <meta charset="utf-8">
     <title>BoomBlock</title>
     <script type="text/javascript" src="bundle.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
       (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';document.head.appendChild(script);})()
-    </script>
+    </script> -->
+    <link href="https://fonts.googleapis.com/css?family=Ranchers" rel="stylesheet">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="main_styles.css">
   </head>
   <body>
     <div id="world" class="world-move"></div>
+    <nav>
+      <ul class="nav-left">
+        <li class="icon-portfolio">
+          <a href="http://milesmcleod.com">
+            <img src="/assets/mm_logo_v2.png" alt="">
+          </a>
+          <span class="hover-portfolio">Portfolio</span>
+        </li>
+        <li class="icon-linkedin">
+          <a href="https://www.linkedin.com/in/miles-mcleod/">
+            <img src="/assets/linkedin_box.png" alt="">
+          </a>
+          <span class="hover-linkedin">LinkedIn</span>
+        </li>
+        <li class="icon-github">
+          <a href="https://github.com/milesmcleod/boomblock">
+            <img src="/assets/github_icon.png" alt="">
+          </a>
+          <span class="hover-github">Boomblock Github</span>
+        </li>
+      </ul>
+      <span>BPM</span>
+      <ul class="nav-right">
+        <li class="about-link">What is going on here?</li>
+      </ul>
+    </nav>
+    <article class="about-modal">
+      <p>
+        Boomblock is an interactive, multitrack reel-to-reel player that uses JavaScript to detect the tempo of incoming audio and renders the 3D environment accordingly.
+      </p>
+      <p>
+        This program is written exclusively in JavaScript, using the ThreeJS library. It is a work in progress.
+      </p>
+      <p>
+        All songs are original compositions by Miles McLeod.
+      </p>
+    </article>
   </body>
 </html>

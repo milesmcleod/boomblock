@@ -47610,6 +47610,11 @@ var Handlers = function () {
   }, {
     key: 'handlePause',
     value: function handlePause() {
+      var killId = setTimeout(function () {
+        for (var i = killId; i > 0; i--) {
+          window.clearInterval(i);
+        }
+      }, 15);
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();

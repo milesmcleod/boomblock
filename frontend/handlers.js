@@ -28,6 +28,9 @@ class Handlers {
   }
 
   handlePause() {
+    const killId = setTimeout(function() {
+      for (let i = killId; i > 0; i--) window.clearInterval(i);
+    }, 15);
     if (this.audio.playing) {
       this.audio.masterGain.gain.value = 0;
       this.audio.stop();

@@ -1,92 +1,188 @@
-# BoomBlock - An Interactive Audio Player with ThreeJS
-
-## Background and Overview
-
-Boomblock is a custom multi-track audio player, rendered using the ThreeJS library.
-
-A multi-track audio composition is one that is broken out into individual files for each instrument or for groups of instruments (melodic, bass-heavy, percussive).
-
-The user activates different pieces of the multi-track audio by interacting with the Boomblock. As the user activates and deactivates different elements of the audio, the ThreeJS world also reacts. New elements appear and move according to amplitude data generated from the multitracked audio files.
-
-This project aims to experiment with the possible relationships between 3d javascript animation and sound.
-
-## Functionality and MVP
-
-Boomblock MVPs:
-
-- [ ] The user can activate and deactivate different parts of a multitrack audio composition that play in sync by interacting with the boomblock
-
-- [ ] Global play, pause, mute, and reset capability
-
-- [ ] The surrounding ThreeJS environment reacts differently to the activation of each of the different tracks
-
-- [ ] The main ThreeJS object (the boomblock itself) realizes a unique digital audio interface
-
-- [ ] The user can select from several different multitrack compositions
-
-In addition, this project will include:
-
-- [ ] A "What is going on?" modal describing the overall concept of the application
-
-## Wireframes
-
-This is a single-page app. The link to the "What is going on?" modal and the links to my personal profiles will be in a translucent top nav, which will also contain global audio controls (play, pause, mute, reset). The rest of the page will be the "World." A loading display will also be necessary.
-
-The boomblock itself will be a ThreeJS object, based loosely on a reel-to-reel tape machine. It will include four colored buttons, each for activating one of the multitrack elements. It will also include a button that activates a dropdown, allowing the user to select a different multitrack composition.
-
-The boomblock will sit on a 3d city block, as if it were one of the buildings.
-
-Below is a basic 2d rendering of the 3d space that will make up the world. The user will have a very limited ability to pan and zoom, using Three's OrbitalControls module.
+<h1 style="text-align:center;">BoomBlock: An Interactive Audio Visualizer</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/milesmcleod/purplenote-wireframes/master/Untitled%20Diagram.png"/>
+  <img src="https://github.com/milesmcleod/purplenote-images/blob/master/purplenote-demo.gif?raw=true"/>
 </p>
 
-## Architecture and Technologies
+## <h2 style="text-align:center;"> [BoomBlock Live](https://milesmcleod.github.io/boomblock/)</h2>
 
-* ThreeJS for modeling the interactive world and filling the "world" DOM element
-* Web Audio API for audio playback
-* Webpack for bundling
-* React for managing the overall application architecture with the following components:
-    * Root
-    * App
-    * Header with global audio controls and links
-    * About modal (including simple directions)
-    * ThreeJS world component
+----
 
-## Implementation Timeline
+## Summary
 
-### Over the weekend:
+BoomBlock is an original multitrack audio player and visualizer, rendered using the ThreeJS library and the Web Audio API. It builds and explores relationships between 3D JavaScript animation and sound.
 
-- [ ] Experiment with ThreeJS; completed web tutorial for basic ThreeJS geometry concepts
-- [ ] Begin building prototype "world"
-- [ ] Create the react application and instantiate the ThreeJS rendering
-- [ ] Install necessary NPM dependencies
+## Tempo Detection with JavaScript and the Web Audio API
 
-### Day 1:
+BoomBlock's core algorithm is based on one outlined [here](http://joesul.li/van/beat-detection-using-web-audio/) by Joe Sullivan. The algorithm generates an interval by which to iterate through a massive array of the mp3 waveform's PCM data, searching for amplitude peak, and when it finds a peak, it stores the index of that peak in an array:
 
-- [ ] Learn the basics of WebAudioAPI and begin serving audio assets
-- [ ] Implement Web Audio source summing to achieve multitrack playback (see WebAudioAPI Docs part 4.1)
-- [ ] Build onClick functionality into the boomblock that triggers multitrack audio playback, and uses the GainNode functionality of the WebAudioAPI to control gain on individual tracks
-- [ ] Build global audio controls that pause, play, mute, and reset playback
+```JavaScript
 
-### Day 2:
+class BeatAnalyser {
 
-- [ ] Build out the ThreeJS world; complete drawing all static      elements, with special detail given to the boomblock.
-- [ ] Begin working in components that react to the audio. By the end of the day, the reels should spin, and tempo data should control color shifts and some moving components on the boomblock.
+  constructor(drumsBuffer) {
+    this.data = drumsBuffer.getChannelData(0);
+    this.duration = drumsBuffer.duration;
+    this.threshold = undefined;
+    this.dataLength = this.data.length;
+    this.increment = Math.round(this.dataLength/(this.duration * 1000)); // in floats/ms
+    this.peaksArray = [];
+    this.intervalCounterHash = {};
+    this.mostCommonInterval = 0;
+    this.mostCommonIntervalCount = 0;
+    this.generateThreshold();
+    this.run();
+  }
 
-### Day 3:
+  generateThreshold() {
+    this.largestFloat = 0;
+    for (let i = 0; i < this.dataLength; i += this.increment) {
+      if (Math.abs(this.data[i]) > this.largestFloat) {
+        this.largestFloat = this.data[i];
+      }
+    }
+    this.threshold = this.largestFloat;
+  }
 
-- [ ] Build a dropdown from the boomblock that changes the song.
-- [ ] Time to make the world move to the beat. Buildings should sway.
+  generatePeaks() {
+    for (let i = 0; i < this.dataLength; i += this.increment) {
+      if (Math.abs(this.data[i]) > this.threshold) {
+        this.peaksArray.push(i);
+      }
+    }
+  }
 
-### Day 4:
+  run() {
+    this.generatePeaks();
+    if (this.peaksArray.length < 300) {
+      this.threshold -= 0.005;
+      this.run();
+    } else {
+      this.generateIntervalHash();
+      this.generateMostCommonInterval();
+    }
+  }
 
-- [ ] Complete a satisfactory collection of ThreeJS components that react dynamically to the audio data.
-- [ ] Style the background and polish the lighting
-- [ ] Complete styling the interface and write out the About section.
+  //...
 
-### Bonus
+}
 
-- [ ] Weather
-- [ ] Sun/moon that moves and corresponds with the actual time of day
+```
+
+The algorithm then analyzes each peak's index against it's most adjacent peak, and stores those relational intervals in a counter hash. Essentially, this process generates a histogram of the most common intervals between loudness peaks in the song:
+
+```JavaScript
+
+class BeatAnalyser {
+
+  //...
+
+  generateIntervalHash() {
+    for (let i = 0; i < this.peaksArray.length - 1; i++) {
+      const interval = this.peaksArray[i + 1] - this.peaksArray[i];
+      if (this.intervalCounterHash[interval]) {
+        this.intervalCounterHash[interval] += 1;
+      } else {
+        this.intervalCounterHash[interval] = 1;
+      }
+    }
+    this.intervalCounterHash[this.increment] = 0;
+  }
+
+  generateMostCommonInterval() {
+    const intervals = Object.keys(this.intervalCounterHash);
+    intervals.forEach(interval => {
+      if (this.intervalCounterHash[interval] > this.mostCommonIntervalCount) {
+        this.mostCommonIntervalCount = this.intervalCounterHash[interval];
+        this.mostCommonInterval = interval;
+      }
+    });
+  }
+
+  //...
+
+}
+
+```
+
+The algorithm then uses the ratio between the length of the PCM data array (generally around 9 million floating point values for a 3.5 minute mp3) and the length of the song in seconds to compute the BPM (beats per minute) of the song:
+
+```JavaScript
+
+class BeatAnalyser {
+
+  //...
+
+  getIntervalInMilliseconds() {
+    const tempo = this.mostCommonInterval/this.increment;
+    const bpm = Math.round((1/tempo) * 60 * 1000 * 2);
+    return (60*1000*4/(bpm)); //gives beats in ms
+  }
+
+}
+
+```
+
+In preliminary testing, the algorithm was able to compute the BPM to within 0.2 BPM of the actual rate; I decided to round this value because a) most of my songs run at an integer BPM and b) even an error of 0.05 BPM will become jarring during playback, because the animation will begin to lag behind or jump ahead of the beat. The full algorithm can be found [here](https://github.com/milesmcleod/boomblock/blob/master/frontend/audio_components/beat_analysis.js) in the repo.
+
+## Syncing tempo to Animation
+
+Web audio sourceNodes can only be used once; this means that if the song is paused, those nodes must be garbage collected, and new ones must be generated. I employed a system that keeps track of where in the song we were when it was paused, and then that value sets the start point in the mp3 file when playback is resumed.
+
+The animation utilizes timeouts and intervals to add and remove blocks on beat. This presented a challenge. To make sure that the beat is re-synced with the animation after pausing and resuming playback, I wrote the following:
+
+```JavaScript
+
+// in the DrumStack class
+
+setInterval() {
+  const tempo = this.audio.globalTempo;
+  const pausedAt = this.audio.pausedAt;
+  //this is the coolest thing ever
+  const beatOffset = pausedAt ? (tempo - ((pausedAt) % tempo)) : 0;
+  this.set8thNoteTimeouts(beatOffset);
+  window.setTimeout(() => {
+    if (beatOffset) {
+      this.reset8thNoteTimeouts();
+      this.resetStack(this.scene);
+      this.set8thNoteTimeouts(0);
+    }
+    this.intervalId = window.setInterval(() => {
+      this.reset8thNoteTimeouts();
+      this.resetStack(this.scene);
+      this.set8thNoteTimeouts(0);
+    }, this.audio.globalTempo);
+  }, beatOffset);
+}
+
+//...
+
+set8thNoteTimeouts (beatOffset) {
+  this.reset8thNoteTimeouts();
+  let eighthNotes = [
+    0,
+    (this.audio.globalTempo/8),
+    (2 * this.audio.globalTempo/8),
+    (3 * this.audio.globalTempo/8),
+    (4 * this.audio.globalTempo/8),
+    (5 * this.audio.globalTempo/8),
+    (6 * this.audio.globalTempo/8),
+    (7 * this.audio.globalTempo/8)
+  ];
+  if (beatOffset) {
+    eighthNotes = eighthNotes.map(el => (
+      beatOffset - el
+    ));
+    eighthNotes = eighthNotes.filter(el => el >= 0 && el < beatOffset);
+  }
+  eighthNotes.forEach(note => {
+    const id = window.setTimeout(() => this.stack(), note);
+    this.timeoutIds.push(id);
+  });
+}
+
+
+
+```
+
+The beat offset uses the global tempo value to track how far into a particular measure we were when playback was paused, and then when playback is resumed, the algorithm calculates how exactly the intervals and timeouts should be set such that the stacking blocks resume stacking and disappearing at the correct moment in the beat.

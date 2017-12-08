@@ -45182,7 +45182,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.world = world;
 
   var set8thNotes = function set8thNotes() {
-    [0, 366, 735, 1100, 1467, 1834, 2201, 2568].forEach(function (time) {
+    [0, audio.globalTempo / 8, 2 * audio.globalTempo / 8, 3 * audio.globalTempo / 8, 4 * audio.globalTempo / 8, 5 * audio.globalTempo / 8, 6 * audio.globalTempo / 8, 7 * audio.globalTempo / 8].forEach(function (time) {
       window.setTimeout(function () {
         return world.drumStack();
       }, time);
@@ -45196,14 +45196,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })[0];
     if (clickElement) switch (clickElement.object.name) {
       case 'play':
-        var beatOffset = audio.pausedAt ? 2932 - audio.pausedAt % 2932 : 0;
+        var beatOffset = audio.pausedAt ? audio.globalTempo - audio.pausedAt % audio.globalTempo : 0;
         console.log(beatOffset); //this is the coolest thing ever
         window.setTimeout(function () {
           world.resetDrumStack();
           world.drumIntervalId = window.setInterval(function () {
             world.resetDrumStack();
             set8thNotes();
-          }, 2932); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
+          }, audio.globalTempo); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
         // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
         // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
@@ -45315,26 +45315,12 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
         audio.beatAnalyser = new _beat_analysis2.default(audio.drumsBuffer);
-        console.log(audio.beatAnalyser.getInterval());
+        audio.globalTempo = audio.beatAnalyser.getIntervalInMilliseconds();
       } else {
         loadCheck();
       }
     }, 10);
   };
-
-  window.addEventListener("click", function () {
-    console.log(audio.drumsBuffer.sampleRate);
-    console.log(audio.drumsBuffer.length);
-    console.log(audio.drumsBuffer.duration);
-    console.log(audio.drumsBuffer.numberOfChannels);
-    var data = audio.drumsBuffer.getChannelData(0);
-    console.log(data.length);
-    console.log(data[0]);
-    console.log(data[1000000]);
-    console.log(data[2000000]);
-    console.log(data[3000000]);
-    console.log(data[4000000]);
-  });
 
   loadCheck();
 
@@ -47419,20 +47405,32 @@ var BeatAnalyser = function () {
 
     this.data = drumsBuffer.getChannelData(0);
     this.duration = drumsBuffer.duration;
-    this.threshold = 0.45;
+    this.threshold = undefined;
     this.dataLength = this.data.length;
     this.increment = Math.floor(this.dataLength / (this.duration * 1000)); // in floats/ms
-    this.tenMSIncrement = this.increment / 4;
     this.peaksArray = [];
     this.intervalCounterHash = {};
     this.mostCommonInterval = 0;
-    this.maxIntervalCount = 0;
+    this.mostCommonIntervalCount = 0;
+    this.generateThreshold();
     this.generatePeaks();
     this.generateIntervalHash();
-    this.generateAverageIntervalInSeconds();
+    this.generateMostCommonInterval();
   }
 
   _createClass(BeatAnalyser, [{
+    key: "generateThreshold",
+    value: function generateThreshold() {
+      this.largestFloat = 0;
+      for (var i = 0; i < this.dataLength; i += this.increment) {
+        if (Math.abs(this.data[i]) > this.largestFloat) {
+          this.largestFloat = this.data[i];
+        }
+      }
+      console.log(this.largestFloat);
+      this.threshold = this.largestFloat - .03;
+    }
+  }, {
     key: "generatePeaks",
     value: function generatePeaks() {
       for (var i = 0; i < this.dataLength; i += this.increment) {
@@ -47452,24 +47450,27 @@ var BeatAnalyser = function () {
           this.intervalCounterHash[interval] = 1;
         }
       }
+      this.intervalCounterHash[this.increment] = 0;
     }
   }, {
-    key: "generateAverageIntervalInSeconds",
-    value: function generateAverageIntervalInSeconds() {
+    key: "generateMostCommonInterval",
+    value: function generateMostCommonInterval() {
       var _this = this;
 
       var intervals = Object.keys(this.intervalCounterHash);
       intervals.forEach(function (interval) {
-        if (_this.intervalCounterHash[interval] > _this.maxIntervalCount) {
-          _this.maxIntervalCount = _this.intervalCounterHash[interval];
+        if (_this.intervalCounterHash[interval] > _this.mostCommonIntervalCount) {
+          _this.mostCommonIntervalCount = _this.intervalCounterHash[interval];
           _this.mostCommonInterval = interval;
         }
       });
     }
   }, {
-    key: "getInterval",
-    value: function getInterval() {
-      return this.mostCommonInterval;
+    key: "getIntervalInMilliseconds",
+    value: function getIntervalInMilliseconds() {
+      var tempo = this.mostCommonInterval / this.increment;
+      console.log("this song plays at around " + 1 / tempo * 60 * 1000 * 2 + " bpm");
+      return tempo * 2; //gives beats in ms
     }
   }]);
 

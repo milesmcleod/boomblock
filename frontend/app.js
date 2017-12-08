@@ -23,7 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.world = world;
 
   const set8thNotes = () => {
-    [0, 366, 735, 1100, 1467, 1834, 2201, 2568].forEach(time => {
+    [
+    0,
+    audio.globalTempo/8,
+    2 * audio.globalTempo/8,
+    3 * audio.globalTempo/8,
+    4 * audio.globalTempo/8,
+    5 * audio.globalTempo/8,
+    6 * audio.globalTempo/8,
+    7 * audio.globalTempo/8
+  ].forEach(time => {
       window.setTimeout(() => world.drumStack(), time);
     });
   };
@@ -33,14 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const boomBlockObject = world.scene.children.filter(obj => obj.name === 'boombox')[0];
     if (clickElement) switch(clickElement.object.name) {
       case 'play':
-        const beatOffset = audio.pausedAt ? (2932 - ((audio.pausedAt) % 2932)) : 0;
+        const beatOffset = audio.pausedAt ? (audio.globalTempo - ((audio.pausedAt) % audio.globalTempo)) : 0;
         console.log(beatOffset); //this is the coolest thing ever
         window.setTimeout(() => {
           world.resetDrumStack();
           world.drumIntervalId = window.setInterval(() => {
             world.resetDrumStack();
             set8thNotes();
-          }, 2932); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
+          }, audio.globalTempo); //2932 is my calculated value in ms for the length of 1 measure; i should automate this
         }, beatOffset);
         // audio.masterAnalyser.getByteFrequencyData(audio.masterDataArray);
         // if (audio.drumsDataArray[0] > -60) window.setTimeout(() => {
@@ -152,26 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
         audio.beatAnalyser = new BeatAnalyser(audio.drumsBuffer);
-        console.log(audio.beatAnalyser.getInterval());
+        audio.globalTempo = audio.beatAnalyser.getIntervalInMilliseconds();
       } else {
         loadCheck();
       }
     }, 10);
   };
-
-  window.addEventListener("click", () => {
-    console.log(audio.drumsBuffer.sampleRate);
-    console.log(audio.drumsBuffer.length);
-    console.log(audio.drumsBuffer.duration);
-    console.log(audio.drumsBuffer.numberOfChannels);
-    const data = audio.drumsBuffer.getChannelData(0);
-    console.log(data.length);
-    console.log(data[0]);
-    console.log(data[1000000]);
-    console.log(data[2000000]);
-    console.log(data[3000000]);
-    console.log(data[4000000]);
-  });
 
   loadCheck();
 

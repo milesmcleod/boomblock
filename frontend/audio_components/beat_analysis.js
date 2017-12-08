@@ -6,17 +6,28 @@ class BeatAnalyser {
   constructor(drumsBuffer) {
     this.data = drumsBuffer.getChannelData(0);
     this.duration = drumsBuffer.duration;
-    this.threshold = 0.45;
+    this.threshold = undefined;
     this.dataLength = this.data.length;
     this.increment = Math.floor(this.dataLength/(this.duration * 1000)); // in floats/ms
-    this.tenMSIncrement = this.increment/4;
     this.peaksArray = [];
     this.intervalCounterHash = {};
     this.mostCommonInterval = 0;
-    this.maxIntervalCount = 0;
+    this.mostCommonIntervalCount = 0;
+    this.generateThreshold();
     this.generatePeaks();
     this.generateIntervalHash();
-    this.generateAverageIntervalInSeconds();
+    this.generateMostCommonInterval();
+  }
+
+  generateThreshold() {
+    this.largestFloat = 0;
+    for (let i = 0; i < this.dataLength; i += this.increment) {
+      if (Math.abs(this.data[i]) > this.largestFloat) {
+        this.largestFloat = this.data[i];
+      }
+    }
+    console.log(this.largestFloat);
+    this.threshold = this.largestFloat - .03;
   }
 
   generatePeaks() {
@@ -36,20 +47,23 @@ class BeatAnalyser {
         this.intervalCounterHash[interval] = 1;
       }
     }
+    this.intervalCounterHash[this.increment] = 0;
   }
 
-  generateAverageIntervalInSeconds() {
+  generateMostCommonInterval() {
     const intervals = Object.keys(this.intervalCounterHash);
     intervals.forEach(interval => {
-      if (this.intervalCounterHash[interval] > this.maxIntervalCount) {
-        this.maxIntervalCount = this.intervalCounterHash[interval];
+      if (this.intervalCounterHash[interval] > this.mostCommonIntervalCount) {
+        this.mostCommonIntervalCount = this.intervalCounterHash[interval];
         this.mostCommonInterval = interval;
       }
     });
   }
 
-  getInterval() {
-    return this.mostCommonInterval;
+  getIntervalInMilliseconds() {
+    const tempo = this.mostCommonInterval/this.increment;
+    console.log(`this song plays at around ${(1/tempo) * 60 * 1000 * 2} bpm`);
+    return tempo * 2; //gives beats in ms
   }
 }
 

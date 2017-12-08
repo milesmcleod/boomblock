@@ -1,7 +1,7 @@
 <h1 style="text-align:center;">BoomBlock: An Interactive Audio Visualizer</h1>
 
 <p align="center">
-  <img src="https://github.com/milesmcleod/purplenote-images/blob/master/purplenote-demo.gif?raw=true"/>
+  <img src="https://github.com/milesmcleod/boomblock/blob/master/assets/boomblock_demo.gif?raw=true"/>
 </p>
 
 ## <h2 style="text-align:center;"> [BoomBlock Live](https://milesmcleod.github.io/boomblock/)</h2>

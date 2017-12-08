@@ -45156,12 +45156,17 @@ var _audio_tracks = __webpack_require__(8);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
+var _beat_analysis = __webpack_require__(17);
+
+var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
+
 var _buildings = __webpack_require__(9);
 
 var _buildings2 = _interopRequireDefault(_buildings);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -45309,6 +45314,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (audio.loaded === 1) {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
+        audio.beatAnalyser = new _beat_analysis2.default(audio.drumsBuffer);
+        console.log(audio.beatAnalyser.getInterval());
       } else {
         loadCheck();
       }
@@ -45332,7 +45339,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadCheck();
 
   world.loop(audio);
-}); // entry.jsx
+});
 
 /***/ }),
 /* 2 */
@@ -47379,6 +47386,127 @@ var Buildings = function () {
 }();
 
 exports.default = Buildings;
+
+/***/ }),
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// this is my attempt at creating a tempo analyser in JS, based
+// on the approach outlined by Joe Sullivan at
+// http://joesul.li/van/beat-detection-using-web-audio/
+
+var BeatAnalyser = function () {
+  function BeatAnalyser(drumsBuffer) {
+    _classCallCheck(this, BeatAnalyser);
+
+    this.data = drumsBuffer.getChannelData(0);
+    this.duration = drumsBuffer.duration;
+    this.threshold = 0.45;
+    this.dataLength = this.data.length;
+    this.increment = Math.floor(this.dataLength / (this.duration * 1000)); // in floats/ms
+    this.tenMSIncrement = this.increment / 4;
+    this.peaksArray = [];
+    this.intervalCounterHash = {};
+    this.mostCommonInterval = 0;
+    this.maxIntervalCount = 0;
+    this.generatePeaks();
+    this.generateIntervalHash();
+    this.generateAverageIntervalInSeconds();
+  }
+
+  _createClass(BeatAnalyser, [{
+    key: "generatePeaks",
+    value: function generatePeaks() {
+      for (var i = 0; i < this.dataLength; i += this.increment) {
+        if (Math.abs(this.data[i]) > this.threshold) {
+          this.peaksArray.push(i);
+        }
+      }
+    }
+  }, {
+    key: "generateIntervalHash",
+    value: function generateIntervalHash() {
+      for (var i = 0; i < this.peaksArray.length - 1; i++) {
+        var interval = this.peaksArray[i + 1] - this.peaksArray[i];
+        if (this.intervalCounterHash[interval]) {
+          this.intervalCounterHash[interval] += 1;
+        } else {
+          this.intervalCounterHash[interval] = 1;
+        }
+      }
+    }
+  }, {
+    key: "generateAverageIntervalInSeconds",
+    value: function generateAverageIntervalInSeconds() {
+      var _this = this;
+
+      var intervals = Object.keys(this.intervalCounterHash);
+      intervals.forEach(function (interval) {
+        if (_this.intervalCounterHash[interval] > _this.maxIntervalCount) {
+          _this.maxIntervalCount = _this.intervalCounterHash[interval];
+          _this.mostCommonInterval = interval;
+        }
+      });
+    }
+  }, {
+    key: "getInterval",
+    value: function getInterval() {
+      return this.mostCommonInterval;
+    }
+  }]);
+
+  return BeatAnalyser;
+}();
+
+exports.default = BeatAnalyser;
+
+/*
+
+variables I need
+
+-the buffer length in milliseconds
+duration = drumsBuffer.duration;
+
+-length of Float32Array of PCM data
+dataLength = audio.drumsBuffer.getChannelData(0).length;
+
+-an arbitrary threshold
+try 0.15 to start
+
+-the length of an arbitrary interval in milliseconds by which I will
+iterate through the buffer and take the peak value from the Float32Array
+
+dataLength/duration = floats/second; * second/1000 ms = floats/millisecond
+
+increment = dataLength/(duration * 1000); this is in float/ms
+
+peaksArray = array of dataLength indices where PCM value is above threshold
+
+intervalHash: a counter hash where each key represents an interval in
+milliseconds, and the value at that key represents the number of times
+that interval occurs between adjacent values in the peaksArray
+
+
+
+*/
 
 /***/ })
 /******/ ]);

@@ -6,17 +6,54 @@ class BeatAnalyser {
   constructor(drumsBuffer) {
     this.data = drumsBuffer.getChannelData(0);
     this.duration = drumsBuffer.duration;
-    this.threshold = 0.15;
+    this.threshold = 0.45;
     this.dataLength = this.data.length;
-    this.increment = this.dataLength/(this.duration * 1000); // in floats/ms
+    this.increment = Math.floor(this.dataLength/(this.duration * 1000)); // in floats/ms
+    this.tenMSIncrement = this.increment/4;
     this.peaksArray = [];
-    this.intervalHash = {};
+    this.intervalCounterHash = {};
+    this.mostCommonInterval = 0;
+    this.maxIntervalCount = 0;
+    this.generatePeaks();
+    this.generateIntervalHash();
+    this.generateAverageIntervalInSeconds();
   }
 
-  getPeaksAboveThreshold(data, threshold) {
-    
+  generatePeaks() {
+    for (let i = 0; i < this.dataLength; i += this.increment) {
+      if (Math.abs(this.data[i]) > this.threshold) {
+        this.peaksArray.push(i);
+      }
+    }
+  }
+
+  generateIntervalHash() {
+    for (let i = 0; i < this.peaksArray.length - 1; i++) {
+      const interval = this.peaksArray[i + 1] - this.peaksArray[i];
+      if (this.intervalCounterHash[interval]) {
+        this.intervalCounterHash[interval] += 1;
+      } else {
+        this.intervalCounterHash[interval] = 1;
+      }
+    }
+  }
+
+  generateAverageIntervalInSeconds() {
+    const intervals = Object.keys(this.intervalCounterHash);
+    intervals.forEach(interval => {
+      if (this.intervalCounterHash[interval] > this.maxIntervalCount) {
+        this.maxIntervalCount = this.intervalCounterHash[interval];
+        this.mostCommonInterval = interval;
+      }
+    });
+  }
+
+  getInterval() {
+    return this.mostCommonInterval;
   }
 }
+
+export default BeatAnalyser;
 
 /*
 

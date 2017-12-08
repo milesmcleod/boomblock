@@ -5,6 +5,7 @@ import Floor from './three_components/floor';
 import BoomBlock from './three_components/boomblock';
 import TrainTrack from './three_components/traintrack';
 import AudioTracks from './audio_components/audio_tracks';
+import BeatAnalyser from './audio_components/beat_analysis';
 import Buildings from './three_components/buildings';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -150,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (audio.loaded === 1) {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
+        audio.beatAnalyser = new BeatAnalyser(audio.drumsBuffer);
+        console.log(audio.beatAnalyser.getInterval());
       } else {
         loadCheck();
       }

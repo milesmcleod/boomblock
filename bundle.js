@@ -46964,14 +46964,17 @@ var AudioTracks = function () {
       melodyArrayBuffer: undefined
     };
 
+    this.drumsBuffer = undefined;
     this.drumsSource = undefined;
     this.drumsGain = undefined;
     this.drumsAnalyser = undefined;
 
+    this.bassBuffer = undefined;
     this.bassSource = undefined;
     this.bassGain = undefined;
     this.bassAnalyser = undefined;
 
+    this.melodyBuffer = undefined;
     this.melodySource = undefined;
     this.melodyGain = undefined;
     this.melodyAnalyser = undefined;
@@ -46979,6 +46982,7 @@ var AudioTracks = function () {
     // length: 128
     this.melodyDataArray = undefined;
 
+    this.samplesBuffer = undefined;
     this.samplesSource = undefined;
     this.samplesGain = undefined;
     this.samplesAnalyser = undefined;
@@ -47061,9 +47065,29 @@ var AudioTracks = function () {
         _this2[type + "BufferLength"] = _this2[type + "Analyser"].frequencyBinCount;
         // length: 128
         _this2[type + "DataArray"] = new Float32Array(_this2[type + "BufferLength"]);
-        console.log("loaded " + type);
         _this2.loaded += 0.25;
       });
+    }
+  }, {
+    key: "resetTrack",
+    value: function resetTrack(type, buffer) {
+      var sourceNode = this.audioContext.createBufferSource();
+      var typeBuffer = buffer;
+      sourceNode.buffer = typeBuffer;
+      var gainNode = this.audioContext.createGain();
+      sourceNode.connect(gainNode);
+      var analyserNode = this.audioContext.createAnalyser();
+      gainNode.connect(analyserNode);
+      analyserNode.connect(this.masterGain);
+      this[type + "Buffer"] = typeBuffer;
+      this[type + "Source"] = sourceNode;
+      this[type + "Gain"] = gainNode;
+      this[type + "Analyser"] = analyserNode;
+      this[type + "Analyser"].fftSize = 16384;
+      this[type + "BufferLength"] = this[type + "Analyser"].frequencyBinCount;
+      // length: 128
+      this[type + "DataArray"] = new Float32Array(this[type + "BufferLength"]);
+      this.loaded += 0.25;
     }
   }, {
     key: "start",
@@ -47097,10 +47121,10 @@ var AudioTracks = function () {
     key: "reload",
     value: function reload() {
       this.loaded = 0;
-      this.routeTrack('drums', this.arrayBufferCollection);
-      this.routeTrack('bass', this.arrayBufferCollection);
-      this.routeTrack('samples', this.arrayBufferCollection);
-      this.routeTrack('melody', this.arrayBufferCollection);
+      this.resetTrack('drums', this.drumsBuffer);
+      this.resetTrack('bass', this.bassBuffer);
+      this.resetTrack('samples', this.samplesBuffer);
+      this.resetTrack('melody', this.melodyBuffer);
     }
   }]);
 
@@ -47255,7 +47279,6 @@ var BeatAnalyser = function () {
           this.largestFloat = this.data[i];
         }
       }
-      console.log(this.largestFloat);
       this.threshold = this.largestFloat;
     }
   }, {
@@ -47310,7 +47333,6 @@ var BeatAnalyser = function () {
     value: function getIntervalInMilliseconds() {
       var tempo = this.mostCommonInterval / this.increment;
       var bpm = Math.round(1 / tempo * 60 * 1000 * 2);
-      console.log("this song plays at " + bpm + " bpm");
       return 60 * 1000 * 4 / bpm; //gives beats in ms
     }
   }]);
@@ -47390,6 +47412,7 @@ var DrumStack = function () {
     value: function set8thNoteTimeouts(beatOffset) {
       var _this = this;
 
+      this.reset8thNoteTimeouts();
       var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
       if (beatOffset) {
         eighthNotes = eighthNotes.map(function (el) {
@@ -47399,7 +47422,6 @@ var DrumStack = function () {
           return el >= 0 && el < beatOffset;
         });
       }
-      console.log(eighthNotes);
       eighthNotes.forEach(function (note) {
         var id = window.setTimeout(function () {
           return _this.stack();
@@ -47436,7 +47458,6 @@ var DrumStack = function () {
           _this2.set8thNoteTimeouts(0);
         }, _this2.audio.globalTempo);
       }, beatOffset);
-      console.log(beatOffset);
     }
   }, {
     key: 'resetInterval',
@@ -47550,22 +47571,23 @@ var Handlers = function () {
   _createClass(Handlers, [{
     key: 'handlePlay',
     value: function handlePlay() {
-      // this.drumStack.resetStack();
-      this.drumStack.setInterval();
       if (!this.audio.playing) {
         this.audio.masterGain.gain.value = 1;
         this.audio.start();
+        this.drumStack.resetInterval();
+        this.drumStack.reset8thNoteTimeouts();
+        this.drumStack.setInterval();
       }
     }
   }, {
     key: 'handlePause',
     value: function handlePause() {
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
         window.removeEventListener('mouseup', this.handleClick, false);
+        this.drumStack.resetInterval();
+        this.drumStack.reset8thNoteTimeouts();
         this.audio.reload();
         this.loadCheck();
       }
@@ -47575,21 +47597,21 @@ var Handlers = function () {
     value: function handleReset() {
       var _this = this;
 
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
       if (this.audio.playing) {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
+        this.audio.masterGain.gain.value = 1;
+        window.removeEventListener('mouseup', this.handleClick, false);
+        this.audio.pausedAt = 0;
+        this.audio.resetting = 1;
+        this.drumStack.resetInterval();
+        this.drumStack.reset8thNoteTimeouts();
+        window.setTimeout(function () {
+          _this.audio.resetting = 0;
+        }, 400);
+        this.audio.reload();
+        this.loadCheck();
       }
-      this.audio.masterGain.gain.value = 1;
-      window.removeEventListener('mouseup', this.handleClick, false);
-      this.audio.pausedAt = 0;
-      this.audio.resetting = 1;
-      window.setTimeout(function () {
-        _this.audio.resetting = 0;
-      }, 400);
-      this.audio.reload();
-      this.loadCheck();
     }
   }, {
     key: 'handleMute',

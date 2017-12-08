@@ -24,7 +24,6 @@ class BeatAnalyser {
         this.largestFloat = this.data[i];
       }
     }
-    console.log(this.largestFloat);
     this.threshold = this.largestFloat;
   }
 
@@ -72,7 +71,6 @@ class BeatAnalyser {
   getIntervalInMilliseconds() {
     const tempo = this.mostCommonInterval/this.increment;
     const bpm = Math.round((1/tempo) * 60 * 1000 * 2);
-    console.log(`this song plays at ${bpm} bpm`);
     return (60*1000*4/(bpm)); //gives beats in ms
   }
 }

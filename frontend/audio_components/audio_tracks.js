@@ -7,14 +7,17 @@ class AudioTracks {
       melodyArrayBuffer: undefined
     };
 
+    this.drumsBuffer = undefined;
     this.drumsSource = undefined;
     this.drumsGain = undefined;
     this.drumsAnalyser = undefined;
 
+    this.bassBuffer = undefined;
     this.bassSource = undefined;
     this.bassGain = undefined;
     this.bassAnalyser = undefined;
 
+    this.melodyBuffer = undefined;
     this.melodySource = undefined;
     this.melodyGain = undefined;
     this.melodyAnalyser = undefined;
@@ -22,6 +25,7 @@ class AudioTracks {
     // length: 128
     this.melodyDataArray = undefined;
 
+    this.samplesBuffer = undefined;
     this.samplesSource = undefined;
     this.samplesGain = undefined;
     this.samplesAnalyser = undefined;
@@ -115,10 +119,29 @@ class AudioTracks {
         this[`${type}BufferLength`] = this[`${type}Analyser`].frequencyBinCount;
         // length: 128
         this[`${type}DataArray`] = new Float32Array(this[`${type}BufferLength`]);
-        console.log(`loaded ${type}`);
         this.loaded += 0.25;
       }
     );
+  }
+
+  resetTrack(type, buffer) {
+    const sourceNode = this.audioContext.createBufferSource();
+    let typeBuffer = buffer;
+      sourceNode.buffer = typeBuffer;
+      const gainNode = this.audioContext.createGain();
+      sourceNode.connect(gainNode);
+      const analyserNode = this.audioContext.createAnalyser();
+      gainNode.connect(analyserNode);
+      analyserNode.connect(this.masterGain);
+      this[`${type}Buffer`] = typeBuffer;
+      this[`${type}Source`] = sourceNode;
+      this[`${type}Gain`] = gainNode;
+      this[`${type}Analyser`] = analyserNode;
+      this[`${type}Analyser`].fftSize = 16384;
+      this[`${type}BufferLength`] = this[`${type}Analyser`].frequencyBinCount;
+      // length: 128
+      this[`${type}DataArray`] = new Float32Array(this[`${type}BufferLength`]);
+      this.loaded += 0.25;
   }
 
   start() {
@@ -149,10 +172,10 @@ class AudioTracks {
 
   reload() {
     this.loaded = 0;
-    this.routeTrack('drums', this.arrayBufferCollection);
-    this.routeTrack('bass', this.arrayBufferCollection);
-    this.routeTrack('samples', this.arrayBufferCollection);
-    this.routeTrack('melody', this.arrayBufferCollection);
+    this.resetTrack('drums', this.drumsBuffer);
+    this.resetTrack('bass', this.bassBuffer);
+    this.resetTrack('samples', this.samplesBuffer);
+    this.resetTrack('melody', this.melodyBuffer);
   }
 }
 

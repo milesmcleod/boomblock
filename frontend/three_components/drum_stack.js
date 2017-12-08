@@ -14,6 +14,7 @@ class DrumStack {
   }
 
   set8thNoteTimeouts (beatOffset) {
+    this.reset8thNoteTimeouts();
     let eighthNotes = [
       0,
       (this.audio.globalTempo/8),
@@ -30,7 +31,6 @@ class DrumStack {
       ));
       eighthNotes = eighthNotes.filter(el => el >= 0 && el < beatOffset);
     }
-    console.log(eighthNotes);
     eighthNotes.forEach(note => {
       const id = window.setTimeout(() => this.stack(), note);
       this.timeoutIds.push(id);
@@ -59,7 +59,6 @@ class DrumStack {
         this.set8thNoteTimeouts(0);
       }, this.audio.globalTempo);
     }, beatOffset);
-    console.log(beatOffset);
   }
 
   resetInterval() {

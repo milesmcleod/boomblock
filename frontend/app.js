@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
         audio.beatAnalyser = new BeatAnalyser(audio.drumsBuffer);
-        audio.globalTempo = audio.beatAnalyser.getIntervalInMilliseconds();
+        audio.globalTempo = Math.round(audio.beatAnalyser.getIntervalInMilliseconds());
       } else {
         loadCheck();
       }

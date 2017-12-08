@@ -45315,7 +45315,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('mouseup', handleClick, false);
         window.addEventListener('mousemove', handleMove, false);
         audio.beatAnalyser = new _beat_analysis2.default(audio.drumsBuffer);
-        audio.globalTempo = audio.beatAnalyser.getIntervalInMilliseconds();
+        audio.globalTempo = Math.round(audio.beatAnalyser.getIntervalInMilliseconds());
       } else {
         loadCheck();
       }
@@ -47176,10 +47176,10 @@ var AudioTracks = function () {
     value: function load() {
       var _this = this;
 
-      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_drums.mp3");
-      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_bass.mp3");
-      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_samples.mp3");
-      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/the_lux_2_melody.mp3");
+      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_drums.mp3");
+      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_bass.mp3");
+      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_samples.mp3");
+      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/lux_2_melody.mp3");
       Promise.all([getDrums, getBass, getSamples, getMelody]).then(function (results) {
         ['drums', 'bass', 'samples', 'melody'].forEach(function (type, idx) {
           _this.arrayBufferCollection[type + "ArrayBuffer"] = results[idx];
@@ -47407,15 +47407,13 @@ var BeatAnalyser = function () {
     this.duration = drumsBuffer.duration;
     this.threshold = undefined;
     this.dataLength = this.data.length;
-    this.increment = Math.floor(this.dataLength / (this.duration * 1000)); // in floats/ms
+    this.increment = Math.round(this.dataLength / (this.duration * 1000)); // in floats/ms
     this.peaksArray = [];
     this.intervalCounterHash = {};
     this.mostCommonInterval = 0;
     this.mostCommonIntervalCount = 0;
     this.generateThreshold();
-    this.generatePeaks();
-    this.generateIntervalHash();
-    this.generateMostCommonInterval();
+    this.run();
   }
 
   _createClass(BeatAnalyser, [{
@@ -47428,7 +47426,7 @@ var BeatAnalyser = function () {
         }
       }
       console.log(this.largestFloat);
-      this.threshold = this.largestFloat - .03;
+      this.threshold = this.largestFloat;
     }
   }, {
     key: "generatePeaks",
@@ -47466,11 +47464,24 @@ var BeatAnalyser = function () {
       });
     }
   }, {
+    key: "run",
+    value: function run() {
+      this.generatePeaks();
+      if (this.peaksArray.length < 300) {
+        this.threshold -= 0.005;
+        this.run();
+      } else {
+        this.generateIntervalHash();
+        this.generateMostCommonInterval();
+      }
+    }
+  }, {
     key: "getIntervalInMilliseconds",
     value: function getIntervalInMilliseconds() {
       var tempo = this.mostCommonInterval / this.increment;
-      console.log("this song plays at around " + 1 / tempo * 60 * 1000 * 2 + " bpm");
-      return tempo * 2; //gives beats in ms
+      var bpm = Math.round(1 / tempo * 60 * 1000 * 2);
+      console.log("this song plays at " + bpm + " bpm");
+      return 60 * 1000 * 4 / bpm; //gives beats in ms
     }
   }]);
 
@@ -47489,8 +47500,7 @@ duration = drumsBuffer.duration;
 -length of Float32Array of PCM data
 dataLength = audio.drumsBuffer.getChannelData(0).length;
 
--an arbitrary threshold
-try 0.15 to start
+-a threshold
 
 -the length of an arbitrary interval in milliseconds by which I will
 iterate through the buffer and take the peak value from the Float32Array

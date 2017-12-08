@@ -8,15 +8,13 @@ class BeatAnalyser {
     this.duration = drumsBuffer.duration;
     this.threshold = undefined;
     this.dataLength = this.data.length;
-    this.increment = Math.floor(this.dataLength/(this.duration * 1000)); // in floats/ms
+    this.increment = Math.round(this.dataLength/(this.duration * 1000)); // in floats/ms
     this.peaksArray = [];
     this.intervalCounterHash = {};
     this.mostCommonInterval = 0;
     this.mostCommonIntervalCount = 0;
     this.generateThreshold();
-    this.generatePeaks();
-    this.generateIntervalHash();
-    this.generateMostCommonInterval();
+    this.run();
   }
 
   generateThreshold() {
@@ -27,7 +25,7 @@ class BeatAnalyser {
       }
     }
     console.log(this.largestFloat);
-    this.threshold = this.largestFloat - .03;
+    this.threshold = this.largestFloat;
   }
 
   generatePeaks() {
@@ -60,10 +58,22 @@ class BeatAnalyser {
     });
   }
 
+  run() {
+    this.generatePeaks();
+    if (this.peaksArray.length < 300) {
+      this.threshold -= 0.005;
+      this.run();
+    } else {
+      this.generateIntervalHash();
+      this.generateMostCommonInterval();
+    }
+  }
+
   getIntervalInMilliseconds() {
     const tempo = this.mostCommonInterval/this.increment;
-    console.log(`this song plays at around ${(1/tempo) * 60 * 1000 * 2} bpm`);
-    return tempo * 2; //gives beats in ms
+    const bpm = Math.round((1/tempo) * 60 * 1000 * 2);
+    console.log(`this song plays at ${bpm} bpm`);
+    return (60*1000*4/(bpm)); //gives beats in ms
   }
 }
 
@@ -79,8 +89,7 @@ duration = drumsBuffer.duration;
 -length of Float32Array of PCM data
 dataLength = audio.drumsBuffer.getChannelData(0).length;
 
--an arbitrary threshold
-try 0.15 to start
+-a threshold
 
 -the length of an arbitrary interval in milliseconds by which I will
 iterate through the buffer and take the peak value from the Float32Array

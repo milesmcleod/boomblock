@@ -4,7 +4,7 @@
   <img src="https://github.com/milesmcleod/boomblock/blob/master/assets/boomblock_demo.gif?raw=true"/>
 </p>
 
-## <h2 style="text-align:center;"> [BoomBlock Live](https://milesmcleod.github.io/boomblock/)</h2>
+## <h2 style="text-align:center;"> [BoomBlock 1.0 Live](https://milesmcleod.github.io/boomblock/)</h2>
 
 ----
 
@@ -12,7 +12,7 @@
 
 BoomBlock is an original multitrack audio player and visualizer, rendered using the ThreeJS library and the Web Audio API. It builds and explores relationships between 3D JavaScript animation and sound.
 
-## Tempo Detection with JavaScript and the Web Audio API
+### Tempo Detection with JavaScript and the Web Audio API
 
 BoomBlock's core algorithm is based on one outlined [here](http://joesul.li/van/beat-detection-using-web-audio/) by Joe Sullivan. The algorithm generates an interval by which to iterate through a massive array of the mp3 waveform's PCM data, searching for amplitude peak, and when it finds a peak, it stores the index of that peak in an array:
 
@@ -125,7 +125,7 @@ class BeatAnalyser {
 
 In preliminary testing, the algorithm was able to compute the BPM to within 0.2 BPM of the actual rate; I decided to round this value because a) most of my songs run at an integer BPM and b) even an error of 0.05 BPM will become jarring during playback, because the animation will begin to lag behind or jump ahead of the beat. The full algorithm can be found [here](https://github.com/milesmcleod/boomblock/blob/master/frontend/audio_components/beat_analysis.js) in the repo.
 
-## Syncing tempo to Animation
+### Syncing tempo to Animation
 
 Web audio sourceNodes can only be used once; this means that if the song is paused, those nodes must be garbage collected, and new ones must be generated. I employed a system that keeps track of where in the song we were when it was paused, and then that value sets the start point in the mp3 file when playback is resumed.
 

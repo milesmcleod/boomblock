@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -45132,86 +45132,6 @@ function CanvasRenderer() {
 "use strict";
 
 
-var _world = __webpack_require__(2);
-
-var _world2 = _interopRequireDefault(_world);
-
-var _lighting = __webpack_require__(4);
-
-var _lighting2 = _interopRequireDefault(_lighting);
-
-var _floor = __webpack_require__(5);
-
-var _floor2 = _interopRequireDefault(_floor);
-
-var _boomblock = __webpack_require__(6);
-
-var _boomblock2 = _interopRequireDefault(_boomblock);
-
-var _drum_stack = __webpack_require__(18);
-
-var _drum_stack2 = _interopRequireDefault(_drum_stack);
-
-var _traintrack = __webpack_require__(7);
-
-var _traintrack2 = _interopRequireDefault(_traintrack);
-
-var _audio_tracks = __webpack_require__(8);
-
-var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
-
-var _beat_analysis = __webpack_require__(17);
-
-var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
-
-var _buildings = __webpack_require__(9);
-
-var _buildings2 = _interopRequireDefault(_buildings);
-
-var _handlers = __webpack_require__(19);
-
-var _handlers2 = _interopRequireDefault(_handlers);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// entry.jsx
-document.addEventListener('DOMContentLoaded', function () {
-
-  var audio = new _audio_tracks2.default();
-  audio.load();
-  window.audio = audio;
-
-  var world = new _world2.default();
-  var lighting = new _lighting2.default(world.scene);
-  var floor = new _floor2.default(world.scene);
-  var boomblock = new _boomblock2.default(world.scene);
-  var traintrack = new _traintrack2.default(world.scene);
-  var buildings = new _buildings2.default(world.scene);
-  var drumStack = new _drum_stack2.default(audio, world.scene);
-  var handlers = new _handlers2.default(audio, world, drumStack);
-  window.world = world;
-
-  handlers.loadCheck();
-
-  var about = document.getElementsByClassName('about-link')[0];
-  about.addEventListener("click", function () {
-    var modal = document.getElementsByClassName('about-modal')[0];
-    modal.classList.add('show-modal');
-    modal.addEventListener("click", function () {
-      modal.classList.remove('show-modal');
-    });
-  });
-
-  world.loop(audio);
-});
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -45222,7 +45142,7 @@ var _three = __webpack_require__(0);
 
 var THREE = _interopRequireWildcard(_three);
 
-var _threeOrbitcontrols = __webpack_require__(3);
+var _threeOrbitcontrols = __webpack_require__(11);
 
 var _threeOrbitcontrols2 = _interopRequireDefault(_threeOrbitcontrols);
 
@@ -45370,7 +45290,1207 @@ var World = function () {
 exports.default = World;
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Lighting = function () {
+  _createClass(Lighting, [{
+    key: 'createAmbientLight',
+    value: function createAmbientLight(scene) {
+      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
+      scene.add(this.ambientLight);
+    }
+  }, {
+    key: 'createSpotLight',
+    value: function createSpotLight(scene) {
+      this.spotLight = new THREE.SpotLight(0xffffff, 0.8);
+      this.spotLight.position.set(200, 500, 500);
+      this.spotLight.castShadow = true;
+      this.spotLight.shadow.mapSize.width = 1024;
+      this.spotLight.shadow.mapSize.height = 1024;
+      this.spotLight.shadow.camera.near = 500;
+      this.spotLight.shadow.camera.far = 4000;
+      this.spotLight.shadow.camera.fov = 30;
+      this.spotLight.angle = Math.PI / 5;
+      scene.add(this.spotLight);
+    }
+  }]);
+
+  function Lighting(scene) {
+    _classCallCheck(this, Lighting);
+
+    this.createAmbientLight(scene);
+    // this.createSpotLight(scene);
+  }
+
+  return Lighting;
+}();
+
+exports.default = Lighting;
+
+/***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Floor = function () {
+  _createClass(Floor, [{
+    key: 'createFloor',
+    value: function createFloor(scene) {
+      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.floor.rotation.x = -Math.PI / 2;
+      this.floor.position.y = -180;
+      this.floor.receiveShadow = true;
+      scene.add(this.floor);
+    }
+  }]);
+
+  function Floor(scene) {
+    _classCallCheck(this, Floor);
+
+    this.createFloor(scene);
+  }
+
+  return Floor;
+}();
+
+exports.default = Floor;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BoomBlock = function () {
+  _createClass(BoomBlock, [{
+    key: 'createBase',
+    value: function createBase(boombox) {
+      var baseGeometry = new THREE.BoxBufferGeometry(480, 360, 200);
+      var baseMaterial = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      this.base = new THREE.Mesh(baseGeometry, baseMaterial);
+      this.base.castShadow = true;
+      this.base.receiveShadow = true;
+      boombox.add(this.base);
+
+      var tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
+      var tapeReaderMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      this.tapeReader = new THREE.Mesh(tapeReaderGeometry, tapeReaderMaterial);
+      this.tapeReader.position.set(-20, 70, 110);
+      boombox.add(this.tapeReader);
+    }
+  }, {
+    key: 'createReels',
+    value: function createReels(scene) {
+      var reelGeometry = new THREE.CylinderBufferGeometry(60, 60, 40, 32);
+      var reelMaterial = new THREE.MeshPhongMaterial({
+        color: 0x000000,
+        side: THREE.DoubleSide
+      });
+      var miniReelGeometry = new THREE.CylinderBufferGeometry(20, 20, 60, 32);
+
+      var spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
+      var spokeMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      var ringGeometry = new THREE.RingGeometry(50, 70, 32);
+      var ringMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+
+      var reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
+      reelLeft.rotateX(Math.PI / 2);
+
+      var spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL1.position.set(0, 32, 21);
+      var spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL2.position.set(26, -12, 21);
+      spokeL2.rotation.z = Math.PI / 3;
+      var spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeL3.position.set(-26, -12, 21);
+      spokeL3.rotation.z = 2 * Math.PI / 3;
+
+      var frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      frontLeftRing.position.set(0, 0, 21);
+      var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      backLeftRing.position.set(0, 0, -21);
+
+      var miniReelL = new THREE.Mesh(miniReelGeometry, ringMaterial);
+      miniReelL.rotateX(Math.PI / 2);
+
+      this.leftReel = new THREE.Group();
+      this.leftReel.add(miniReelL);
+      this.leftReel.add(reelLeft);
+      this.leftReel.add(spokeL1);
+      this.leftReel.add(spokeL2);
+      this.leftReel.add(spokeL3);
+      this.leftReel.add(frontLeftRing);
+      this.leftReel.add(backLeftRing);
+      this.leftReel.position.set(-120, 200, 122);
+      // this.leftReel.rotation.x = Math.PI/2;
+
+      this.leftReel.name = 'reelLeft';
+
+      scene.add(this.leftReel);
+
+      var reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
+      reelRight.rotateX(Math.PI / 2);
+
+      var spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR1.position.set(0, 32, 21);
+      var spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR2.position.set(26, -12, 21);
+      spokeR2.rotation.z = Math.PI / 3;
+      var spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
+      spokeR3.position.set(-26, -12, 21);
+      spokeR3.rotation.z = 2 * Math.PI / 3;
+
+      var frontRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      frontRightRing.position.set(0, 0, 21);
+      var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      backRightRing.position.set(0, 0, -21);
+
+      var miniReelR = new THREE.Mesh(miniReelGeometry, ringMaterial);
+      miniReelR.rotateX(Math.PI / 2);
+
+      this.rightReel = new THREE.Group();
+      this.rightReel.add(miniReelR);
+      this.rightReel.add(reelRight);
+      this.rightReel.add(spokeR1);
+      this.rightReel.add(spokeR2);
+      this.rightReel.add(spokeR3);
+      this.rightReel.add(frontRightRing);
+      this.rightReel.add(backRightRing);
+      this.rightReel.position.set(80, 200, 122);
+
+      this.rightReel.name = 'reelRight';
+
+      scene.add(this.rightReel);
+    }
+  }, {
+    key: 'createTape',
+    value: function createTape(boombox) {
+      var tapeGeometry = new THREE.PlaneBufferGeometry(154, 80);
+      var tapeMaterial = new THREE.MeshPhongMaterial({
+        color: 0x000000,
+        side: THREE.DoubleSide
+      });
+      var tapeLeft = new THREE.Mesh(tapeGeometry, tapeMaterial);
+      tapeLeft.position.set(-120, 108, 100);
+      tapeLeft.rotation.x = Math.PI / 2;
+      tapeLeft.rotation.y = -Math.PI / 3.60;
+      var tapeRight = new THREE.Mesh(tapeGeometry, tapeMaterial);
+      tapeRight.position.set(80, 108, 100);
+      tapeRight.rotation.x = Math.PI / 2;
+      tapeRight.rotation.y = Math.PI / 3.60;
+
+      var tapeBottomGeometry = new THREE.PlaneBufferGeometry(101, 80);
+      var tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
+      tapeBottom.position.set(-20, 49, 100);
+      tapeBottom.rotation.x = Math.PI / 2;
+
+      boombox.add(tapeLeft);
+      boombox.add(tapeRight);
+      boombox.add(tapeBottom);
+    }
+  }, {
+    key: 'createTrackButtons',
+    value: function createTrackButtons(boombox) {
+      var trackButtonGeometry = new THREE.BoxBufferGeometry(50, 50, 20);
+      var trackButtonMaterial1 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        side: THREE.DoubleSide
+      });
+      var trackButtonMaterial2 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        side: THREE.DoubleSide
+      });
+      var trackButtonMaterial3 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        side: THREE.DoubleSide
+      });
+      var trackButtonMaterial4 = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        side: THREE.DoubleSide
+      });
+      this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial1);
+      this.trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial2);
+      this.trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial3);
+      this.trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial4);
+      // trackButton1.material.uniforms.transparent = true;
+      // trackButton1.material.uniforms.opacity = 0.3;
+      this.trackButton1.position.set(175, 100, 110);
+      this.trackButton2.position.set(175, 30, 110);
+      this.trackButton3.position.set(175, -40, 110);
+      this.trackButton4.position.set(175, -110, 110);
+
+      var light = new THREE.PointLight(0x00ffff, 0.6, 0, 2);
+      light.position.set(175, 0, 110);
+      light.castShadow = true;
+      light.shadow.mapSize.width = 1024;
+      light.shadow.mapSize.height = 1024;
+      light.shadow.camera.far = 2000;
+      boombox.add(light);
+
+      this.trackButton1.name = 'track1';
+      this.trackButton2.name = 'track2';
+      this.trackButton3.name = 'track3';
+      this.trackButton4.name = 'track4';
+
+      boombox.add(this.trackButton1);
+      boombox.add(this.trackButton2);
+      boombox.add(this.trackButton3);
+      boombox.add(this.trackButton4);
+    }
+  }, {
+    key: 'createPlayButtons',
+    value: function createPlayButtons(boombox) {
+      var playButtonGeometry = new THREE.CylinderBufferGeometry(30, 30, 20, 32);
+      var playButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0x66ff66,
+        side: THREE.DoubleSide
+      });
+      var pauseButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        side: THREE.DoubleSide
+      });
+      var resetButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        side: THREE.DoubleSide
+      });
+      var muteButtonMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        side: THREE.DoubleSide
+      });
+
+      this.playButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
+      this.playButton.position.set(-180, -10, 110);
+      this.playButton.rotation.x = Math.PI / 2;
+
+      var coneGeometry = new THREE.ConeGeometry(16, 24, 2);
+      var labelMaterial = new THREE.MeshBasicMaterial({ color: 0x343434 });
+      var cone = new THREE.Mesh(coneGeometry, labelMaterial);
+      cone.position.set(-176, -10, 121);
+      cone.rotateX(-Math.PI / 2);
+      cone.rotateZ(-Math.PI / 2);
+      cone.name = 'play';
+      boombox.add(cone);
+
+      this.pauseButton = new THREE.Mesh(playButtonGeometry, pauseButtonMaterial);
+      this.pauseButton.position.set(-100, -10, 110);
+      this.pauseButton.rotation.x = Math.PI / 2;
+
+      var pausePlaneGeometry = new THREE.PlaneBufferGeometry(25, 9);
+      var pauseLeft = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+      pauseLeft.position.set(-106, -10, 121);
+      pauseLeft.rotateZ(Math.PI / 2);
+      var pauseRight = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
+      pauseRight.position.set(-94, -10, 121);
+      pauseRight.rotateZ(Math.PI / 2);
+      pauseLeft.name = 'pause';
+      pauseRight.name = 'pause';
+      boombox.add(pauseLeft);
+      boombox.add(pauseRight);
+
+      this.resetButton = new THREE.Mesh(playButtonGeometry, resetButtonMaterial);
+      this.resetButton.position.set(-20, -10, 110);
+      this.resetButton.rotation.x = Math.PI / 2;
+
+      var rewindGeometry = new THREE.ConeGeometry(12, 18, 2);
+      var cone1 = new THREE.Mesh(rewindGeometry, labelMaterial);
+      cone1.position.set(-12, -10, 121);
+      cone1.rotateX(-Math.PI / 2);
+      cone1.rotateZ(Math.PI / 2);
+      cone1.name = 'reset';
+      boombox.add(cone1);
+      var cone2 = new THREE.Mesh(rewindGeometry, labelMaterial);
+      cone2.position.set(-25, -10, 121);
+      cone2.rotateX(-Math.PI / 2);
+      cone2.rotateZ(Math.PI / 2);
+      cone2.name = 'reset';
+      boombox.add(cone2);
+      var resetPlaneGeometry = new THREE.PlaneBufferGeometry(24, 5);
+      var resetBar = new THREE.Mesh(resetPlaneGeometry, labelMaterial);
+      resetBar.position.set(-33, -10, 121);
+      resetBar.rotateZ(Math.PI / 2);
+      resetBar.name = 'reset';
+      boombox.add(resetBar);
+
+      this.muteButton = new THREE.Mesh(playButtonGeometry, muteButtonMaterial);
+      this.muteButton.position.set(60, -10, 110);
+      this.muteButton.rotation.x = Math.PI / 2;
+
+      var cone3 = new THREE.Mesh(coneGeometry, labelMaterial);
+      cone3.position.set(51, -10, 121);
+      cone3.rotateX(-Math.PI / 2);
+      cone3.rotateZ(Math.PI / 2);
+      cone3.name = 'mute';
+      boombox.add(cone3);
+      var mutePlaneGeometry = new THREE.PlaneBufferGeometry(14, 14);
+      var mutePlane = new THREE.Mesh(mutePlaneGeometry, labelMaterial);
+      mutePlane.position.set(44, -10, 121);
+      mutePlane.name = 'mute';
+      boombox.add(mutePlane);
+      var mutePlane2Geometry = new THREE.PlaneBufferGeometry(16, 3);
+      var mutePlaneX1 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+      mutePlaneX1.position.set(70, -10, 121);
+      mutePlaneX1.rotateZ(Math.PI / 4);
+      mutePlaneX1.name = 'mute';
+      boombox.add(mutePlaneX1);
+      var mutePlaneX2 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
+      mutePlaneX2.position.set(70, -10, 121);
+      mutePlaneX2.rotateZ(-Math.PI / 4);
+      mutePlaneX2.name = 'mute';
+      boombox.add(mutePlaneX2);
+
+      this.playButton.name = 'play';
+      this.pauseButton.name = 'pause';
+      this.resetButton.name = 'reset';
+      this.muteButton.name = 'muteButton';
+
+      var playLight = new THREE.PointLight(0x66ff66, 0.7, 0, 2);
+      playLight.position.set(-180, -10, 150);
+      var pauseLight = new THREE.PointLight(0xff0000, 0.7, 0, 2);
+      pauseLight.position.set(-100, -10, 150);
+      var resetLight = new THREE.PointLight(0xffff00, 0.7, 0, 2);
+      resetLight.position.set(-20, -10, 150);
+      var muteLight = new THREE.PointLight(0x0000ff, 0.7, 0, 2);
+      muteLight.position.set(60, -10, 150);
+
+      [playLight, pauseLight, resetLight, muteLight].forEach(function (light) {
+        light.castShadow = true;
+        light.shadow.mapSize.width = 1024;
+        light.shadow.mapSize.height = 1024;
+        light.shadow.camera.far = 2000;
+        boombox.add(light);
+      });
+
+      boombox.add(this.playButton);
+      boombox.add(this.pauseButton);
+      boombox.add(this.resetButton);
+      boombox.add(this.muteButton);
+    }
+  }, {
+    key: 'createFrequencyVisualizer',
+    value: function createFrequencyVisualizer(boombox) {
+      var freqBottomGeometry = new THREE.BoxBufferGeometry(310, 15, 25);
+      var freqBottomMaterial = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
+      bottomBar.position.set(-58, -155, 110);
+      boombox.add(bottomBar);
+
+      var rainbowBarColors = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+
+      for (var i = 1; i < 13; i++) {
+        var color = 0x00ffff;
+        var freqBarGeometry = new THREE.BoxBufferGeometry(20, 90, 20);
+        var freqBarMaterial = new THREE.MeshBasicMaterial({
+          color: color,
+          side: THREE.DoubleSide
+        });
+        this['bar' + i] = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
+        this['bar' + i].position.set(-195 + (i - 1) * 25, -110, 110);
+        this['bar' + i].name = 'bar' + i;
+        boombox.add(this['bar' + i]);
+      }
+    }
+  }]);
+
+  function BoomBlock(scene) {
+    _classCallCheck(this, BoomBlock);
+
+    this.boombox = new THREE.Group();
+    this.createBase(this.boombox);
+    this.createReels(scene);
+    this.createTape(this.boombox);
+    this.createTrackButtons(this.boombox);
+    this.createPlayButtons(this.boombox);
+    this.createFrequencyVisualizer(this.boombox);
+    this.boombox.name = 'boombox';
+    scene.add(this.boombox);
+  }
+
+  return BoomBlock;
+}();
+
+exports.default = BoomBlock;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DrumStack = function () {
+  function DrumStack(audio, scene) {
+    _classCallCheck(this, DrumStack);
+
+    this.audio = audio;
+    this.scene = scene;
+    this.drumStackY = -100;
+    this.drumStackwidth = 150;
+    this.drumStackDepth = 150;
+    this.drumStackRotation = 0;
+    this.drumStackColors = undefined;
+    this.intervalId = undefined;
+    this.timeoutIds = [];
+    this.stackPosition = 0;
+  }
+
+  _createClass(DrumStack, [{
+    key: 'set8thNoteTimeouts',
+    value: function set8thNoteTimeouts(beatOffset) {
+      var _this = this;
+
+      this.reset8thNoteTimeouts();
+      var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
+      if (beatOffset) {
+        eighthNotes = eighthNotes.map(function (el) {
+          return beatOffset - el;
+        });
+        eighthNotes = eighthNotes.filter(function (el) {
+          return el >= 0 && el < beatOffset;
+        });
+      }
+      eighthNotes.forEach(function (note) {
+        var id = window.setTimeout(function () {
+          return _this.stack();
+        }, note);
+        _this.timeoutIds.push(id);
+      });
+    }
+  }, {
+    key: 'reset8thNoteTimeouts',
+    value: function reset8thNoteTimeouts() {
+      this.timeoutIds.forEach(function (id) {
+        return window.clearTimeout(id);
+      });
+    }
+  }, {
+    key: 'setInterval',
+    value: function setInterval() {
+      var _this2 = this;
+
+      var tempo = this.audio.globalTempo;
+      var pausedAt = this.audio.pausedAt;
+      //this is the coolest thing ever
+      var beatOffset = pausedAt ? tempo - pausedAt % tempo : 0;
+      this.set8thNoteTimeouts(beatOffset);
+      window.setTimeout(function () {
+        if (beatOffset) {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }
+        _this2.intervalId = window.setInterval(function () {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }, _this2.audio.globalTempo);
+      }, beatOffset);
+    }
+  }, {
+    key: 'resetInterval',
+    value: function resetInterval() {
+      window.clearInterval(this.intervalId);
+    }
+  }, {
+    key: 'addBlock',
+    value: function addBlock(position, geometry, material) {
+      var drumBlock = new THREE.Mesh(geometry, material);
+      drumBlock.name = 'drumBlock';
+      drumBlock.position.set(position, this.drumStackY, 0);
+      drumBlock.rotateY(this.drumStackRotation);
+      this.scene.add(drumBlock);
+    }
+  }, {
+    key: 'stack',
+    value: function stack() {
+      var _this3 = this;
+
+      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+      var positions = [650, -650];
+      if (!this.drumStackColors) {
+        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
+      }
+      var geometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
+      var material = new THREE.MeshBasicMaterial({
+        color: this.drumStackColors[Math.floor(Math.random() * 2)]
+      });
+      positions.forEach(function (position) {
+        _this3.addBlock(position, geometry, material);
+        _this3.stackPosition += 1;
+      });
+      this.drumStackY += 150;
+      this.drumStackRotation += Math.PI / 8;
+    }
+  }, {
+    key: 'resetStack',
+    value: function resetStack() {
+      var _this4 = this;
+
+      this.drumStackY = -100;
+      this.drumStackRotation = 0;
+      this.drumStackColors = undefined;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'drumBlock';
+      }).forEach(function (el) {
+        return _this4.scene.remove(el);
+      });
+    }
+  }]);
+
+  return DrumStack;
+}();
+
+exports.default = DrumStack;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TrainTrack = function () {
+  _createClass(TrainTrack, [{
+    key: 'createTrack',
+    value: function createTrack(scene) {
+      var trackGeometry = new THREE.BoxBufferGeometry(10000, 50, 200);
+      var trackMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+      this.trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
+      this.trainTrack.position.set(0, 100, -300);
+      this.trainTrack.receiveShadow = true;
+      scene.add(this.trainTrack);
+    }
+  }]);
+
+  function TrainTrack(scene) {
+    // this.createTrack(scene);
+
+    _classCallCheck(this, TrainTrack);
+  }
+
+  return TrainTrack;
+}();
+
+exports.default = TrainTrack;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AudioTracks = function () {
+  function AudioTracks() {
+    _classCallCheck(this, AudioTracks);
+
+    this.arrayBufferCollection = {
+      drumsArrayBuffer: undefined,
+      samplesArrayBuffer: undefined,
+      bassArrayBuffer: undefined,
+      melodyArrayBuffer: undefined
+    };
+
+    this.drumsBuffer = undefined;
+    this.drumsSource = undefined;
+    this.drumsGain = undefined;
+    this.drumsAnalyser = undefined;
+
+    this.bassBuffer = undefined;
+    this.bassSource = undefined;
+    this.bassGain = undefined;
+    this.bassAnalyser = undefined;
+
+    this.melodyBuffer = undefined;
+    this.melodySource = undefined;
+    this.melodyGain = undefined;
+    this.melodyAnalyser = undefined;
+    this.melodyBufferLength = undefined;
+    // length: 128
+    this.melodyDataArray = undefined;
+
+    this.samplesBuffer = undefined;
+    this.samplesSource = undefined;
+    this.samplesGain = undefined;
+    this.samplesAnalyser = undefined;
+
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    this.masterGain = this.audioContext.createGain();
+    this.masterAnalyser = this.audioContext.createAnalyser();
+    this.masterGain.connect(this.masterAnalyser);
+    this.masterAnalyser.connect(this.audioContext.destination);
+
+    this.masterAnalyser.fftSize = 256;
+    var bufferLength = this.masterAnalyser.frequencyBinCount;
+    // length: 128
+    this.masterDataArray = new Uint8Array(bufferLength);
+
+    this.loaded = 0;
+    this.playing = 0;
+    this.startedAt = 0;
+    this.pausedAt = 0;
+  }
+
+  _createClass(AudioTracks, [{
+    key: "load",
+    value: function load() {
+      var _this = this;
+
+      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3");
+      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3");
+      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3");
+      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3");
+      Promise.all([getDrums, getBass, getSamples, getMelody]).then(function (results) {
+        ['drums', 'bass', 'samples', 'melody'].forEach(function (type, idx) {
+          _this.arrayBufferCollection[type + "ArrayBuffer"] = results[idx];
+        });
+      }).then(function () {
+        _this.routeTrack('drums', _this.arrayBufferCollection);
+        _this.routeTrack('bass', _this.arrayBufferCollection);
+        _this.routeTrack('samples', _this.arrayBufferCollection);
+        _this.routeTrack('melody', _this.arrayBufferCollection);
+      });
+    }
+  }, {
+    key: "getTrack",
+    value: function getTrack(url) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            reject(Error(xhr.statusText));
+          }
+        };
+        xhr.send();
+      });
+    }
+  }, {
+    key: "routeTrack",
+    value: function routeTrack(type, arrayBufferCollection) {
+      var _this2 = this;
+
+      var sourceNode = this.audioContext.createBufferSource();
+      var typeBuffer = void 0;
+      this.audioContext.decodeAudioData(arrayBufferCollection[type + "ArrayBuffer"].slice(), function (buffer) {
+        typeBuffer = buffer;
+        sourceNode.buffer = typeBuffer;
+        var gainNode = _this2.audioContext.createGain();
+        sourceNode.connect(gainNode);
+        var analyserNode = _this2.audioContext.createAnalyser();
+        gainNode.connect(analyserNode);
+        analyserNode.connect(_this2.masterGain);
+        _this2[type + "Buffer"] = typeBuffer;
+        _this2[type + "Source"] = sourceNode;
+        _this2[type + "Gain"] = gainNode;
+        _this2[type + "Analyser"] = analyserNode;
+        _this2[type + "Analyser"].fftSize = 16384;
+        _this2[type + "BufferLength"] = _this2[type + "Analyser"].frequencyBinCount;
+        // length: 128
+        _this2[type + "DataArray"] = new Float32Array(_this2[type + "BufferLength"]);
+        _this2.loaded += 0.25;
+      });
+    }
+  }, {
+    key: "resetTrack",
+    value: function resetTrack(type, buffer) {
+      var sourceNode = this.audioContext.createBufferSource();
+      var typeBuffer = buffer;
+      sourceNode.buffer = typeBuffer;
+      var gainNode = this.audioContext.createGain();
+      sourceNode.connect(gainNode);
+      var analyserNode = this.audioContext.createAnalyser();
+      gainNode.connect(analyserNode);
+      analyserNode.connect(this.masterGain);
+      this[type + "Buffer"] = typeBuffer;
+      this[type + "Source"] = sourceNode;
+      this[type + "Gain"] = gainNode;
+      this[type + "Analyser"] = analyserNode;
+      this[type + "Analyser"].fftSize = 16384;
+      this[type + "BufferLength"] = this[type + "Analyser"].frequencyBinCount;
+      // length: 128
+      this[type + "DataArray"] = new Float32Array(this[type + "BufferLength"]);
+      this.loaded += 0.25;
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      this.playing = 1;
+      if (this.pausedAt) {
+        this.startedAt = Date.now() - this.pausedAt;
+        this.drumsSource.start(0, this.pausedAt / 1000);
+        this.bassSource.start(0, this.pausedAt / 1000);
+        this.melodySource.start(0, this.pausedAt / 1000);
+        this.samplesSource.start(0, this.pausedAt / 1000);
+      } else {
+        this.startedAt = Date.now();
+        this.drumsSource.start(0);
+        this.bassSource.start(0);
+        this.melodySource.start(0);
+        this.samplesSource.start(0);
+      }
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      this.playing = 0;
+      this.pausedAt = Date.now() - this.startedAt;
+      this.drumsSource.stop();
+      this.bassSource.stop();
+      this.melodySource.stop();
+      this.samplesSource.stop();
+    }
+  }, {
+    key: "reload",
+    value: function reload() {
+      this.loaded = 0;
+      this.resetTrack('drums', this.drumsBuffer);
+      this.resetTrack('bass', this.bassBuffer);
+      this.resetTrack('samples', this.samplesBuffer);
+      this.resetTrack('melody', this.melodyBuffer);
+    }
+  }]);
+
+  return AudioTracks;
+}();
+
+exports.default = AudioTracks;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// this is my attempt at creating a tempo analyser in JS, based
+// on the approach outlined by Joe Sullivan at
+// http://joesul.li/van/beat-detection-using-web-audio/
+
+var BeatAnalyser = function () {
+  function BeatAnalyser(drumsBuffer) {
+    _classCallCheck(this, BeatAnalyser);
+
+    this.data = drumsBuffer.getChannelData(0);
+    this.duration = drumsBuffer.duration;
+    this.threshold = undefined;
+    this.dataLength = this.data.length;
+    this.increment = Math.round(this.dataLength / (this.duration * 1000)); // in floats/ms
+    this.peaksArray = [];
+    this.intervalCounterHash = {};
+    this.mostCommonInterval = 0;
+    this.mostCommonIntervalCount = 0;
+    this.generateThreshold();
+    this.run();
+  }
+
+  _createClass(BeatAnalyser, [{
+    key: "generateThreshold",
+    value: function generateThreshold() {
+      this.largestFloat = 0;
+      for (var i = 0; i < this.dataLength; i += this.increment) {
+        if (Math.abs(this.data[i]) > this.largestFloat) {
+          this.largestFloat = this.data[i];
+        }
+      }
+      this.threshold = this.largestFloat;
+    }
+  }, {
+    key: "generatePeaks",
+    value: function generatePeaks() {
+      for (var i = 0; i < this.dataLength; i += this.increment) {
+        if (Math.abs(this.data[i]) > this.threshold) {
+          this.peaksArray.push(i);
+        }
+      }
+    }
+  }, {
+    key: "generateIntervalHash",
+    value: function generateIntervalHash() {
+      for (var i = 0; i < this.peaksArray.length - 1; i++) {
+        var interval = this.peaksArray[i + 1] - this.peaksArray[i];
+        if (this.intervalCounterHash[interval]) {
+          this.intervalCounterHash[interval] += 1;
+        } else {
+          this.intervalCounterHash[interval] = 1;
+        }
+      }
+      this.intervalCounterHash[this.increment] = 0;
+    }
+  }, {
+    key: "generateMostCommonInterval",
+    value: function generateMostCommonInterval() {
+      var _this = this;
+
+      var intervals = Object.keys(this.intervalCounterHash);
+      intervals.forEach(function (interval) {
+        if (_this.intervalCounterHash[interval] > _this.mostCommonIntervalCount) {
+          _this.mostCommonIntervalCount = _this.intervalCounterHash[interval];
+          _this.mostCommonInterval = interval;
+        }
+      });
+    }
+  }, {
+    key: "run",
+    value: function run() {
+      this.generatePeaks();
+      if (this.peaksArray.length < 300) {
+        this.threshold -= 0.005;
+        this.run();
+      } else {
+        this.generateIntervalHash();
+        this.generateMostCommonInterval();
+      }
+    }
+  }, {
+    key: "getIntervalInMilliseconds",
+    value: function getIntervalInMilliseconds() {
+      var tempo = this.mostCommonInterval / this.increment;
+      var bpm = Math.round(1 / tempo * 60 * 1000 * 2);
+      return 60 * 1000 * 4 / bpm; //gives beats in ms
+    }
+  }]);
+
+  return BeatAnalyser;
+}();
+
+exports.default = BeatAnalyser;
+
+/*
+
+variables I need
+
+-the buffer length in milliseconds
+duration = drumsBuffer.duration;
+
+-length of Float32Array of PCM data
+dataLength = audio.drumsBuffer.getChannelData(0).length;
+
+-a threshold
+
+-the length of an arbitrary interval in milliseconds by which I will
+iterate through the buffer and take the peak value from the Float32Array
+
+dataLength/duration = floats/second; * second/1000 ms = floats/millisecond
+
+increment = dataLength/(duration * 1000); this is in float/ms
+
+peaksArray = array of dataLength indices where PCM value is above threshold
+
+intervalHash: a counter hash where each key represents an interval in
+milliseconds, and the value at that key represents the number of times
+that interval occurs between adjacent values in the peaksArray
+
+
+
+*/
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Buildings = function () {
+  _createClass(Buildings, [{
+    key: 'tower1',
+    value: function tower1(scene) {
+      var building1Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
+      var building1Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building1 = new THREE.Mesh(building1Geometry, building1Material);
+      building1.position.set(-650, -180, 0);
+      building1.castShadow = true;
+      building1.receiveShadow = true;
+      scene.add(building1);
+    }
+  }, {
+    key: 'tower2',
+    value: function tower2(scene) {
+      var building2Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
+      var building2Material = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      var building2 = new THREE.Mesh(building2Geometry, building2Material);
+      building2.position.set(650, -180, 0);
+      building2.castShadow = true;
+      building2.receiveShadow = true;
+      scene.add(building2);
+    }
+
+    // create2 (scene) {
+    //   const building2Geometry = new THREE.BoxBufferGeometry(320, 2000, 200);
+    //   const building2Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building2 = new THREE.Mesh(building2Geometry, building2Material);
+    //   building2.position.set(-550, -50, 0);
+    //   building2.castShadow = true;
+    //   building2.receiveShadow = true;
+    //   scene.add(building2);
+    // }
+
+    // create3 (scene) {
+    //   const building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
+    //   const building3Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building3 = new THREE.Mesh(building3Geometry, building3Material);
+    //   building3.position.set(550, -100, 0);
+    //   building3.castShadow = true;
+    //   building3.receiveShadow = true;
+    //   scene.add(building3);
+    // }
+    //
+    // create4 (scene) {
+    //   const building4Geometry = new THREE.BoxBufferGeometry(320, 1600, 200);
+    //   const building4Material = new THREE.MeshPhongMaterial({
+    //     color: 0x343434,
+    //     side: THREE.DoubleSide
+    //   });
+    //   const building4 = new THREE.Mesh(building4Geometry, building4Material);
+    //   building4.position.set(1050, -50, 0);
+    //   building4.castShadow = true;
+    //   building4.receiveShadow = true;
+    //   scene.add(building4);
+    // }
+
+
+  }]);
+
+  function Buildings(scene) {
+    _classCallCheck(this, Buildings);
+
+    this.tower1(scene);
+    this.tower2(scene);
+    // this.create2(scene);
+    // this.create3(scene);
+    // this.create4(scene);
+  }
+
+  return Buildings;
+}();
+
+exports.default = Buildings;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _world = __webpack_require__(1);
+
+var _world2 = _interopRequireDefault(_world);
+
+var _lighting = __webpack_require__(2);
+
+var _lighting2 = _interopRequireDefault(_lighting);
+
+var _floor = __webpack_require__(3);
+
+var _floor2 = _interopRequireDefault(_floor);
+
+var _boomblock = __webpack_require__(4);
+
+var _boomblock2 = _interopRequireDefault(_boomblock);
+
+var _drum_stack = __webpack_require__(5);
+
+var _drum_stack2 = _interopRequireDefault(_drum_stack);
+
+var _traintrack = __webpack_require__(6);
+
+var _traintrack2 = _interopRequireDefault(_traintrack);
+
+var _audio_tracks = __webpack_require__(7);
+
+var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
+
+var _beat_analysis = __webpack_require__(8);
+
+var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
+
+var _buildings = __webpack_require__(9);
+
+var _buildings2 = _interopRequireDefault(_buildings);
+
+var _handlers = __webpack_require__(12);
+
+var _handlers2 = _interopRequireDefault(_handlers);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// entry.jsx
+document.addEventListener('DOMContentLoaded', function () {
+
+  var audio = new _audio_tracks2.default();
+  audio.load();
+  window.audio = audio;
+
+  var world = new _world2.default();
+  var lighting = new _lighting2.default(world.scene);
+  var floor = new _floor2.default(world.scene);
+  var boomblock = new _boomblock2.default(world.scene);
+  var traintrack = new _traintrack2.default(world.scene);
+  var buildings = new _buildings2.default(world.scene);
+  var drumStack = new _drum_stack2.default(audio, world.scene);
+  var handlers = new _handlers2.default(audio, world, drumStack);
+  window.world = world;
+
+  handlers.loadCheck();
+
+  var about = document.getElementsByClassName('about-link')[0];
+  about.addEventListener("click", function () {
+    var modal = document.getElementsByClassName('about-modal')[0];
+    modal.classList.add('show-modal');
+    modal.addEventListener("click", function () {
+      modal.classList.remove('show-modal');
+    });
+  });
+
+  world.loop(audio);
+});
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var THREE = __webpack_require__(0)
@@ -46422,7 +47542,7 @@ module.exports = OrbitControls
 
 
 /***/ }),
-/* 4 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46434,1155 +47554,35 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Lighting = function () {
-  _createClass(Lighting, [{
-    key: 'createAmbientLight',
-    value: function createAmbientLight(scene) {
-      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
-      scene.add(this.ambientLight);
-    }
-  }, {
-    key: 'createSpotLight',
-    value: function createSpotLight(scene) {
-      this.spotLight = new THREE.SpotLight(0xffffff, 0.8);
-      this.spotLight.position.set(200, 500, 500);
-      this.spotLight.castShadow = true;
-      this.spotLight.shadow.mapSize.width = 1024;
-      this.spotLight.shadow.mapSize.height = 1024;
-      this.spotLight.shadow.camera.near = 500;
-      this.spotLight.shadow.camera.far = 4000;
-      this.spotLight.shadow.camera.fov = 30;
-      this.spotLight.angle = Math.PI / 5;
-      scene.add(this.spotLight);
-    }
-  }]);
-
-  function Lighting(scene) {
-    _classCallCheck(this, Lighting);
-
-    this.createAmbientLight(scene);
-    // this.createSpotLight(scene);
-  }
-
-  return Lighting;
-}();
-
-exports.default = Lighting;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Floor = function () {
-  _createClass(Floor, [{
-    key: 'createFloor',
-    value: function createFloor(scene) {
-      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0x000000 }));
-      this.floor.rotation.x = -Math.PI / 2;
-      this.floor.position.y = -180;
-      this.floor.receiveShadow = true;
-      scene.add(this.floor);
-    }
-  }]);
-
-  function Floor(scene) {
-    _classCallCheck(this, Floor);
-
-    this.createFloor(scene);
-  }
-
-  return Floor;
-}();
-
-exports.default = Floor;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BoomBlock = function () {
-  _createClass(BoomBlock, [{
-    key: 'createBase',
-    value: function createBase(boombox) {
-      var baseGeometry = new THREE.BoxBufferGeometry(480, 360, 200);
-      var baseMaterial = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      this.base = new THREE.Mesh(baseGeometry, baseMaterial);
-      this.base.castShadow = true;
-      this.base.receiveShadow = true;
-      boombox.add(this.base);
-
-      var tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
-      var tapeReaderMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-
-      this.tapeReader = new THREE.Mesh(tapeReaderGeometry, tapeReaderMaterial);
-      this.tapeReader.position.set(-20, 70, 110);
-      boombox.add(this.tapeReader);
-    }
-  }, {
-    key: 'createReels',
-    value: function createReels(scene) {
-      var reelGeometry = new THREE.CylinderBufferGeometry(60, 60, 40, 32);
-      var reelMaterial = new THREE.MeshPhongMaterial({
-        color: 0x000000,
-        side: THREE.DoubleSide
-      });
-      var miniReelGeometry = new THREE.CylinderBufferGeometry(20, 20, 60, 32);
-
-      var spokeGeometry = new THREE.BoxBufferGeometry(12, 50, 1);
-      var spokeMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-
-      var ringGeometry = new THREE.RingGeometry(50, 70, 32);
-      var ringMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-
-      var reelLeft = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelLeft.rotateX(Math.PI / 2);
-
-      var spokeL1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL1.position.set(0, 32, 21);
-      var spokeL2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL2.position.set(26, -12, 21);
-      spokeL2.rotation.z = Math.PI / 3;
-      var spokeL3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeL3.position.set(-26, -12, 21);
-      spokeL3.rotation.z = 2 * Math.PI / 3;
-
-      var frontLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontLeftRing.position.set(0, 0, 21);
-      var backLeftRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backLeftRing.position.set(0, 0, -21);
-
-      var miniReelL = new THREE.Mesh(miniReelGeometry, ringMaterial);
-      miniReelL.rotateX(Math.PI / 2);
-
-      this.leftReel = new THREE.Group();
-      this.leftReel.add(miniReelL);
-      this.leftReel.add(reelLeft);
-      this.leftReel.add(spokeL1);
-      this.leftReel.add(spokeL2);
-      this.leftReel.add(spokeL3);
-      this.leftReel.add(frontLeftRing);
-      this.leftReel.add(backLeftRing);
-      this.leftReel.position.set(-120, 200, 122);
-      // this.leftReel.rotation.x = Math.PI/2;
-
-      this.leftReel.name = 'reelLeft';
-
-      scene.add(this.leftReel);
-
-      var reelRight = new THREE.Mesh(reelGeometry, reelMaterial);
-      reelRight.rotateX(Math.PI / 2);
-
-      var spokeR1 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR1.position.set(0, 32, 21);
-      var spokeR2 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR2.position.set(26, -12, 21);
-      spokeR2.rotation.z = Math.PI / 3;
-      var spokeR3 = new THREE.Mesh(spokeGeometry, spokeMaterial);
-      spokeR3.position.set(-26, -12, 21);
-      spokeR3.rotation.z = 2 * Math.PI / 3;
-
-      var frontRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      frontRightRing.position.set(0, 0, 21);
-      var backRightRing = new THREE.Mesh(ringGeometry, ringMaterial);
-      backRightRing.position.set(0, 0, -21);
-
-      var miniReelR = new THREE.Mesh(miniReelGeometry, ringMaterial);
-      miniReelR.rotateX(Math.PI / 2);
-
-      this.rightReel = new THREE.Group();
-      this.rightReel.add(miniReelR);
-      this.rightReel.add(reelRight);
-      this.rightReel.add(spokeR1);
-      this.rightReel.add(spokeR2);
-      this.rightReel.add(spokeR3);
-      this.rightReel.add(frontRightRing);
-      this.rightReel.add(backRightRing);
-      this.rightReel.position.set(80, 200, 122);
-
-      this.rightReel.name = 'reelRight';
-
-      scene.add(this.rightReel);
-    }
-  }, {
-    key: 'createTape',
-    value: function createTape(boombox) {
-      var tapeGeometry = new THREE.PlaneBufferGeometry(154, 80);
-      var tapeMaterial = new THREE.MeshPhongMaterial({
-        color: 0x000000,
-        side: THREE.DoubleSide
-      });
-      var tapeLeft = new THREE.Mesh(tapeGeometry, tapeMaterial);
-      tapeLeft.position.set(-120, 108, 100);
-      tapeLeft.rotation.x = Math.PI / 2;
-      tapeLeft.rotation.y = -Math.PI / 3.60;
-      var tapeRight = new THREE.Mesh(tapeGeometry, tapeMaterial);
-      tapeRight.position.set(80, 108, 100);
-      tapeRight.rotation.x = Math.PI / 2;
-      tapeRight.rotation.y = Math.PI / 3.60;
-
-      var tapeBottomGeometry = new THREE.PlaneBufferGeometry(101, 80);
-      var tapeBottom = new THREE.Mesh(tapeBottomGeometry, tapeMaterial);
-      tapeBottom.position.set(-20, 49, 100);
-      tapeBottom.rotation.x = Math.PI / 2;
-
-      boombox.add(tapeLeft);
-      boombox.add(tapeRight);
-      boombox.add(tapeBottom);
-    }
-  }, {
-    key: 'createTrackButtons',
-    value: function createTrackButtons(boombox) {
-      var trackButtonGeometry = new THREE.BoxBufferGeometry(50, 50, 20);
-      var trackButtonMaterial1 = new THREE.MeshBasicMaterial({
-        color: 0x00ffff,
-        side: THREE.DoubleSide
-      });
-      var trackButtonMaterial2 = new THREE.MeshBasicMaterial({
-        color: 0x00ffff,
-        side: THREE.DoubleSide
-      });
-      var trackButtonMaterial3 = new THREE.MeshBasicMaterial({
-        color: 0x00ffff,
-        side: THREE.DoubleSide
-      });
-      var trackButtonMaterial4 = new THREE.MeshBasicMaterial({
-        color: 0x00ffff,
-        side: THREE.DoubleSide
-      });
-      this.trackButton1 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial1);
-      this.trackButton2 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial2);
-      this.trackButton3 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial3);
-      this.trackButton4 = new THREE.Mesh(trackButtonGeometry, trackButtonMaterial4);
-      // trackButton1.material.uniforms.transparent = true;
-      // trackButton1.material.uniforms.opacity = 0.3;
-      this.trackButton1.position.set(175, 100, 110);
-      this.trackButton2.position.set(175, 30, 110);
-      this.trackButton3.position.set(175, -40, 110);
-      this.trackButton4.position.set(175, -110, 110);
-
-      var light = new THREE.PointLight(0x00ffff, 0.6, 0, 2);
-      light.position.set(175, 0, 110);
-      light.castShadow = true;
-      light.shadow.mapSize.width = 1024;
-      light.shadow.mapSize.height = 1024;
-      light.shadow.camera.far = 2000;
-      boombox.add(light);
-
-      this.trackButton1.name = 'track1';
-      this.trackButton2.name = 'track2';
-      this.trackButton3.name = 'track3';
-      this.trackButton4.name = 'track4';
-
-      boombox.add(this.trackButton1);
-      boombox.add(this.trackButton2);
-      boombox.add(this.trackButton3);
-      boombox.add(this.trackButton4);
-    }
-  }, {
-    key: 'createPlayButtons',
-    value: function createPlayButtons(boombox) {
-      var playButtonGeometry = new THREE.CylinderBufferGeometry(30, 30, 20, 32);
-      var playButtonMaterial = new THREE.MeshBasicMaterial({
-        color: 0x66ff66,
-        side: THREE.DoubleSide
-      });
-      var pauseButtonMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        side: THREE.DoubleSide
-      });
-      var resetButtonMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
-        side: THREE.DoubleSide
-      });
-      var muteButtonMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ffff,
-        side: THREE.DoubleSide
-      });
-
-      this.playButton = new THREE.Mesh(playButtonGeometry, playButtonMaterial);
-      this.playButton.position.set(-180, -10, 110);
-      this.playButton.rotation.x = Math.PI / 2;
-
-      var coneGeometry = new THREE.ConeGeometry(16, 24, 2);
-      var labelMaterial = new THREE.MeshBasicMaterial({ color: 0x343434 });
-      var cone = new THREE.Mesh(coneGeometry, labelMaterial);
-      cone.position.set(-176, -10, 121);
-      cone.rotateX(-Math.PI / 2);
-      cone.rotateZ(-Math.PI / 2);
-      cone.name = 'play';
-      boombox.add(cone);
-
-      this.pauseButton = new THREE.Mesh(playButtonGeometry, pauseButtonMaterial);
-      this.pauseButton.position.set(-100, -10, 110);
-      this.pauseButton.rotation.x = Math.PI / 2;
-
-      var pausePlaneGeometry = new THREE.PlaneBufferGeometry(25, 9);
-      var pauseLeft = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
-      pauseLeft.position.set(-106, -10, 121);
-      pauseLeft.rotateZ(Math.PI / 2);
-      var pauseRight = new THREE.Mesh(pausePlaneGeometry, labelMaterial);
-      pauseRight.position.set(-94, -10, 121);
-      pauseRight.rotateZ(Math.PI / 2);
-      pauseLeft.name = 'pause';
-      pauseRight.name = 'pause';
-      boombox.add(pauseLeft);
-      boombox.add(pauseRight);
-
-      this.resetButton = new THREE.Mesh(playButtonGeometry, resetButtonMaterial);
-      this.resetButton.position.set(-20, -10, 110);
-      this.resetButton.rotation.x = Math.PI / 2;
-
-      var rewindGeometry = new THREE.ConeGeometry(12, 18, 2);
-      var cone1 = new THREE.Mesh(rewindGeometry, labelMaterial);
-      cone1.position.set(-12, -10, 121);
-      cone1.rotateX(-Math.PI / 2);
-      cone1.rotateZ(Math.PI / 2);
-      cone1.name = 'reset';
-      boombox.add(cone1);
-      var cone2 = new THREE.Mesh(rewindGeometry, labelMaterial);
-      cone2.position.set(-25, -10, 121);
-      cone2.rotateX(-Math.PI / 2);
-      cone2.rotateZ(Math.PI / 2);
-      cone2.name = 'reset';
-      boombox.add(cone2);
-      var resetPlaneGeometry = new THREE.PlaneBufferGeometry(24, 5);
-      var resetBar = new THREE.Mesh(resetPlaneGeometry, labelMaterial);
-      resetBar.position.set(-33, -10, 121);
-      resetBar.rotateZ(Math.PI / 2);
-      resetBar.name = 'reset';
-      boombox.add(resetBar);
-
-      this.muteButton = new THREE.Mesh(playButtonGeometry, muteButtonMaterial);
-      this.muteButton.position.set(60, -10, 110);
-      this.muteButton.rotation.x = Math.PI / 2;
-
-      var cone3 = new THREE.Mesh(coneGeometry, labelMaterial);
-      cone3.position.set(51, -10, 121);
-      cone3.rotateX(-Math.PI / 2);
-      cone3.rotateZ(Math.PI / 2);
-      cone3.name = 'mute';
-      boombox.add(cone3);
-      var mutePlaneGeometry = new THREE.PlaneBufferGeometry(14, 14);
-      var mutePlane = new THREE.Mesh(mutePlaneGeometry, labelMaterial);
-      mutePlane.position.set(44, -10, 121);
-      mutePlane.name = 'mute';
-      boombox.add(mutePlane);
-      var mutePlane2Geometry = new THREE.PlaneBufferGeometry(16, 3);
-      var mutePlaneX1 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
-      mutePlaneX1.position.set(70, -10, 121);
-      mutePlaneX1.rotateZ(Math.PI / 4);
-      mutePlaneX1.name = 'mute';
-      boombox.add(mutePlaneX1);
-      var mutePlaneX2 = new THREE.Mesh(mutePlane2Geometry, labelMaterial);
-      mutePlaneX2.position.set(70, -10, 121);
-      mutePlaneX2.rotateZ(-Math.PI / 4);
-      mutePlaneX2.name = 'mute';
-      boombox.add(mutePlaneX2);
-
-      this.playButton.name = 'play';
-      this.pauseButton.name = 'pause';
-      this.resetButton.name = 'reset';
-      this.muteButton.name = 'muteButton';
-
-      var playLight = new THREE.PointLight(0x66ff66, 0.7, 0, 2);
-      playLight.position.set(-180, -10, 150);
-      var pauseLight = new THREE.PointLight(0xff0000, 0.7, 0, 2);
-      pauseLight.position.set(-100, -10, 150);
-      var resetLight = new THREE.PointLight(0xffff00, 0.7, 0, 2);
-      resetLight.position.set(-20, -10, 150);
-      var muteLight = new THREE.PointLight(0x0000ff, 0.7, 0, 2);
-      muteLight.position.set(60, -10, 150);
-
-      [playLight, pauseLight, resetLight, muteLight].forEach(function (light) {
-        light.castShadow = true;
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
-        light.shadow.camera.far = 2000;
-        boombox.add(light);
-      });
-
-      boombox.add(this.playButton);
-      boombox.add(this.pauseButton);
-      boombox.add(this.resetButton);
-      boombox.add(this.muteButton);
-    }
-  }, {
-    key: 'createFrequencyVisualizer',
-    value: function createFrequencyVisualizer(boombox) {
-      var freqBottomGeometry = new THREE.BoxBufferGeometry(310, 15, 25);
-      var freqBottomMaterial = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      var bottomBar = new THREE.Mesh(freqBottomGeometry, freqBottomMaterial);
-      bottomBar.position.set(-58, -155, 110);
-      boombox.add(bottomBar);
-
-      var rainbowBarColors = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
-
-      for (var i = 1; i < 13; i++) {
-        var color = 0x00ffff;
-        var freqBarGeometry = new THREE.BoxBufferGeometry(20, 90, 20);
-        var freqBarMaterial = new THREE.MeshBasicMaterial({
-          color: color,
-          side: THREE.DoubleSide
-        });
-        this['bar' + i] = new THREE.Mesh(freqBarGeometry, freqBarMaterial);
-        this['bar' + i].position.set(-195 + (i - 1) * 25, -110, 110);
-        this['bar' + i].name = 'bar' + i;
-        boombox.add(this['bar' + i]);
-      }
-    }
-  }]);
-
-  function BoomBlock(scene) {
-    _classCallCheck(this, BoomBlock);
-
-    this.boombox = new THREE.Group();
-    this.createBase(this.boombox);
-    this.createReels(scene);
-    this.createTape(this.boombox);
-    this.createTrackButtons(this.boombox);
-    this.createPlayButtons(this.boombox);
-    this.createFrequencyVisualizer(this.boombox);
-    this.boombox.name = 'boombox';
-    scene.add(this.boombox);
-  }
-
-  return BoomBlock;
-}();
-
-exports.default = BoomBlock;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TrainTrack = function () {
-  _createClass(TrainTrack, [{
-    key: 'createTrack',
-    value: function createTrack(scene) {
-      var trackGeometry = new THREE.BoxBufferGeometry(10000, 50, 200);
-      var trackMaterial = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        side: THREE.DoubleSide
-      });
-      this.trainTrack = new THREE.Mesh(trackGeometry, trackMaterial);
-      this.trainTrack.position.set(0, 100, -300);
-      this.trainTrack.receiveShadow = true;
-      scene.add(this.trainTrack);
-    }
-  }]);
-
-  function TrainTrack(scene) {
-    // this.createTrack(scene);
-
-    _classCallCheck(this, TrainTrack);
-  }
-
-  return TrainTrack;
-}();
-
-exports.default = TrainTrack;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var AudioTracks = function () {
-  function AudioTracks() {
-    _classCallCheck(this, AudioTracks);
-
-    this.arrayBufferCollection = {
-      drumsArrayBuffer: undefined,
-      samplesArrayBuffer: undefined,
-      bassArrayBuffer: undefined,
-      melodyArrayBuffer: undefined
-    };
-
-    this.drumsBuffer = undefined;
-    this.drumsSource = undefined;
-    this.drumsGain = undefined;
-    this.drumsAnalyser = undefined;
-
-    this.bassBuffer = undefined;
-    this.bassSource = undefined;
-    this.bassGain = undefined;
-    this.bassAnalyser = undefined;
-
-    this.melodyBuffer = undefined;
-    this.melodySource = undefined;
-    this.melodyGain = undefined;
-    this.melodyAnalyser = undefined;
-    this.melodyBufferLength = undefined;
-    // length: 128
-    this.melodyDataArray = undefined;
-
-    this.samplesBuffer = undefined;
-    this.samplesSource = undefined;
-    this.samplesGain = undefined;
-    this.samplesAnalyser = undefined;
-
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    this.masterGain = this.audioContext.createGain();
-    this.masterAnalyser = this.audioContext.createAnalyser();
-    this.masterGain.connect(this.masterAnalyser);
-    this.masterAnalyser.connect(this.audioContext.destination);
-
-    this.masterAnalyser.fftSize = 256;
-    var bufferLength = this.masterAnalyser.frequencyBinCount;
-    // length: 128
-    this.masterDataArray = new Uint8Array(bufferLength);
-
-    this.loaded = 0;
-    this.playing = 0;
-    this.startedAt = 0;
-    this.pausedAt = 0;
-  }
-
-  _createClass(AudioTracks, [{
-    key: "load",
-    value: function load() {
-      var _this = this;
-
-      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3");
-      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3");
-      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3");
-      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3");
-      Promise.all([getDrums, getBass, getSamples, getMelody]).then(function (results) {
-        ['drums', 'bass', 'samples', 'melody'].forEach(function (type, idx) {
-          _this.arrayBufferCollection[type + "ArrayBuffer"] = results[idx];
-        });
-      }).then(function () {
-        _this.routeTrack('drums', _this.arrayBufferCollection);
-        _this.routeTrack('bass', _this.arrayBufferCollection);
-        _this.routeTrack('samples', _this.arrayBufferCollection);
-        _this.routeTrack('melody', _this.arrayBufferCollection);
-      });
-    }
-  }, {
-    key: "getTrack",
-    value: function getTrack(url) {
-      return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'arraybuffer';
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            resolve(xhr.response);
-          } else {
-            reject(Error(xhr.statusText));
-          }
-        };
-        xhr.send();
-      });
-    }
-  }, {
-    key: "routeTrack",
-    value: function routeTrack(type, arrayBufferCollection) {
-      var _this2 = this;
-
-      var sourceNode = this.audioContext.createBufferSource();
-      var typeBuffer = void 0;
-      this.audioContext.decodeAudioData(arrayBufferCollection[type + "ArrayBuffer"].slice(), function (buffer) {
-        typeBuffer = buffer;
-        sourceNode.buffer = typeBuffer;
-        var gainNode = _this2.audioContext.createGain();
-        sourceNode.connect(gainNode);
-        var analyserNode = _this2.audioContext.createAnalyser();
-        gainNode.connect(analyserNode);
-        analyserNode.connect(_this2.masterGain);
-        _this2[type + "Buffer"] = typeBuffer;
-        _this2[type + "Source"] = sourceNode;
-        _this2[type + "Gain"] = gainNode;
-        _this2[type + "Analyser"] = analyserNode;
-        _this2[type + "Analyser"].fftSize = 16384;
-        _this2[type + "BufferLength"] = _this2[type + "Analyser"].frequencyBinCount;
-        // length: 128
-        _this2[type + "DataArray"] = new Float32Array(_this2[type + "BufferLength"]);
-        _this2.loaded += 0.25;
-      });
-    }
-  }, {
-    key: "resetTrack",
-    value: function resetTrack(type, buffer) {
-      var sourceNode = this.audioContext.createBufferSource();
-      var typeBuffer = buffer;
-      sourceNode.buffer = typeBuffer;
-      var gainNode = this.audioContext.createGain();
-      sourceNode.connect(gainNode);
-      var analyserNode = this.audioContext.createAnalyser();
-      gainNode.connect(analyserNode);
-      analyserNode.connect(this.masterGain);
-      this[type + "Buffer"] = typeBuffer;
-      this[type + "Source"] = sourceNode;
-      this[type + "Gain"] = gainNode;
-      this[type + "Analyser"] = analyserNode;
-      this[type + "Analyser"].fftSize = 16384;
-      this[type + "BufferLength"] = this[type + "Analyser"].frequencyBinCount;
-      // length: 128
-      this[type + "DataArray"] = new Float32Array(this[type + "BufferLength"]);
-      this.loaded += 0.25;
-    }
-  }, {
-    key: "start",
-    value: function start() {
-      this.playing = 1;
-      if (this.pausedAt) {
-        this.startedAt = Date.now() - this.pausedAt;
-        this.drumsSource.start(0, this.pausedAt / 1000);
-        this.bassSource.start(0, this.pausedAt / 1000);
-        this.melodySource.start(0, this.pausedAt / 1000);
-        this.samplesSource.start(0, this.pausedAt / 1000);
-      } else {
-        this.startedAt = Date.now();
-        this.drumsSource.start(0);
-        this.bassSource.start(0);
-        this.melodySource.start(0);
-        this.samplesSource.start(0);
-      }
-    }
-  }, {
-    key: "stop",
-    value: function stop() {
-      this.playing = 0;
-      this.pausedAt = Date.now() - this.startedAt;
-      this.drumsSource.stop();
-      this.bassSource.stop();
-      this.melodySource.stop();
-      this.samplesSource.stop();
-    }
-  }, {
-    key: "reload",
-    value: function reload() {
-      this.loaded = 0;
-      this.resetTrack('drums', this.drumsBuffer);
-      this.resetTrack('bass', this.bassBuffer);
-      this.resetTrack('samples', this.samplesBuffer);
-      this.resetTrack('melody', this.melodyBuffer);
-    }
-  }]);
-
-  return AudioTracks;
-}();
-
-exports.default = AudioTracks;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Buildings = function () {
-  _createClass(Buildings, [{
-    key: 'tower1',
-    value: function tower1(scene) {
-      var building1Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
-      var building1Material = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      var building1 = new THREE.Mesh(building1Geometry, building1Material);
-      building1.position.set(-650, -180, 0);
-      building1.castShadow = true;
-      building1.receiveShadow = true;
-      scene.add(building1);
-    }
-  }, {
-    key: 'tower2',
-    value: function tower2(scene) {
-      var building2Geometry = new THREE.BoxBufferGeometry(400, 20, 400);
-      var building2Material = new THREE.MeshPhongMaterial({
-        color: 0x343434,
-        side: THREE.DoubleSide
-      });
-      var building2 = new THREE.Mesh(building2Geometry, building2Material);
-      building2.position.set(650, -180, 0);
-      building2.castShadow = true;
-      building2.receiveShadow = true;
-      scene.add(building2);
-    }
-
-    // create2 (scene) {
-    //   const building2Geometry = new THREE.BoxBufferGeometry(320, 2000, 200);
-    //   const building2Material = new THREE.MeshPhongMaterial({
-    //     color: 0x343434,
-    //     side: THREE.DoubleSide
-    //   });
-    //   const building2 = new THREE.Mesh(building2Geometry, building2Material);
-    //   building2.position.set(-550, -50, 0);
-    //   building2.castShadow = true;
-    //   building2.receiveShadow = true;
-    //   scene.add(building2);
-    // }
-
-    // create3 (scene) {
-    //   const building3Geometry = new THREE.BoxBufferGeometry(320, 200, 200);
-    //   const building3Material = new THREE.MeshPhongMaterial({
-    //     color: 0x343434,
-    //     side: THREE.DoubleSide
-    //   });
-    //   const building3 = new THREE.Mesh(building3Geometry, building3Material);
-    //   building3.position.set(550, -100, 0);
-    //   building3.castShadow = true;
-    //   building3.receiveShadow = true;
-    //   scene.add(building3);
-    // }
-    //
-    // create4 (scene) {
-    //   const building4Geometry = new THREE.BoxBufferGeometry(320, 1600, 200);
-    //   const building4Material = new THREE.MeshPhongMaterial({
-    //     color: 0x343434,
-    //     side: THREE.DoubleSide
-    //   });
-    //   const building4 = new THREE.Mesh(building4Geometry, building4Material);
-    //   building4.position.set(1050, -50, 0);
-    //   building4.castShadow = true;
-    //   building4.receiveShadow = true;
-    //   scene.add(building4);
-    // }
-
-
-  }]);
-
-  function Buildings(scene) {
-    _classCallCheck(this, Buildings);
-
-    this.tower1(scene);
-    this.tower2(scene);
-    // this.create2(scene);
-    // this.create3(scene);
-    // this.create4(scene);
-  }
-
-  return Buildings;
-}();
-
-exports.default = Buildings;
-
-/***/ }),
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// this is my attempt at creating a tempo analyser in JS, based
-// on the approach outlined by Joe Sullivan at
-// http://joesul.li/van/beat-detection-using-web-audio/
-
-var BeatAnalyser = function () {
-  function BeatAnalyser(drumsBuffer) {
-    _classCallCheck(this, BeatAnalyser);
-
-    this.data = drumsBuffer.getChannelData(0);
-    this.duration = drumsBuffer.duration;
-    this.threshold = undefined;
-    this.dataLength = this.data.length;
-    this.increment = Math.round(this.dataLength / (this.duration * 1000)); // in floats/ms
-    this.peaksArray = [];
-    this.intervalCounterHash = {};
-    this.mostCommonInterval = 0;
-    this.mostCommonIntervalCount = 0;
-    this.generateThreshold();
-    this.run();
-  }
-
-  _createClass(BeatAnalyser, [{
-    key: "generateThreshold",
-    value: function generateThreshold() {
-      this.largestFloat = 0;
-      for (var i = 0; i < this.dataLength; i += this.increment) {
-        if (Math.abs(this.data[i]) > this.largestFloat) {
-          this.largestFloat = this.data[i];
-        }
-      }
-      this.threshold = this.largestFloat;
-    }
-  }, {
-    key: "generatePeaks",
-    value: function generatePeaks() {
-      for (var i = 0; i < this.dataLength; i += this.increment) {
-        if (Math.abs(this.data[i]) > this.threshold) {
-          this.peaksArray.push(i);
-        }
-      }
-    }
-  }, {
-    key: "generateIntervalHash",
-    value: function generateIntervalHash() {
-      for (var i = 0; i < this.peaksArray.length - 1; i++) {
-        var interval = this.peaksArray[i + 1] - this.peaksArray[i];
-        if (this.intervalCounterHash[interval]) {
-          this.intervalCounterHash[interval] += 1;
-        } else {
-          this.intervalCounterHash[interval] = 1;
-        }
-      }
-      this.intervalCounterHash[this.increment] = 0;
-    }
-  }, {
-    key: "generateMostCommonInterval",
-    value: function generateMostCommonInterval() {
-      var _this = this;
-
-      var intervals = Object.keys(this.intervalCounterHash);
-      intervals.forEach(function (interval) {
-        if (_this.intervalCounterHash[interval] > _this.mostCommonIntervalCount) {
-          _this.mostCommonIntervalCount = _this.intervalCounterHash[interval];
-          _this.mostCommonInterval = interval;
-        }
-      });
-    }
-  }, {
-    key: "run",
-    value: function run() {
-      this.generatePeaks();
-      if (this.peaksArray.length < 300) {
-        this.threshold -= 0.005;
-        this.run();
-      } else {
-        this.generateIntervalHash();
-        this.generateMostCommonInterval();
-      }
-    }
-  }, {
-    key: "getIntervalInMilliseconds",
-    value: function getIntervalInMilliseconds() {
-      var tempo = this.mostCommonInterval / this.increment;
-      var bpm = Math.round(1 / tempo * 60 * 1000 * 2);
-      return 60 * 1000 * 4 / bpm; //gives beats in ms
-    }
-  }]);
-
-  return BeatAnalyser;
-}();
-
-exports.default = BeatAnalyser;
-
-/*
-
-variables I need
-
--the buffer length in milliseconds
-duration = drumsBuffer.duration;
-
--length of Float32Array of PCM data
-dataLength = audio.drumsBuffer.getChannelData(0).length;
-
--a threshold
-
--the length of an arbitrary interval in milliseconds by which I will
-iterate through the buffer and take the peak value from the Float32Array
-
-dataLength/duration = floats/second; * second/1000 ms = floats/millisecond
-
-increment = dataLength/(duration * 1000); this is in float/ms
-
-peaksArray = array of dataLength indices where PCM value is above threshold
-
-intervalHash: a counter hash where each key represents an interval in
-milliseconds, and the value at that key represents the number of times
-that interval occurs between adjacent values in the peaksArray
-
-
-
-*/
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var DrumStack = function () {
-  function DrumStack(audio, scene) {
-    _classCallCheck(this, DrumStack);
-
-    this.audio = audio;
-    this.scene = scene;
-    this.drumStackY = -100;
-    this.drumStackwidth = 150;
-    this.drumStackDepth = 150;
-    this.drumStackRotation = 0;
-    this.drumStackColors = undefined;
-    this.intervalId = undefined;
-    this.timeoutIds = [];
-  }
-
-  _createClass(DrumStack, [{
-    key: 'set8thNoteTimeouts',
-    value: function set8thNoteTimeouts(beatOffset) {
-      var _this = this;
-
-      this.reset8thNoteTimeouts();
-      var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
-      if (beatOffset) {
-        eighthNotes = eighthNotes.map(function (el) {
-          return beatOffset - el;
-        });
-        eighthNotes = eighthNotes.filter(function (el) {
-          return el >= 0 && el < beatOffset;
-        });
-      }
-      eighthNotes.forEach(function (note) {
-        var id = window.setTimeout(function () {
-          return _this.stack();
-        }, note);
-        _this.timeoutIds.push(id);
-      });
-    }
-  }, {
-    key: 'reset8thNoteTimeouts',
-    value: function reset8thNoteTimeouts() {
-      this.timeoutIds.forEach(function (id) {
-        return window.clearTimeout(id);
-      });
-    }
-  }, {
-    key: 'setInterval',
-    value: function setInterval() {
-      var _this2 = this;
-
-      var tempo = this.audio.globalTempo;
-      var pausedAt = this.audio.pausedAt;
-      //this is the coolest thing ever
-      var beatOffset = pausedAt ? tempo - pausedAt % tempo : 0;
-      this.set8thNoteTimeouts(beatOffset);
-      window.setTimeout(function () {
-        if (beatOffset) {
-          _this2.reset8thNoteTimeouts();
-          _this2.resetStack(_this2.scene);
-          _this2.set8thNoteTimeouts(0);
-        }
-        _this2.intervalId = window.setInterval(function () {
-          _this2.reset8thNoteTimeouts();
-          _this2.resetStack(_this2.scene);
-          _this2.set8thNoteTimeouts(0);
-        }, _this2.audio.globalTempo);
-      }, beatOffset);
-    }
-  }, {
-    key: 'resetInterval',
-    value: function resetInterval() {
-      window.clearInterval(this.intervalId);
-    }
-  }, {
-    key: 'stack',
-    value: function stack() {
-      var _this3 = this;
-
-      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
-      var positions = [650, -650];
-      if (!this.drumStackColors) {
-        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
-      }
-      var geometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
-      var material = new THREE.MeshBasicMaterial({
-        color: this.drumStackColors[Math.floor(Math.random() * 2)]
-      });
-      positions.forEach(function (position) {
-        var drumBlock = new THREE.Mesh(geometry, material);
-        drumBlock.name = 'drumBlock';
-        drumBlock.position.set(position, _this3.drumStackY, 0);
-        drumBlock.rotateY(_this3.drumStackRotation);
-        _this3.scene.add(drumBlock);
-      });
-      this.drumStackY += 150;
-      this.drumStackRotation += Math.PI / 8;
-    }
-  }, {
-    key: 'resetStack',
-    value: function resetStack() {
-      var _this4 = this;
-
-      this.drumStackY = -100;
-      this.drumStackRotation = 0;
-      this.drumStackColors = undefined;
-      this.scene.children.filter(function (obj) {
-        return obj.name === 'drumBlock';
-      }).forEach(function (el) {
-        return _this4.scene.remove(el);
-      });
-    }
-  }]);
-
-  return DrumStack;
-}();
-
-exports.default = DrumStack;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _world = __webpack_require__(2);
+var _world = __webpack_require__(1);
 
 var _world2 = _interopRequireDefault(_world);
 
-var _lighting = __webpack_require__(4);
+var _lighting = __webpack_require__(2);
 
 var _lighting2 = _interopRequireDefault(_lighting);
 
-var _floor = __webpack_require__(5);
+var _floor = __webpack_require__(3);
 
 var _floor2 = _interopRequireDefault(_floor);
 
-var _boomblock = __webpack_require__(6);
+var _boomblock = __webpack_require__(4);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
 
-var _drum_stack = __webpack_require__(18);
+var _drum_stack = __webpack_require__(5);
 
 var _drum_stack2 = _interopRequireDefault(_drum_stack);
 
-var _traintrack = __webpack_require__(7);
+var _traintrack = __webpack_require__(6);
 
 var _traintrack2 = _interopRequireDefault(_traintrack);
 
-var _audio_tracks = __webpack_require__(8);
+var _audio_tracks = __webpack_require__(7);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
-var _beat_analysis = __webpack_require__(17);
+var _beat_analysis = __webpack_require__(8);
 
 var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
 

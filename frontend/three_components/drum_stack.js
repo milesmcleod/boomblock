@@ -11,6 +11,7 @@ class DrumStack {
     this.drumStackColors = undefined;
     this.intervalId = undefined;
     this.timeoutIds = [];
+    this.stackPosition = 0;
   }
 
   set8thNoteTimeouts (beatOffset) {
@@ -65,6 +66,14 @@ class DrumStack {
     window.clearInterval(this.intervalId);
   }
 
+  addBlock(position, geometry, material) {
+    const drumBlock = new THREE.Mesh(geometry, material);
+    drumBlock.name = 'drumBlock';
+    drumBlock.position.set(position, this.drumStackY, 0);
+    drumBlock.rotateY(this.drumStackRotation);
+    this.scene.add(drumBlock);
+  }
+
   stack() {
     const rainbow = [
       0xcc0000,
@@ -96,11 +105,8 @@ class DrumStack {
       color: this.drumStackColors[Math.floor(Math.random()*2)]
     });
     positions.forEach(position => {
-      const drumBlock = new THREE.Mesh(geometry, material);
-      drumBlock.name = 'drumBlock';
-      drumBlock.position.set(position, this.drumStackY, 0);
-      drumBlock.rotateY(this.drumStackRotation);
-      this.scene.add(drumBlock);
+      this.addBlock(position, geometry, material);
+      this.stackPosition += 1;
     });
     this.drumStackY += 150;
     this.drumStackRotation += Math.PI/8;

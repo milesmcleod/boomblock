@@ -9,6 +9,7 @@ import AudioTracks from './audio_components/audio_tracks';
 import BeatAnalyser from './audio_components/beat_analysis';
 import Buildings from './three_components/buildings';
 import Handlers from './handlers';
+import ThreeTest from './three_components/test';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const traintrack = new TrainTrack(world.scene);
   const buildings = new Buildings(world.scene);
   const drumStack = new DrumStack(audio, world.scene);
+  const test = new ThreeTest(world.scene);
   const handlers = new Handlers(audio, world, drumStack);
   window.world = world;
 

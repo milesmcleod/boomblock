@@ -46456,9 +46456,12 @@ var _handlers = __webpack_require__(12);
 
 var _handlers2 = _interopRequireDefault(_handlers);
 
+var _test = __webpack_require__(13);
+
+var _test2 = _interopRequireDefault(_test);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -46472,6 +46475,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var traintrack = new _traintrack2.default(world.scene);
   var buildings = new _buildings2.default(world.scene);
   var drumStack = new _drum_stack2.default(audio, world.scene);
+  var test = new _test2.default(world.scene);
   var handlers = new _handlers2.default(audio, world, drumStack);
   window.world = world;
 
@@ -46487,7 +46491,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   world.loop(audio);
-});
+}); // entry.jsx
 
 /***/ }),
 /* 11 */
@@ -47754,6 +47758,79 @@ var Handlers = function () {
 }();
 
 exports.default = Handlers;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+var _tree_geometries = __webpack_require__(14);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Test = function () {
+  _createClass(Test, [{
+    key: 'createObject',
+    value: function createObject(scene) {
+      var testMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide
+      });
+      this.object = new THREE.Mesh(_tree_geometries.smallLeavesGeometry, testMaterial);
+      this.object.position.set(0, 100, 300);
+      this.object.receiveShadow = true;
+      scene.add(this.object);
+    }
+  }]);
+
+  function Test(scene) {
+    // this.createObject(scene);
+
+    _classCallCheck(this, Test);
+  }
+
+  return Test;
+}();
+
+exports.default = Test;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.bigLeavesGeometry = exports.smallLeavesGeometry = exports.trunkBlockGeometry = undefined;
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var trunkBlockGeometry = exports.trunkBlockGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
+
+var smallLeavesGeometry = exports.smallLeavesGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
+
+var bigLeavesGeometry = exports.bigLeavesGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
 
 /***/ })
 /******/ ]);

@@ -6,13 +6,13 @@ export const trunkBlockGeometry = new THREE.BoxBufferGeometry(
   150
 );
 
-export const smallLeaves = new THREE.BoxBufferGeometry(
+export const smallLeavesGeometry = new THREE.BoxBufferGeometry(
   150,
   150,
   150
 );
 
-export const bigLeaves = new THREE.BoxBufferGeometry(
+export const bigLeavesGeometry = new THREE.BoxBufferGeometry(
   150,
   150,
   150

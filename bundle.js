@@ -47785,22 +47785,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Test = function () {
   _createClass(Test, [{
     key: 'createObject',
-    value: function createObject(scene) {
-      var testMaterial = new THREE.MeshPhongMaterial({
+    value: function createObject(scene, geometry) {
+      var testMaterial = new THREE.MeshLambertMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide
       });
-      this.object = new THREE.Mesh(_tree_geometries.smallLeavesGeometry, testMaterial);
-      this.object.position.set(0, 100, 300);
+      this.object = new THREE.Mesh(geometry, testMaterial);
+      this.object.position.set(0, 300, 300);
       this.object.receiveShadow = true;
       scene.add(this.object);
     }
   }]);
 
   function Test(scene) {
-    // this.createObject(scene);
-
     _classCallCheck(this, Test);
+
+    this.createObject(scene, _tree_geometries.smallLeaves1Geometry);
+    this.createObject(scene, _tree_geometries.smallLeaves2Geometry);
+    this.createObject(scene, _tree_geometries.smallLeaves3Geometry);
   }
 
   return Test;
@@ -47818,7 +47820,7 @@ exports.default = Test;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.bigLeavesGeometry = exports.smallLeavesGeometry = exports.trunkBlockGeometry = undefined;
+exports.bigLeavesGeometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.trunkBlockGeometry = undefined;
 
 var _three = __webpack_require__(0);
 
@@ -47828,9 +47830,29 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var trunkBlockGeometry = exports.trunkBlockGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
 
-var smallLeavesGeometry = exports.smallLeavesGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
+var smallLeafShift = new THREE.Matrix4().makeScale(150, 150, 150);
+var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
 
-var bigLeavesGeometry = exports.bigLeavesGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
+var smallLeaves1Geometry = exports.smallLeaves1Geometry = new THREE.Geometry();
+
+smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+var smallLeaves2Geometry = exports.smallLeaves2Geometry = new THREE.Geometry();
+
+smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-1, 1.2, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+var smallLeaves3Geometry = exports.smallLeaves3Geometry = new THREE.Geometry();
+
+smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(2, 1, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+smallLeaves1Geometry.faces = smallLeafFaces;
+smallLeaves1Geometry.applyMatrix(smallLeafShift);
+smallLeaves2Geometry.faces = smallLeafFaces;
+smallLeaves2Geometry.applyMatrix(smallLeafShift);
+smallLeaves3Geometry.faces = smallLeafFaces;
+smallLeaves3Geometry.applyMatrix(smallLeafShift);
+
+var bigLeavesGeometry = exports.bigLeavesGeometry = new THREE.Geometry();
 
 /***/ })
 /******/ ]);

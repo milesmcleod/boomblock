@@ -28,7 +28,7 @@ export const smallLeaves2Geometry = new THREE.Geometry();
 smallLeaves2Geometry.vertices = [
   new THREE.Vector3( 0, 0, 0 ),
   new THREE.Vector3( .5, 0, 1  ),
-  new THREE.Vector3( -1, 1.2, 1.5 ),
+  new THREE.Vector3( -0.5, 1.2, 1 ),
   new THREE.Vector3( 0.5, 0.5, 0.5 )
 ];
 
@@ -37,7 +37,7 @@ export const smallLeaves3Geometry = new THREE.Geometry();
 smallLeaves3Geometry.vertices = [
   new THREE.Vector3( 1, 0, 0 ),
   new THREE.Vector3( .5, 0, 1  ),
-  new THREE.Vector3( 2, 1, 1.5 ),
+  new THREE.Vector3( 1.5, 1, 1.2 ),
   new THREE.Vector3( 0.5, 0.5, 0.5 )
 ];
 
@@ -78,8 +78,11 @@ export const bigLeaves2Geometry = new THREE.Geometry();
 bigLeaves2Geometry.vertices = [
   new THREE.Vector3( 0, 0, 0 ),
   new THREE.Vector3( .5, 0, 1  ),
-  new THREE.Vector3( -1, 1.2, 1.5 ),
-  new THREE.Vector3( 0.5, 0.5, 0.5 )
+  new THREE.Vector3( 0.5, 0.5, 0.5 ),
+  new THREE.Vector3( -0.7, 0.6, 0.6 ),
+  new THREE.Vector3( -0.3, 0.6, 1 ),
+  new THREE.Vector3( -0.5, 1.2, 0.8 ),
+  new THREE.Vector3( -1, 0.4, 1.1 )
 ];
 
 export const bigLeaves3Geometry = new THREE.Geometry();
@@ -87,8 +90,11 @@ export const bigLeaves3Geometry = new THREE.Geometry();
 bigLeaves3Geometry.vertices = [
   new THREE.Vector3( 1, 0, 0 ),
   new THREE.Vector3( .5, 0, 1  ),
-  new THREE.Vector3( 2, 1, 1.5 ),
-  new THREE.Vector3( 0.5, 0.5, 0.5 )
+  new THREE.Vector3( 0.5, 0.5, 0.5 ),
+  new THREE.Vector3( 1.5, 0.3, 0.9 ),
+  new THREE.Vector3( 1.5, 0.3, 1.5 ),
+  new THREE.Vector3( 1.5, 1, 1.2 ),
+  new THREE.Vector3( 1.6, -0.1, 1.4 ),
 ];
 
 bigLeaves1Geometry.faces = bigLeafFaces;

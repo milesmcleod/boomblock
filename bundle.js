@@ -47786,8 +47786,8 @@ var Test = function () {
   _createClass(Test, [{
     key: 'createObject',
     value: function createObject(scene, geometry) {
-      var testMaterial = new THREE.MeshLambertMaterial({
-        color: 0xffffff,
+      var testMaterial = new THREE.MeshPhongMaterial({
+        color: 0x66ff66,
         side: THREE.DoubleSide
       });
       this.object = new THREE.Mesh(geometry, testMaterial);
@@ -47801,8 +47801,8 @@ var Test = function () {
     _classCallCheck(this, Test);
 
     this.createObject(scene, _tree_geometries.bigLeaves1Geometry);
-    // this.createObject(scene, bigLeaves2Geometry);
-    // this.createObject(scene, bigLeaves3Geometry);
+    this.createObject(scene, _tree_geometries.bigLeaves2Geometry);
+    this.createObject(scene, _tree_geometries.bigLeaves3Geometry);
   }
 
   return Test;
@@ -47839,11 +47839,11 @@ smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1
 
 var smallLeaves2Geometry = exports.smallLeaves2Geometry = new THREE.Geometry();
 
-smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-1, 1.2, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-0.5, 1.2, 1), new THREE.Vector3(0.5, 0.5, 0.5)];
 
 var smallLeaves3Geometry = exports.smallLeaves3Geometry = new THREE.Geometry();
 
-smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(2, 1, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(0.5, 0.5, 0.5)];
 
 smallLeaves1Geometry.faces = smallLeafFaces;
 smallLeaves1Geometry.applyMatrix(leafShift);
@@ -47860,11 +47860,11 @@ bigLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 
 
 var bigLeaves2Geometry = exports.bigLeaves2Geometry = new THREE.Geometry();
 
-bigLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-1, 1.2, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+bigLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(-0.7, 0.6, 0.6), new THREE.Vector3(-0.3, 0.6, 1), new THREE.Vector3(-0.5, 1.2, 0.8), new THREE.Vector3(-1, 0.4, 1.1)];
 
 var bigLeaves3Geometry = exports.bigLeaves3Geometry = new THREE.Geometry();
 
-bigLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(2, 1, 1.5), new THREE.Vector3(0.5, 0.5, 0.5)];
+bigLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(1.5, 0.3, 0.9), new THREE.Vector3(1.5, 0.3, 1.5), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(1.6, -0.1, 1.4)];
 
 bigLeaves1Geometry.faces = bigLeafFaces;
 bigLeaves1Geometry.applyMatrix(leafShift);

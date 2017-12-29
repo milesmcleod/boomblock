@@ -10,8 +10,8 @@ import {
 
 class Test {
   createObject(scene, geometry) {
-    const testMaterial = new THREE.MeshLambertMaterial({
-      color: 0xffffff,
+    const testMaterial = new THREE.MeshPhongMaterial({
+      color: 0x66ff66,
       side: THREE.DoubleSide
     });
     this.object = new THREE.Mesh(geometry, testMaterial);
@@ -22,8 +22,8 @@ class Test {
 
   constructor(scene) {
     this.createObject(scene, bigLeaves1Geometry);
-    // this.createObject(scene, bigLeaves2Geometry);
-    // this.createObject(scene, bigLeaves3Geometry);
+    this.createObject(scene, bigLeaves2Geometry);
+    this.createObject(scene, bigLeaves3Geometry);
   }
 }
 

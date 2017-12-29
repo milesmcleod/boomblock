@@ -3,7 +3,10 @@ import {
   smallLeaves1Geometry,
   smallLeaves2Geometry,
   smallLeaves3Geometry,
-  bigLeavesGeometry} from './tree_geometries';
+  bigLeaves1Geometry,
+  bigLeaves2Geometry,
+  bigLeaves3Geometry,
+} from './tree_geometries';
 
 class Test {
   createObject(scene, geometry) {
@@ -18,9 +21,9 @@ class Test {
   }
 
   constructor(scene) {
-    this.createObject(scene, smallLeaves1Geometry);
-    this.createObject(scene, smallLeaves2Geometry);
-    this.createObject(scene, smallLeaves3Geometry);
+    this.createObject(scene, bigLeaves1Geometry);
+    // this.createObject(scene, bigLeaves2Geometry);
+    // this.createObject(scene, bigLeaves3Geometry);
   }
 }
 

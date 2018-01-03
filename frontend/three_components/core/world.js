@@ -36,8 +36,8 @@ class World {
 
   createControls() {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.minDistance = 0;
-    this.controls.maxDistance = Infinity;
+    this.controls.minDistance = 750;
+    this.controls.maxDistance = 4000;
     this.controls.enableZoom = true;
     this.controls.zoomSpeed = 1.0;
   }

@@ -117,7 +117,7 @@ class World {
 
   loop(audio) {
     setTimeout(() => {
-      // this.update(audio);
+      this.update(audio);
       this.render();
       requestAnimationFrame(() => this.loop(audio));
     }, 1000/this.fps);

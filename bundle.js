@@ -47395,7 +47395,7 @@ var World = function () {
       var _this = this;
 
       setTimeout(function () {
-        // this.update(audio);
+        _this.update(audio);
         _this.render();
         requestAnimationFrame(function () {
           return _this.loop(audio);
@@ -47438,17 +47438,25 @@ var Lighting = function () {
       scene.add(this.ambientLight);
     }
   }, {
+    key: 'createSun',
+    value: function createSun(scene) {
+      this.sun = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffff80 }));
+      this.sun.position.set(800, 3000, -3000);
+      scene.add(this.sun);
+    }
+  }, {
     key: 'createSpotLight',
     value: function createSpotLight(scene) {
-      this.spotLight = new THREE.SpotLight(0xffffff, 0.8);
-      this.spotLight.position.set(200, 500, 500);
-      // this.spotLight.castShadow = true;
-      // this.spotLight.shadow.mapSize.width = 1024;
-      // this.spotLight.shadow.mapSize.height = 1024;
-      // this.spotLight.shadow.camera.near = 500;
+      this.spotLight = new THREE.SpotLight(0xffffff, 5);
+      // this.spotLight.position.set( 200, 500, 500 );
+      this.spotLight.position.set(800, 3000, -3000);
+      this.spotLight.castShadow = true;
+      this.spotLight.shadow.mapSize.width = 4000;
+      this.spotLight.shadow.mapSize.height = 4000;
+      this.spotLight.shadow.camera.near = 500;
       // this.spotLight.shadow.camera.far = 4000;
       // this.spotLight.shadow.camera.fov = 30;
-      this.spotLight.angle = Math.PI / 5;
+      // this.spotLight.angle = Math.PI/5;
       scene.add(this.spotLight);
     }
   }]);
@@ -47457,7 +47465,8 @@ var Lighting = function () {
     _classCallCheck(this, Lighting);
 
     this.createAmbientLight(scene);
-    // this.createSpotLight(scene);
+    this.createSun(scene);
+    this.createSpotLight(scene);
   }
 
   return Lighting;
@@ -47497,7 +47506,7 @@ var BoomBlock = function () {
         side: THREE.DoubleSide
       });
       this.base = new THREE.Mesh(baseGeometry, baseMaterial);
-      // this.base.castShadow = true;
+      this.base.castShadow = true;
       // this.base.receiveShadow = true;
       boombox.add(this.base);
 
@@ -47890,32 +47899,37 @@ var Island = function () {
     // }
 
     value: function createIsland(scene) {
-      var islandMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+      var islandMaterial = new THREE.MeshPhongMaterial({ color: 0x86592d });
 
       this.cylinder1 = new THREE.Mesh(new THREE.CylinderBufferGeometry(300, 300, 150, 32), islandMaterial);
-      this.cylinder1.position.y = -180 - 300;
+      this.cylinder1.position.y = -180 - 150;
       this.cylinder1.position.x = -400;
       this.cylinder1.position.z = 400;
       // this.cylinder1.receiveShadow = true;
+      // this.cylinder1.castShadow = true;
       scene.add(this.cylinder1);
 
       this.cylinder2 = new THREE.Mesh(new THREE.CylinderBufferGeometry(700, 700, 300, 32), islandMaterial);
       this.cylinder2.position.y = -180 - 150;
+      this.cylinder2.position.z = -100;
       // this.cylinder2.receiveShadow = true;
+      // this.cylinder2.castShadow = true;
       scene.add(this.cylinder2);
 
-      this.cylinder3 = new THREE.Mesh(new THREE.CylinderBufferGeometry(400, 400, 600, 32), islandMaterial);
+      this.cylinder3 = new THREE.Mesh(new THREE.CylinderBufferGeometry(400, 400, 500, 32), islandMaterial);
       this.cylinder3.position.y = -180;
       this.cylinder3.position.x = 400;
-      this.cylinder3.position.z = -450;
+      this.cylinder3.position.z = -550;
       // this.cylinder3.receiveShadow = true;
+      // this.cylinder3.castShadow = true;
       scene.add(this.cylinder3);
 
       this.cylinder4 = new THREE.Mesh(new THREE.CylinderBufferGeometry(350, 350, 900, 32), islandMaterial);
       this.cylinder4.position.y = -100;
       this.cylinder4.position.x = -300;
-      this.cylinder4.position.z = -550;
+      this.cylinder4.position.z = -650;
       // this.cylinder4.receiveShadow = true;
+      // this.cylinder4.castShadow = true;
       scene.add(this.cylinder4);
     }
   }]);

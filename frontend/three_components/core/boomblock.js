@@ -8,7 +8,7 @@ class BoomBlock {
       side: THREE.DoubleSide
     });
     this.base = new THREE.Mesh(baseGeometry, baseMaterial);
-    // this.base.castShadow = true;
+    this.base.castShadow = true;
     // this.base.receiveShadow = true;
     boombox.add(this.base);
 

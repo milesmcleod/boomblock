@@ -1,6 +1,6 @@
 import World from './three_components/core/world';
 import Lighting from './three_components/core/lighting';
-import Floor from './three_components/core/floor';
+import Island from './three_components/core/island';
 import BoomBlock from './three_components/core/boomblock';
 import DrumStack from './three_components/drum_stack';
 import TrainTrack from './three_components/traintrack';

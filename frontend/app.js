@@ -1,7 +1,7 @@
 // entry.jsx
 import World from './three_components/core/world';
 import Lighting from './three_components/core/lighting';
-import Floor from './three_components/core/floor';
+import Island from './three_components/core/island';
 import BoomBlock from './three_components/core/boomblock';
 import DrumStack from './three_components/drum_stack';
 import TrainTrack from './three_components/traintrack';
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const world = new World();
   const lighting = new Lighting(world.scene);
-  const floor = new Floor(world.scene);
+  const floor = new Island(world.scene);
   const boomblock = new BoomBlock(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);

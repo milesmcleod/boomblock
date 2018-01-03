@@ -45785,9 +45785,9 @@ var _lighting = __webpack_require__(16);
 
 var _lighting2 = _interopRequireDefault(_lighting);
 
-var _floor = __webpack_require__(17);
+var _island = __webpack_require__(19);
 
-var _floor2 = _interopRequireDefault(_floor);
+var _island2 = _interopRequireDefault(_island);
 
 var _boomblock = __webpack_require__(18);
 
@@ -45831,7 +45831,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var world = new _world2.default();
   var lighting = new _lighting2.default(world.scene);
-  var floor = new _floor2.default(world.scene);
+  var floor = new _island2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
@@ -46927,9 +46927,9 @@ var _lighting = __webpack_require__(16);
 
 var _lighting2 = _interopRequireDefault(_lighting);
 
-var _floor = __webpack_require__(17);
+var _island = __webpack_require__(19);
 
-var _floor2 = _interopRequireDefault(_floor);
+var _island2 = _interopRequireDefault(_island);
 
 var _boomblock = __webpack_require__(18);
 
@@ -47373,9 +47373,6 @@ var World = function () {
         }
       }); //rotateOnAxis function
     }
-
-    //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
-
   }, {
     key: 'render',
     value: function render() {
@@ -47398,7 +47395,7 @@ var World = function () {
       var _this = this;
 
       setTimeout(function () {
-        _this.update(audio);
+        // this.update(audio);
         _this.render();
         requestAnimationFrame(function () {
           return _this.loop(audio);
@@ -47469,50 +47466,7 @@ var Lighting = function () {
 exports.default = Lighting;
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Floor = function () {
-  _createClass(Floor, [{
-    key: 'createFloor',
-    value: function createFloor(scene) {
-      this.floor = new THREE.Mesh(new THREE.PlaneBufferGeometry(5000, 5000), new THREE.MeshPhongMaterial({ color: 0x000000 }));
-      this.floor.rotation.x = -Math.PI / 2;
-      this.floor.position.y = -180;
-      this.floor.receiveShadow = true;
-      scene.add(this.floor);
-    }
-  }]);
-
-  function Floor(scene) {
-    _classCallCheck(this, Floor);
-
-    this.createFloor(scene);
-  }
-
-  return Floor;
-}();
-
-exports.default = Floor;
-
-/***/ }),
+/* 17 */,
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47898,6 +47852,84 @@ var BoomBlock = function () {
 }();
 
 exports.default = BoomBlock;
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Island = function () {
+  _createClass(Island, [{
+    key: 'createIsland',
+
+    // createFloor(scene) {
+    //   this.floor = new THREE.Mesh(
+    //     new THREE.PlaneBufferGeometry(5000,5000),
+    //     new THREE.MeshPhongMaterial({color: 0x000000})
+    //   );
+    //   this.floor.rotation.x = -Math.PI/2;
+    //   this.floor.position.y = -180;
+    //   this.floor.receiveShadow = true;
+    //   scene.add(this.floor);
+    // }
+
+    value: function createIsland(scene) {
+
+      this.cylinder1 = new THREE.Mesh(new THREE.CylinderBufferGeometry(300, 300, 150, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder1.position.y = -180 - 300;
+      this.cylinder1.position.x = -400;
+      this.cylinder1.position.z = 400;
+      this.cylinder1.receiveShadow = true;
+      scene.add(this.cylinder1);
+
+      this.cylinder2 = new THREE.Mesh(new THREE.CylinderBufferGeometry(700, 700, 300, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder2.position.y = -180 - 150;
+      this.cylinder2.receiveShadow = true;
+      scene.add(this.cylinder2);
+
+      this.cylinder3 = new THREE.Mesh(new THREE.CylinderBufferGeometry(400, 400, 600, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder3.position.y = -180;
+      this.cylinder3.position.x = 400;
+      this.cylinder3.position.z = -450;
+      this.cylinder3.receiveShadow = true;
+      scene.add(this.cylinder3);
+
+      this.cylinder4 = new THREE.Mesh(new THREE.CylinderBufferGeometry(350, 350, 900, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder4.position.y = -100;
+      this.cylinder4.position.x = -300;
+      this.cylinder4.position.z = -550;
+      this.cylinder4.receiveShadow = true;
+      scene.add(this.cylinder4);
+    }
+  }]);
+
+  function Island(scene) {
+    _classCallCheck(this, Island);
+
+    // this.createFloor(scene);
+    this.createIsland(scene);
+  }
+
+  return Island;
+}();
+
+exports.default = Island;
 
 /***/ })
 /******/ ]);

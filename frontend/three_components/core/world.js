@@ -101,8 +101,6 @@ class World {
 
   }
 
-  //7: (12), 1: (15, 14, 13), 2: (17, 18), 3: (27, 28) 4: (32, 31, 30, 29) 5: (35, 34)
-
   render () {
     this.renderer.render( this.scene, this.camera );
   }
@@ -119,7 +117,7 @@ class World {
 
   loop(audio) {
     setTimeout(() => {
-      this.update(audio);
+      // this.update(audio);
       this.render();
       requestAnimationFrame(() => this.loop(audio));
     }, 1000/this.fps);

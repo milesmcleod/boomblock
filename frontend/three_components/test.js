@@ -16,7 +16,7 @@ class Test {
     });
     this.object = new THREE.Mesh(geometry, testMaterial);
     this.object.position.set(0, 300, 300);
-    this.object.receiveShadow = true;
+    // this.object.receiveShadow = true;
     scene.add(this.object);
   }
 

@@ -47153,7 +47153,7 @@ var Test = function () {
       });
       this.object = new THREE.Mesh(geometry, testMaterial);
       this.object.position.set(0, 300, 300);
-      this.object.receiveShadow = true;
+      // this.object.receiveShadow = true;
       scene.add(this.object);
     }
   }]);
@@ -47442,12 +47442,12 @@ var Lighting = function () {
     value: function createSpotLight(scene) {
       this.spotLight = new THREE.SpotLight(0xffffff, 0.8);
       this.spotLight.position.set(200, 500, 500);
-      this.spotLight.castShadow = true;
-      this.spotLight.shadow.mapSize.width = 1024;
-      this.spotLight.shadow.mapSize.height = 1024;
-      this.spotLight.shadow.camera.near = 500;
-      this.spotLight.shadow.camera.far = 4000;
-      this.spotLight.shadow.camera.fov = 30;
+      // this.spotLight.castShadow = true;
+      // this.spotLight.shadow.mapSize.width = 1024;
+      // this.spotLight.shadow.mapSize.height = 1024;
+      // this.spotLight.shadow.camera.near = 500;
+      // this.spotLight.shadow.camera.far = 4000;
+      // this.spotLight.shadow.camera.fov = 30;
       this.spotLight.angle = Math.PI / 5;
       scene.add(this.spotLight);
     }
@@ -47497,8 +47497,8 @@ var BoomBlock = function () {
         side: THREE.DoubleSide
       });
       this.base = new THREE.Mesh(baseGeometry, baseMaterial);
-      this.base.castShadow = true;
-      this.base.receiveShadow = true;
+      // this.base.castShadow = true;
+      // this.base.receiveShadow = true;
       boombox.add(this.base);
 
       var tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
@@ -47661,10 +47661,10 @@ var BoomBlock = function () {
 
       var light = new THREE.PointLight(0x00ffff, 0.6, 0, 2);
       light.position.set(175, 0, 110);
-      light.castShadow = true;
-      light.shadow.mapSize.width = 1024;
-      light.shadow.mapSize.height = 1024;
-      light.shadow.camera.far = 2000;
+      // light.castShadow = true;
+      // light.shadow.mapSize.width = 1024;
+      // light.shadow.mapSize.height = 1024;
+      // light.shadow.camera.far = 2000;
       boombox.add(light);
 
       this.trackButton1.name = 'track1';
@@ -47793,10 +47793,10 @@ var BoomBlock = function () {
       muteLight.position.set(60, -10, 150);
 
       [playLight, pauseLight, resetLight, muteLight].forEach(function (light) {
-        light.castShadow = true;
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
-        light.shadow.camera.far = 2000;
+        // light.castShadow = true;
+        // light.shadow.mapSize.width = 1024;
+        // light.shadow.mapSize.height = 1024;
+        // light.shadow.camera.far = 2000;
         boombox.add(light);
       });
 
@@ -47890,31 +47890,32 @@ var Island = function () {
     // }
 
     value: function createIsland(scene) {
+      var islandMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
 
-      this.cylinder1 = new THREE.Mesh(new THREE.CylinderBufferGeometry(300, 300, 150, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder1 = new THREE.Mesh(new THREE.CylinderBufferGeometry(300, 300, 150, 32), islandMaterial);
       this.cylinder1.position.y = -180 - 300;
       this.cylinder1.position.x = -400;
       this.cylinder1.position.z = 400;
-      this.cylinder1.receiveShadow = true;
+      // this.cylinder1.receiveShadow = true;
       scene.add(this.cylinder1);
 
-      this.cylinder2 = new THREE.Mesh(new THREE.CylinderBufferGeometry(700, 700, 300, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder2 = new THREE.Mesh(new THREE.CylinderBufferGeometry(700, 700, 300, 32), islandMaterial);
       this.cylinder2.position.y = -180 - 150;
-      this.cylinder2.receiveShadow = true;
+      // this.cylinder2.receiveShadow = true;
       scene.add(this.cylinder2);
 
-      this.cylinder3 = new THREE.Mesh(new THREE.CylinderBufferGeometry(400, 400, 600, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder3 = new THREE.Mesh(new THREE.CylinderBufferGeometry(400, 400, 600, 32), islandMaterial);
       this.cylinder3.position.y = -180;
       this.cylinder3.position.x = 400;
       this.cylinder3.position.z = -450;
-      this.cylinder3.receiveShadow = true;
+      // this.cylinder3.receiveShadow = true;
       scene.add(this.cylinder3);
 
-      this.cylinder4 = new THREE.Mesh(new THREE.CylinderBufferGeometry(350, 350, 900, 32), new THREE.MeshPhongMaterial({ color: 0x000000 }));
+      this.cylinder4 = new THREE.Mesh(new THREE.CylinderBufferGeometry(350, 350, 900, 32), islandMaterial);
       this.cylinder4.position.y = -100;
       this.cylinder4.position.x = -300;
       this.cylinder4.position.z = -550;
-      this.cylinder4.receiveShadow = true;
+      // this.cylinder4.receiveShadow = true;
       scene.add(this.cylinder4);
     }
   }]);

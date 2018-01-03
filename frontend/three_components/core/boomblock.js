@@ -8,8 +8,8 @@ class BoomBlock {
       side: THREE.DoubleSide
     });
     this.base = new THREE.Mesh(baseGeometry, baseMaterial);
-    this.base.castShadow = true;
-    this.base.receiveShadow = true;
+    // this.base.castShadow = true;
+    // this.base.receiveShadow = true;
     boombox.add(this.base);
 
     const tapeReaderGeometry = new THREE.BoxBufferGeometry(100, 40, 60);
@@ -185,10 +185,10 @@ class BoomBlock {
 
     const light = new THREE.PointLight( 0x00ffff, 0.6, 0, 2 );
     light.position.set(175, 0, 110);
-    light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
-    light.shadow.camera.far = 2000;
+    // light.castShadow = true;
+    // light.shadow.mapSize.width = 1024;
+    // light.shadow.mapSize.height = 1024;
+    // light.shadow.camera.far = 2000;
     boombox.add(light);
 
     this.trackButton1.name = 'track1';
@@ -330,10 +330,10 @@ class BoomBlock {
     muteLight.position.set(60, -10, 150);
 
     [playLight, pauseLight, resetLight, muteLight].forEach(light => {
-      light.castShadow = true;
-      light.shadow.mapSize.width = 1024;
-      light.shadow.mapSize.height = 1024;
-      light.shadow.camera.far = 2000;
+      // light.castShadow = true;
+      // light.shadow.mapSize.width = 1024;
+      // light.shadow.mapSize.height = 1024;
+      // light.shadow.camera.far = 2000;
       boombox.add(light);
     });
 

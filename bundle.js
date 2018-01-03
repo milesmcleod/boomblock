@@ -45793,6 +45793,10 @@ var _water = __webpack_require__(20);
 
 var _water2 = _interopRequireDefault(_water);
 
+var _playlist = __webpack_require__(21);
+
+var _playlist2 = _interopRequireDefault(_playlist);
+
 var _boomblock = __webpack_require__(18);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
@@ -45827,7 +45831,6 @@ var _test2 = _interopRequireDefault(_test);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -45838,6 +45841,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var lighting = new _lighting2.default(world.scene);
   var island = new _island2.default(world.scene);
   var water = new _water2.default(world.scene);
+  var playlist = new _playlist2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
@@ -45858,7 +45862,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   world.loop(audio);
-});
+}); // entry.jsx
 
 /***/ }),
 /* 11 */
@@ -47456,6 +47460,7 @@ var Lighting = function () {
       this.spotLight = new THREE.SpotLight(0xffffff, 5);
       // this.spotLight.position.set( 200, 500, 500 );
       this.spotLight.position.set(800, 3000, -3000);
+      this.spotLight.penumbra = 0.5;
       this.spotLight.castShadow = true;
       this.spotLight.shadow.mapSize.width = 4000;
       this.spotLight.shadow.mapSize.height = 4000;
@@ -47964,11 +47969,11 @@ var Water = function () {
   _createClass(Water, [{
     key: 'createWater',
     value: function createWater(scene) {
-      this.water = new THREE.Mesh(new THREE.PlaneBufferGeometry(15000, 15000), new THREE.MeshPhongMaterial({ color: 0x33ccff }));
+      this.water = new THREE.Mesh(new THREE.PlaneBufferGeometry(15000, 15000), new THREE.MeshPhongMaterial({ color: 0x1a75ff }));
       this.water.rotation.x = -Math.PI / 2;
       this.water.position.y = -300;
       this.water.material.transparent = true;
-      this.water.material.opacity = 0.7;
+      this.water.material.opacity = 0.5;
       // this.water.receiveShadow = true;
       scene.add(this.water);
     }
@@ -47984,6 +47989,70 @@ var Water = function () {
 }();
 
 exports.default = Water;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Playlist = function () {
+  _createClass(Playlist, [{
+    key: 'buildBoard',
+    value: function buildBoard(scene) {
+      var boardGeometry = new THREE.BoxBufferGeometry(500, 600, 20);
+      var boardMaterial = new THREE.MeshPhongMaterial({
+        color: 0x343434,
+        side: THREE.DoubleSide
+      });
+      this.board = new THREE.Mesh(boardGeometry, boardMaterial);
+      this.board.position.set(-750, 100, 450);
+      this.board.material.transparent = true;
+      this.board.material.opacity = this.initialOpacity;
+      // scene.add( this.board );
+      this.playlist.add(this.board);
+    }
+  }, {
+    key: 'addLinks',
+    value: function addLinks(scene) {}
+  }, {
+    key: 'addPlaylist',
+    value: function addPlaylist(scene) {
+      scene.add(this.playlist);
+    }
+  }]);
+
+  function Playlist(scene) {
+    _classCallCheck(this, Playlist);
+
+    this.initialOpacity = 0;
+    this.opacityIncrement = 0.01;
+    this.maxOpacity = 0.8;
+    this.playlist = new THREE.Group();
+    this.buildBoard();
+    this.addLinks();
+    this.addPlaylist(scene);
+  }
+
+  return Playlist;
+}();
+
+exports.default = Playlist;
 
 /***/ })
 /******/ ]);

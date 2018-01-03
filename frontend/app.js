@@ -2,6 +2,7 @@
 import World from './three_components/core/world';
 import Lighting from './three_components/core/lighting';
 import Island from './three_components/core/island';
+import Water from './three_components/core/water';
 import BoomBlock from './three_components/core/boomblock';
 import DrumStack from './three_components/drum_stack';
 import TrainTrack from './three_components/traintrack';
@@ -19,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const world = new World();
   const lighting = new Lighting(world.scene);
-  const floor = new Island(world.scene);
+  const island = new Island(world.scene);
+  const water = new Water(world.scene);
   const boomblock = new BoomBlock(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);

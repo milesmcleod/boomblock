@@ -45789,6 +45789,10 @@ var _island = __webpack_require__(19);
 
 var _island2 = _interopRequireDefault(_island);
 
+var _water = __webpack_require__(20);
+
+var _water2 = _interopRequireDefault(_water);
+
 var _boomblock = __webpack_require__(18);
 
 var _boomblock2 = _interopRequireDefault(_boomblock);
@@ -45823,6 +45827,7 @@ var _test2 = _interopRequireDefault(_test);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -45831,7 +45836,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var world = new _world2.default();
   var lighting = new _lighting2.default(world.scene);
-  var floor = new _island2.default(world.scene);
+  var island = new _island2.default(world.scene);
+  var water = new _water2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
@@ -45852,7 +45858,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   world.loop(audio);
-}); // entry.jsx
+});
 
 /***/ }),
 /* 11 */
@@ -47456,7 +47462,7 @@ var Lighting = function () {
       this.spotLight.shadow.camera.near = 500;
       // this.spotLight.shadow.camera.far = 4000;
       // this.spotLight.shadow.camera.fov = 30;
-      // this.spotLight.angle = Math.PI/5;
+      this.spotLight.angle = Math.PI / 1.5;
       scene.add(this.spotLight);
     }
   }]);
@@ -47886,18 +47892,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Island = function () {
   _createClass(Island, [{
     key: 'createIsland',
-
-    // createFloor(scene) {
-    //   this.floor = new THREE.Mesh(
-    //     new THREE.PlaneBufferGeometry(5000,5000),
-    //     new THREE.MeshPhongMaterial({color: 0x000000})
-    //   );
-    //   this.floor.rotation.x = -Math.PI/2;
-    //   this.floor.position.y = -180;
-    //   this.floor.receiveShadow = true;
-    //   scene.add(this.floor);
-    // }
-
     value: function createIsland(scene) {
       var islandMaterial = new THREE.MeshPhongMaterial({ color: 0x86592d });
 
@@ -47937,7 +47931,6 @@ var Island = function () {
   function Island(scene) {
     _classCallCheck(this, Island);
 
-    // this.createFloor(scene);
     this.createIsland(scene);
   }
 
@@ -47945,6 +47938,52 @@ var Island = function () {
 }();
 
 exports.default = Island;
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Water = function () {
+  _createClass(Water, [{
+    key: 'createWater',
+    value: function createWater(scene) {
+      this.water = new THREE.Mesh(new THREE.PlaneBufferGeometry(15000, 15000), new THREE.MeshPhongMaterial({ color: 0x33ccff }));
+      this.water.rotation.x = -Math.PI / 2;
+      this.water.position.y = -300;
+      this.water.material.transparent = true;
+      this.water.material.opacity = 0.7;
+      // this.water.receiveShadow = true;
+      scene.add(this.water);
+    }
+  }]);
+
+  function Water(scene) {
+    _classCallCheck(this, Water);
+
+    this.createWater(scene);
+  }
+
+  return Water;
+}();
+
+exports.default = Water;
 
 /***/ })
 /******/ ]);

@@ -10,6 +10,7 @@ class World {
     this.aspectRatio = this.width/this.height;
     this.nearPlane = 1;
     this.farPlane = 20000;
+    this.fps = 50;
   }
 
   createCamera() {
@@ -106,10 +107,22 @@ class World {
     this.renderer.render( this.scene, this.camera );
   }
 
-  loop (audio) {
-    requestAnimationFrame(() => this.loop(audio));
-    this.update(audio);
-    this.render();
+  // original loop:
+
+  // loop (audio) {
+  //   requestAnimationFrame(() => this.loop(audio));
+  //   this.update(audio);
+  //   this.render();
+  // }
+
+  //slowed loop:
+
+  loop(audio) {
+    setTimeout(() => {
+      this.update(audio);
+      this.render();
+      requestAnimationFrame(() => this.loop(audio));
+    }, 1000/this.fps);
   }
 
 }

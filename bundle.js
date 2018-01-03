@@ -45163,6 +45163,7 @@ var World = function () {
       this.aspectRatio = this.width / this.height;
       this.nearPlane = 1;
       this.farPlane = 20000;
+      this.fps = 50;
     }
   }, {
     key: 'createCamera',
@@ -45271,16 +45272,29 @@ var World = function () {
     value: function render() {
       this.renderer.render(this.scene, this.camera);
     }
+
+    // original loop:
+
+    // loop (audio) {
+    //   requestAnimationFrame(() => this.loop(audio));
+    //   this.update(audio);
+    //   this.render();
+    // }
+
+    //slowed loop:
+
   }, {
     key: 'loop',
     value: function loop(audio) {
       var _this = this;
 
-      requestAnimationFrame(function () {
-        return _this.loop(audio);
-      });
-      this.update(audio);
-      this.render();
+      setTimeout(function () {
+        _this.update(audio);
+        _this.render();
+        requestAnimationFrame(function () {
+          return _this.loop(audio);
+        });
+      }, 1000 / this.fps);
     }
   }]);
 

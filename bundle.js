@@ -46546,8 +46546,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
-  var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 2, '1');
-  var bigTree2 = new _big_tree2.default([-420, -100, 400], audio, world.scene, 1, '2');
+  var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 1, '1');
+  var bigTree2 = new _big_tree2.default([-420, -100, 400], audio, world.scene, 2, '2');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
   var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2]);
@@ -48119,17 +48119,21 @@ var BigTree = function () {
     this.xyposition = xyposition;
     this.drumStackY = -100;
     this.drumStackZ = 0;
-    this.drumStackZIncrement = 9;
+    this.drumStackZIncrement = 40;
+    this.xRotation = false;
     if (type === 1) {
-      this.drumStackWidth = 150;
-      this.drumStackHeight = 100;
-      this.drumStackDepth = 150;
-      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
-    } else if (type === 2) {
       this.drumStackWidth = 150;
       this.drumStackHeight = 75;
       this.drumStackDepth = 150;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+    } else if (type === 2) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRadius = 500;
+      this.arcRotation = 3 * Math.PI / 2;
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -48214,9 +48218,15 @@ var BigTree = function () {
       var x = position[0];
       var y = position[1] + this.drumStackY;
       var z = position[2];
-      // const z =position[2] + this.drumStackZ;
+      if (this.xRotation) {
+        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
+        z = position[2] + this.arcRadius * Math.sin(this.arcRotation);
+      }
       drumBlock.position.set(x, y, z);
-      // drumBlock.rotateX(this.drumStackRotation/2);
+      if (this.xRotation) {
+        drumBlock.rotateX(this.arcRotation);
+        this.arcRotation += Math.PI / 12;
+      }
       drumBlock.rotateY(this.drumStackRotation);
       this.scene.add(drumBlock);
     }
@@ -48225,33 +48235,7 @@ var BigTree = function () {
     value: function addLeaves(position, stackPosition) {
       var _this3 = this;
 
-      var leafSize = void 0;
-      switch (stackPosition % 8) {
-        case 0:
-          leafSize = 120;
-          break;
-        case 1:
-          leafSize = 140;
-          break;
-        case 2:
-          leafSize = 160;
-          break;
-        case 3:
-          leafSize = 180;
-          break;
-        case 4:
-          leafSize = 200;
-          break;
-        case 5:
-          leafSize = 220;
-          break;
-        case 6:
-          leafSize = 240;
-          break;
-        case 7:
-          leafSize = 260;
-          break;
-      }
+      var leafSize = this.leafRatios[stackPosition % 8];
       var geometries = Leaves.buildBigLeaves1(leafSize);
       var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
       var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
@@ -48277,20 +48261,36 @@ var BigTree = function () {
   }, {
     key: 'stack',
     value: function stack() {
-      var rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
-      if (!this.drumStackColors) {
-        this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
-      }
+      // const rainbow = [
+      //   0xcc0000,
+      //   0xff3300,
+      //   0xff9933,
+      //   0xffcc00,
+      //   0xffff00,
+      //   0x66ff33,
+      //   0x66ff66,
+      //   0x00ff99,
+      //   0x00ccff,
+      //   0x0066ff,
+      //   0x7f00ff,
+      //   0xff00ff
+      // ];
+      // if (!this.drumStackColors) {
+      //   this.drumStackColors = [
+      //     rainbow[Math.floor(Math.random()*12)],
+      //     rainbow[Math.floor(Math.random()*12)]
+      //   ];
+      // }
       // const material = new THREE.MeshBasicMaterial({
       //   color: this.drumStackColors[Math.floor(Math.random()*2)]
       // }); //this should be triggered if night mode is engaged
-      console.log(this.stackPosition);
       this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
       this.addLeaves(this.xyposition, this.stackPosition);
       this.stackPosition += 1;
       this.drumStackY += this.drumStackHeight;
       this.drumStackZ = this.drumStackZIncrement;
-      this.drumStackZIncrement = this.drumStackZIncrement * 2;
+      // this.drumStackZIncrement = this.drumStackZIncrement * 2;
+      this.drumStackZIncrement = this.drumStackZIncrement + 40;
       this.drumStackRotation += Math.PI / 4;
     }
   }, {
@@ -48309,6 +48309,9 @@ var BigTree = function () {
       }).forEach(function (el) {
         return _this4.scene.remove(el);
       });
+      if (this.xRotation) {
+        this.arcRotation = 3 * Math.PI / 2;
+      }
     }
   }]);
 

@@ -9,17 +9,21 @@ class BigTree {
     this.xyposition = xyposition;
     this.drumStackY = -100;
     this.drumStackZ = 0;
-    this.drumStackZIncrement = 9;
+    this.drumStackZIncrement = 40;
+    this.xRotation = false;
     if (type === 1) {
-      this.drumStackWidth = 150;
-      this.drumStackHeight = 100;
-      this.drumStackDepth = 150;
-      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
-    } else if (type === 2) {
       this.drumStackWidth = 150;
       this.drumStackHeight = 75;
       this.drumStackDepth = 150;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+    } else if (type === 2) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRadius =  500;
+      this.arcRotation = 3 * Math.PI/2;
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -99,43 +103,23 @@ class BigTree {
     const drumBlock = new THREE.Mesh(geometry, material);
     drumBlock.name = 'drumBlock' + this.id;
     const x = position[0];
-    const y = position[1] + this.drumStackY;
-    const z =position[2];
-    // const z =position[2] + this.drumStackZ;
+    let y = position[1] + this.drumStackY;
+    let z = position[2];
+    if (this.xRotation) {
+      y = position[1] + this.arcRadius * (Math.cos(this.arcRotation));
+      z = position[2] + this.arcRadius * (Math.sin(this.arcRotation));
+    }
     drumBlock.position.set(x, y, z);
-    // drumBlock.rotateX(this.drumStackRotation/2);
+    if (this.xRotation) {
+      drumBlock.rotateX(this.arcRotation);
+      this.arcRotation += Math.PI/12;
+    }
     drumBlock.rotateY(this.drumStackRotation);
     this.scene.add(drumBlock);
   }
 
   addLeaves(position, stackPosition) {
-    let leafSize;
-    switch (stackPosition % 8) {
-      case 0:
-        leafSize = 120;
-        break;
-      case 1:
-        leafSize = 140;
-        break;
-      case 2:
-        leafSize = 160;
-        break;
-      case 3:
-        leafSize = 180;
-        break;
-      case 4:
-        leafSize = 200;
-        break;
-      case 5:
-        leafSize = 220;
-        break;
-      case 6:
-        leafSize = 240;
-        break;
-      case 7:
-        leafSize = 260;
-        break;
-    }
+    let leafSize = this.leafRatios[stackPosition % 8];
     const geometries = Leaves.buildBigLeaves1(leafSize);
     const leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
     const leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
@@ -158,36 +142,40 @@ class BigTree {
   }
 
   stack() {
-    const rainbow = [
-      0xcc0000,
-      0xff3300,
-      0xff9933,
-      0xffcc00,
-      0xffff00,
-      0x66ff33,
-      0x66ff66,
-      0x00ff99,
-      0x00ccff,
-      0x0066ff,
-      0x7f00ff,
-      0xff00ff
-    ];
-    if (!this.drumStackColors) {
-      this.drumStackColors = [
-        rainbow[Math.floor(Math.random()*12)],
-        rainbow[Math.floor(Math.random()*12)]
-      ];
-    }
+    // const rainbow = [
+    //   0xcc0000,
+    //   0xff3300,
+    //   0xff9933,
+    //   0xffcc00,
+    //   0xffff00,
+    //   0x66ff33,
+    //   0x66ff66,
+    //   0x00ff99,
+    //   0x00ccff,
+    //   0x0066ff,
+    //   0x7f00ff,
+    //   0xff00ff
+    // ];
+    // if (!this.drumStackColors) {
+    //   this.drumStackColors = [
+    //     rainbow[Math.floor(Math.random()*12)],
+    //     rainbow[Math.floor(Math.random()*12)]
+    //   ];
+    // }
     // const material = new THREE.MeshBasicMaterial({
     //   color: this.drumStackColors[Math.floor(Math.random()*2)]
     // }); //this should be triggered if night mode is engaged
-    console.log(this.stackPosition);
-    this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
+    this.addBlock(
+      this.xyposition,
+      this.bigTrunkGeometry,
+      this.bigTrunkDayMaterial
+    );
     this.addLeaves(this.xyposition, this.stackPosition);
     this.stackPosition += 1;
     this.drumStackY += this.drumStackHeight;
     this.drumStackZ = this.drumStackZIncrement;
-    this.drumStackZIncrement = this.drumStackZIncrement * 2;
+    // this.drumStackZIncrement = this.drumStackZIncrement * 2;
+    this.drumStackZIncrement = this.drumStackZIncrement + 40;
     this.drumStackRotation += Math.PI/4;
   }
 
@@ -201,6 +189,9 @@ class BigTree {
     this.scene.children.filter(obj => (
       obj.name === 'drumBlock' + this.id || obj.name === 'leafBlock' + this.id
     )).forEach(el => this.scene.remove(el));
+    if (this.xRotation) {
+      this.arcRotation = 3 * Math.PI/2;
+    }
   }
 }
 

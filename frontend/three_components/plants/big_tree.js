@@ -15,7 +15,7 @@ class BigTree {
       this.drumStackDepth = 150;
     } else if (type === 2) {
       this.drumStackWidth = 150;
-      this.drumStackHeight = 100;
+      this.drumStackHeight = 75;
       this.drumStackDepth = 150;
     }
     this.drumStackRotation = 0;
@@ -28,12 +28,15 @@ class BigTree {
       this.drumStackHeight,
       this.drumStackDepth
     );
-    this.bigTrunkDayMaterial = new THREE.MeshBasicMaterial({
+    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
       color: 0x623b00
     });
-    this.leafMaterial = new THREE.MeshBasicMaterial({
-      color: 0x059c46,
-      side: THREE.DoubleSide
+    this.leafMaterial = new THREE.MeshPhongMaterial({
+      color: 0x00c563,
+      side: THREE.DoubleSide,
+      reflectivity: 0.1,
+      shininess: 5,
+      lightMapIntensity: 0.3
     });
   }
 
@@ -130,7 +133,7 @@ class BigTree {
         leafSize = 260;
         break;
     }
-    const geometries = Leaves.buildSmallLeaves1(leafSize);
+    const geometries = Leaves.buildBigLeaves1(leafSize);
     const leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
     const leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
     const leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
@@ -138,15 +141,16 @@ class BigTree {
     leaves.add(leaves1);
     leaves.add(leaves2);
     leaves.add(leaves3);
-    const x = position[0] -85;
+    const x = position[0] - 85;
     const y = position[1] + this.drumStackY + this.drumStackHeight - 50;
-    const z =position[2] - 40;
+    const z =position[2];
     leaves.position.set(x, y, z);
     leaves.name = 'leafBlock';
     // leaves.receiveShadow = true;
     this.scene.children.filter(obj => (
       obj.name === 'leafBlock'
     )).forEach(el => this.scene.remove(el));
+    leaves.rotateY(this.drumStackRotation);
     this.scene.add(leaves);
   }
 
@@ -186,7 +190,7 @@ class BigTree {
     this.drumStackY += this.drumStackHeight;
     this.drumStackZ = this.drumStackZIncrement;
     this.drumStackZIncrement = this.drumStackZIncrement * 2;
-    this.drumStackRotation += Math.PI/8;
+    this.drumStackRotation += Math.PI/4;
   }
 
   resetStack() {

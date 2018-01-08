@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const buildSmallLeaves1 = (scale) =>{
+export const buildBigLeaves1 = (scale) =>{
   const leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
   const bigLeafFaces = [
       new THREE.Face3( 0, 1, 2 ),
@@ -57,6 +57,12 @@ export const buildSmallLeaves1 = (scale) =>{
   bigLeaves2Geometry.applyMatrix(leafShift);
   bigLeaves3Geometry.faces = bigLeafFaces;
   bigLeaves3Geometry.applyMatrix(leafShift);
+  bigLeaves1Geometry.computeFaceNormals();
+  bigLeaves1Geometry.computeVertexNormals();
+  bigLeaves2Geometry.computeFaceNormals();
+  bigLeaves2Geometry.computeVertexNormals();
+  bigLeaves3Geometry.computeFaceNormals();
+  bigLeaves3Geometry.computeVertexNormals();
 
   return [
     bigLeaves1Geometry,

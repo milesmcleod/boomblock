@@ -48005,7 +48005,7 @@ exports.default = Test;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.bigLeaves3Geometry = exports.bigLeaves2Geometry = exports.bigLeaves1Geometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.buildSmallLeaves1 = undefined;
+exports.bigLeaves3Geometry = exports.bigLeaves2Geometry = exports.bigLeaves1Geometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.buildBigLeaves1 = undefined;
 
 var _three = __webpack_require__(0);
 
@@ -48013,7 +48013,7 @@ var THREE = _interopRequireWildcard(_three);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(scale) {
+var buildBigLeaves1 = exports.buildBigLeaves1 = function buildBigLeaves1(scale) {
   var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
   var bigLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 1, 3), new THREE.Face3(3, 4, 1), new THREE.Face3(1, 2, 4), new THREE.Face3(4, 5, 2), new THREE.Face3(2, 0, 5), new THREE.Face3(5, 3, 0), new THREE.Face3(3, 4, 6), new THREE.Face3(4, 5, 6), new THREE.Face3(5, 3, 6)];
 
@@ -48035,6 +48035,12 @@ var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(s
   bigLeaves2Geometry.applyMatrix(leafShift);
   bigLeaves3Geometry.faces = bigLeafFaces;
   bigLeaves3Geometry.applyMatrix(leafShift);
+  bigLeaves1Geometry.computeFaceNormals();
+  bigLeaves1Geometry.computeVertexNormals();
+  bigLeaves2Geometry.computeFaceNormals();
+  bigLeaves2Geometry.computeVertexNormals();
+  bigLeaves3Geometry.computeFaceNormals();
+  bigLeaves3Geometry.computeVertexNormals();
 
   return [bigLeaves1Geometry, bigLeaves2Geometry, bigLeaves3Geometry];
 };
@@ -48123,7 +48129,7 @@ var BigTree = function () {
       this.drumStackDepth = 150;
     } else if (type === 2) {
       this.drumStackWidth = 150;
-      this.drumStackHeight = 100;
+      this.drumStackHeight = 75;
       this.drumStackDepth = 150;
     }
     this.drumStackRotation = 0;
@@ -48132,12 +48138,15 @@ var BigTree = function () {
     this.timeoutIds = [];
     this.stackPosition = 0;
     this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackWidth, this.drumStackHeight, this.drumStackDepth);
-    this.bigTrunkDayMaterial = new THREE.MeshBasicMaterial({
+    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
       color: 0x623b00
     });
-    this.leafMaterial = new THREE.MeshBasicMaterial({
-      color: 0x059c46,
-      side: THREE.DoubleSide
+    this.leafMaterial = new THREE.MeshPhongMaterial({
+      color: 0x00c563,
+      side: THREE.DoubleSide,
+      reflectivity: 0.1,
+      shininess: 5,
+      lightMapIntensity: 0.3
     });
   }
 
@@ -48244,7 +48253,7 @@ var BigTree = function () {
           leafSize = 260;
           break;
       }
-      var geometries = Leaves.buildSmallLeaves1(leafSize);
+      var geometries = Leaves.buildBigLeaves1(leafSize);
       var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
       var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
       var leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
@@ -48254,7 +48263,7 @@ var BigTree = function () {
       leaves.add(leaves3);
       var x = position[0] - 85;
       var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
-      var z = position[2] - 40;
+      var z = position[2];
       leaves.position.set(x, y, z);
       leaves.name = 'leafBlock';
       // leaves.receiveShadow = true;
@@ -48263,6 +48272,7 @@ var BigTree = function () {
       }).forEach(function (el) {
         return _this3.scene.remove(el);
       });
+      leaves.rotateY(this.drumStackRotation);
       this.scene.add(leaves);
     }
   }, {
@@ -48287,7 +48297,7 @@ var BigTree = function () {
       this.drumStackY += this.drumStackHeight;
       this.drumStackZ = this.drumStackZIncrement;
       this.drumStackZIncrement = this.drumStackZIncrement * 2;
-      this.drumStackRotation += Math.PI / 8;
+      this.drumStackRotation += Math.PI / 4;
     }
   }, {
     key: 'resetStack',

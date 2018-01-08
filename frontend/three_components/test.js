@@ -6,7 +6,7 @@ import {
   bigLeaves1Geometry,
   bigLeaves2Geometry,
   bigLeaves3Geometry,
-} from './tree_geometries';
+} from './plants/tree_geometries';
 
 class Test {
   createObject(scene, geometry) {

@@ -6,6 +6,7 @@ import Water from './three_components/core/water';
 import Playlist from './three_components/core/playlist';
 import BoomBlock from './three_components/core/boomblock';
 import DrumStack from './three_components/drum_stack';
+import BigTree from './three_components/plants/big_tree';
 import TrainTrack from './three_components/traintrack';
 import AudioTracks from './audio_components/audio_tracks';
 import BeatAnalyser from './audio_components/beat_analysis';
@@ -23,13 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const lighting = new Lighting(world.scene);
   const island = new Island(world.scene);
   const water = new Water(world.scene);
-  const playlist = new Playlist(world.scene);
+  // const playlist = new Playlist(world.scene);
   const boomblock = new BoomBlock(world.scene);
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
-  const drumStack = new DrumStack(audio, world.scene);
+  // const drumStack = new DrumStack(audio, world.scene);
+  const bigTree = new BigTree([-330, 525, -700], audio, world.scene);
   // const test = new Test(world.scene);
-  const handlers = new Handlers(audio, world, drumStack);
+  // const handlers = new Handlers(audio, world, drumStack);
+  const handlers = new Handlers(audio, world, bigTree);
   window.world = world;
 
   handlers.loadCheck();

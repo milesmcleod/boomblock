@@ -46547,7 +46547,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
   var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 1, '1');
-  var bigTree2 = new _big_tree2.default([-420, -100, 400], audio, world.scene, 2, '2');
+  var bigTree2 = new _big_tree2.default([-480, -220, 880], audio, world.scene, 2, '2');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
   var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2]);
@@ -48127,13 +48127,13 @@ var BigTree = function () {
       this.drumStackDepth = 150;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
-      this.drumStackWidth = 150;
+      this.drumStackWidth = 100;
       this.drumStackHeight = 100;
-      this.drumStackDepth = 150;
+      this.drumStackDepth = 100;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
       this.xRotation = true;
-      this.arcRadius = 500;
       this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 350;
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -48225,9 +48225,12 @@ var BigTree = function () {
       drumBlock.position.set(x, y, z);
       if (this.xRotation) {
         drumBlock.rotateX(this.arcRotation);
+        drumBlock.rotateZ(this.drumStackRotation);
         this.arcRotation += Math.PI / 12;
+      } else {
+        drumBlock.rotateY(this.drumStackRotation);
       }
-      drumBlock.rotateY(this.drumStackRotation);
+      // drumBlock.rotateY(this.drumStackRotation);
       this.scene.add(drumBlock);
     }
   }, {
@@ -48247,7 +48250,16 @@ var BigTree = function () {
       var x = position[0];
       var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
       var z = position[2];
+      if (this.xRotation) {
+        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
+        z = position[2] + this.arcRadius * Math.sin(this.arcRotation);
+      }
       leaves.position.set(x, y, z);
+      if (this.xRotation) {
+        leaves.rotateY(this.drumStackRotation);
+      } else {
+        leaves.rotateY(this.drumStackRotation);
+      }
       leaves.name = 'leafBlock' + this.id;
       // leaves.receiveShadow = true;
       this.scene.children.filter(function (obj) {
@@ -48289,7 +48301,6 @@ var BigTree = function () {
       this.stackPosition += 1;
       this.drumStackY += this.drumStackHeight;
       this.drumStackZ = this.drumStackZIncrement;
-      // this.drumStackZIncrement = this.drumStackZIncrement * 2;
       this.drumStackZIncrement = this.drumStackZIncrement + 40;
       this.drumStackRotation += Math.PI / 4;
     }

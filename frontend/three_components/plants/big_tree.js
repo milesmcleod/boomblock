@@ -17,13 +17,13 @@ class BigTree {
       this.drumStackDepth = 150;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
-      this.drumStackWidth = 150;
+      this.drumStackWidth = 100;
       this.drumStackHeight = 100;
-      this.drumStackDepth = 150;
+      this.drumStackDepth = 100;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
       this.xRotation = true;
-      this.arcRadius =  500;
       this.arcRotation = 3 * Math.PI/2;
+      this.arcRadius = 350;
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -112,9 +112,12 @@ class BigTree {
     drumBlock.position.set(x, y, z);
     if (this.xRotation) {
       drumBlock.rotateX(this.arcRotation);
+      drumBlock.rotateZ(this.drumStackRotation);
       this.arcRotation += Math.PI/12;
+    } else {
+      drumBlock.rotateY(this.drumStackRotation);
     }
-    drumBlock.rotateY(this.drumStackRotation);
+    // drumBlock.rotateY(this.drumStackRotation);
     this.scene.add(drumBlock);
   }
 
@@ -129,9 +132,18 @@ class BigTree {
     leaves.add(leaves2);
     leaves.add(leaves3);
     const x = position[0];
-    const y = position[1] + this.drumStackY + this.drumStackHeight - 50;
-    const z =position[2];
+    let y = position[1] + this.drumStackY + this.drumStackHeight - 50;
+    let z =position[2];
+    if (this.xRotation) {
+      y = position[1] + this.arcRadius * (Math.cos(this.arcRotation));
+      z = position[2] + this.arcRadius * (Math.sin(this.arcRotation));
+    }
     leaves.position.set(x, y, z);
+    if (this.xRotation) {
+      leaves.rotateY(this.drumStackRotation);
+    } else {
+      leaves.rotateY(this.drumStackRotation);
+    }
     leaves.name = 'leafBlock' + this.id;
     // leaves.receiveShadow = true;
     this.scene.children.filter(obj => (
@@ -174,7 +186,6 @@ class BigTree {
     this.stackPosition += 1;
     this.drumStackY += this.drumStackHeight;
     this.drumStackZ = this.drumStackZIncrement;
-    // this.drumStackZIncrement = this.drumStackZIncrement * 2;
     this.drumStackZIncrement = this.drumStackZIncrement + 40;
     this.drumStackRotation += Math.PI/4;
   }

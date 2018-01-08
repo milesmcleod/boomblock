@@ -48134,8 +48134,9 @@ var BigTree = function () {
       this.xRotation = true;
       this.arcRotation = 3 * Math.PI / 2;
       this.arcRadius = 350;
+      this.yRotationShift = Math.PI / 3;
     }
-    this.drumStackRotation = 0;
+    this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
     this.intervalId = undefined;
     this.timeoutIds = [];
@@ -48221,10 +48222,13 @@ var BigTree = function () {
       if (this.xRotation) {
         y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
         z = position[2] + this.arcRadius * Math.sin(this.arcRotation);
+        x -= z * Math.cos(this.yRotationShift);
+        z = z * Math.sin(this.yRotationShift);
       }
       drumBlock.position.set(x, y, z);
       if (this.xRotation) {
         drumBlock.rotateX(this.arcRotation);
+        // drumBlock.rotateY(this.yRotationShift);
         drumBlock.rotateZ(this.drumStackRotation);
         this.arcRotation += Math.PI / 12;
       } else {
@@ -48313,7 +48317,7 @@ var BigTree = function () {
       this.drumStackZ = 0;
       this.drumStackZIncrement = 9;
       this.stackPosition = 0;
-      this.drumStackRotation = 0;
+      this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
       this.drumStackColors = undefined;
       this.scene.children.filter(function (obj) {
         return obj.name === 'drumBlock' + _this4.id || obj.name === 'leafBlock' + _this4.id;

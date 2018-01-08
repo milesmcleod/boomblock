@@ -24,8 +24,9 @@ class BigTree {
       this.xRotation = true;
       this.arcRotation = 3 * Math.PI/2;
       this.arcRadius = 350;
+      this.yRotationShift = Math.PI/3;
     }
-    this.drumStackRotation = 0;
+    this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
     this.intervalId = undefined;
     this.timeoutIds = [];
@@ -102,16 +103,19 @@ class BigTree {
   addBlock(position, geometry, material) {
     const drumBlock = new THREE.Mesh(geometry, material);
     drumBlock.name = 'drumBlock' + this.id;
-    const x = position[0];
+    let x = position[0];
     let y = position[1] + this.drumStackY;
     let z = position[2];
     if (this.xRotation) {
       y = position[1] + this.arcRadius * (Math.cos(this.arcRotation));
       z = position[2] + this.arcRadius * (Math.sin(this.arcRotation));
+      x -= z * Math.cos(this.yRotationShift);
+      z = z * Math.sin(this.yRotationShift);
     }
     drumBlock.position.set(x, y, z);
     if (this.xRotation) {
       drumBlock.rotateX(this.arcRotation);
+      // drumBlock.rotateY(this.yRotationShift);
       drumBlock.rotateZ(this.drumStackRotation);
       this.arcRotation += Math.PI/12;
     } else {
@@ -131,7 +135,7 @@ class BigTree {
     leaves.add(leaves1);
     leaves.add(leaves2);
     leaves.add(leaves3);
-    const x = position[0];
+    let x = position[0];
     let y = position[1] + this.drumStackY + this.drumStackHeight - 50;
     let z =position[2];
     if (this.xRotation) {
@@ -195,7 +199,7 @@ class BigTree {
     this.drumStackZ = 0;
     this.drumStackZIncrement = 9;
     this.stackPosition = 0;
-    this.drumStackRotation = 0;
+    this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
     this.scene.children.filter(obj => (
       obj.name === 'drumBlock' + this.id || obj.name === 'leafBlock' + this.id

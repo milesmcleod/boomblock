@@ -1,0 +1,8 @@
+implement play/pause buttons on the side of the screen in addition
+to on the boombox itself
+
+night/day switch
+
+figure out how to not suck at trigonometry
+
+literally just learn to use rotation matrices u dunce

@@ -46546,7 +46546,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
-  var bigTree = new _big_tree2.default([-330, 500, -700], audio, world.scene, 2);
+  var bigTree = new _big_tree2.default([-330, 490, -700], audio, world.scene, 2);
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
   var handlers = new _handlers2.default(audio, world, bigTree);
@@ -48005,7 +48005,7 @@ exports.default = Test;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.bigLeaves3Geometry = exports.bigLeaves2Geometry = exports.bigLeaves1Geometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.buildBigLeaves1 = undefined;
+exports.buildSmallLeaves1 = exports.buildBigLeaves1 = undefined;
 
 var _three = __webpack_require__(0);
 
@@ -48019,15 +48019,15 @@ var buildBigLeaves1 = exports.buildBigLeaves1 = function buildBigLeaves1(scale) 
 
   var bigLeaves1Geometry = new THREE.Geometry();
 
-  bigLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(0.2, 0.5, -0.9), new THREE.Vector3(0.8, 0.5, -0.9), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.4, 0.5, -1.6)];
+  bigLeaves1Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-0.3, 0.5, -1.4), new THREE.Vector3(0.3, 0.5, -1.4), new THREE.Vector3(0, 1, -1.5), new THREE.Vector3(-0.1, 0.5, -2.1)];
 
   var bigLeaves2Geometry = new THREE.Geometry();
 
-  bigLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(-0.7, 0.6, 0.6), new THREE.Vector3(-0.3, 0.6, 1), new THREE.Vector3(-0.5, 1.2, 0.8), new THREE.Vector3(-1, 0.4, 1.1)];
+  bigLeaves2Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-1.2, 0.6, 0.1), new THREE.Vector3(-0.8, 0.6, 0.5), new THREE.Vector3(-1, 1.2, 0.3), new THREE.Vector3(-1.5, 0.4, 0.6)];
 
   var bigLeaves3Geometry = new THREE.Geometry();
 
-  bigLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(1.5, 0.3, 0.9), new THREE.Vector3(1.5, 0.3, 1.5), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(1.6, -0.1, 1.4)];
+  bigLeaves3Geometry.vertices = [new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(1, 0.3, 0.4), new THREE.Vector3(1, 0.3, 1), new THREE.Vector3(1, 1, 0.7), new THREE.Vector3(1.1, -0.1, 0.9)];
 
   bigLeaves1Geometry.faces = bigLeafFaces;
   bigLeaves1Geometry.applyMatrix(leafShift);
@@ -48045,48 +48045,37 @@ var buildBigLeaves1 = exports.buildBigLeaves1 = function buildBigLeaves1(scale) 
   return [bigLeaves1Geometry, bigLeaves2Geometry, bigLeaves3Geometry];
 };
 
-var leafShift = new THREE.Matrix4().makeScale(150, 150, 150);
-var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
+var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(scale) {
+  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
+  var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
 
-var smallLeaves1Geometry = exports.smallLeaves1Geometry = new THREE.Geometry();
+  var smallLeaves1Geometry = new THREE.Geometry();
 
-smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.5, 0.5, 0.5)];
+  smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.5, 0.5, 0.5)];
 
-var smallLeaves2Geometry = exports.smallLeaves2Geometry = new THREE.Geometry();
+  var smallLeaves2Geometry = new THREE.Geometry();
 
-smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-0.5, 1.2, 1), new THREE.Vector3(0.5, 0.5, 0.5)];
+  smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-0.5, 1.2, 1), new THREE.Vector3(0.5, 0.5, 0.5)];
 
-var smallLeaves3Geometry = exports.smallLeaves3Geometry = new THREE.Geometry();
+  var smallLeaves3Geometry = new THREE.Geometry();
 
-smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(0.5, 0.5, 0.5)];
+  smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(0.5, 0.5, 0.5)];
 
-smallLeaves1Geometry.faces = smallLeafFaces;
-smallLeaves1Geometry.applyMatrix(leafShift);
-smallLeaves2Geometry.faces = smallLeafFaces;
-smallLeaves2Geometry.applyMatrix(leafShift);
-smallLeaves3Geometry.faces = smallLeafFaces;
-smallLeaves3Geometry.applyMatrix(leafShift);
+  smallLeaves1Geometry.faces = smallLeafFaces;
+  smallLeaves1Geometry.applyMatrix(leafShift);
+  smallLeaves2Geometry.faces = smallLeafFaces;
+  smallLeaves2Geometry.applyMatrix(leafShift);
+  smallLeaves3Geometry.faces = smallLeafFaces;
+  smallLeaves3Geometry.applyMatrix(leafShift);
+  smallLeaves1Geometry.computeFaceNormals();
+  smallLeaves1Geometry.computeVertexNormals();
+  smallLeaves2Geometry.computeFaceNormals();
+  smallLeaves2Geometry.computeVertexNormals();
+  smallLeaves3Geometry.computeFaceNormals();
+  smallLeaves3Geometry.computeVertexNormals();
 
-var bigLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 1, 3), new THREE.Face3(3, 4, 1), new THREE.Face3(1, 2, 4), new THREE.Face3(4, 5, 2), new THREE.Face3(2, 0, 5), new THREE.Face3(5, 3, 0), new THREE.Face3(3, 4, 6), new THREE.Face3(4, 5, 6), new THREE.Face3(5, 3, 6)];
-
-var bigLeaves1Geometry = exports.bigLeaves1Geometry = new THREE.Geometry();
-
-bigLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(0.2, 0.5, -0.9), new THREE.Vector3(0.8, 0.5, -0.9), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.4, 0.5, -1.6)];
-
-var bigLeaves2Geometry = exports.bigLeaves2Geometry = new THREE.Geometry();
-
-bigLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(-0.7, 0.6, 0.6), new THREE.Vector3(-0.3, 0.6, 1), new THREE.Vector3(-0.5, 1.2, 0.8), new THREE.Vector3(-1, 0.4, 1.1)];
-
-var bigLeaves3Geometry = exports.bigLeaves3Geometry = new THREE.Geometry();
-
-bigLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(1.5, 0.3, 0.9), new THREE.Vector3(1.5, 0.3, 1.5), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(1.6, -0.1, 1.4)];
-
-bigLeaves1Geometry.faces = bigLeafFaces;
-bigLeaves1Geometry.applyMatrix(leafShift);
-bigLeaves2Geometry.faces = bigLeafFaces;
-bigLeaves2Geometry.applyMatrix(leafShift);
-bigLeaves3Geometry.faces = bigLeafFaces;
-bigLeaves3Geometry.applyMatrix(leafShift);
+  return [smallLeaves1Geometry, smallLeaves2Geometry, smallLeaves3Geometry];
+};
 
 /***/ }),
 /* 19 */
@@ -48261,7 +48250,7 @@ var BigTree = function () {
       leaves.add(leaves1);
       leaves.add(leaves2);
       leaves.add(leaves3);
-      var x = position[0] - 85;
+      var x = position[0];
       var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
       var z = position[2];
       leaves.position.set(x, y, z);
@@ -48311,7 +48300,7 @@ var BigTree = function () {
       this.drumStackRotation = 0;
       this.drumStackColors = undefined;
       this.scene.children.filter(function (obj) {
-        return obj.name === 'drumBlock';
+        return obj.name === 'drumBlock' || obj.name === 'leafBlock';
       }).forEach(function (el) {
         return _this4.scene.remove(el);
       });

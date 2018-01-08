@@ -141,7 +141,7 @@ class BigTree {
     leaves.add(leaves1);
     leaves.add(leaves2);
     leaves.add(leaves3);
-    const x = position[0] - 85;
+    const x = position[0];
     const y = position[1] + this.drumStackY + this.drumStackHeight - 50;
     const z =position[2];
     leaves.position.set(x, y, z);
@@ -201,7 +201,7 @@ class BigTree {
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
     this.scene.children.filter(obj => (
-      obj.name === 'drumBlock'
+      obj.name === 'drumBlock' || obj.name === 'leafBlock'
     )).forEach(el => this.scene.remove(el));
   }
 }

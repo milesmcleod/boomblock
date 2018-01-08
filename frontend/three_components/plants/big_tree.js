@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import * as Leaves from'./tree_geometries';
 
 class BigTree {
-  constructor(xyposition, audio, scene, type) {
+  constructor(xyposition, audio, scene, type, id) {
+    this.id = id;
     this.audio = audio;
     this.scene = scene;
     this.xyposition = xyposition;
@@ -11,12 +12,14 @@ class BigTree {
     this.drumStackZIncrement = 9;
     if (type === 1) {
       this.drumStackWidth = 150;
-      this.drumStackHeight = 150;
+      this.drumStackHeight = 100;
       this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
       this.drumStackWidth = 150;
       this.drumStackHeight = 75;
       this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -94,7 +97,7 @@ class BigTree {
 
   addBlock(position, geometry, material) {
     const drumBlock = new THREE.Mesh(geometry, material);
-    drumBlock.name = 'drumBlock';
+    drumBlock.name = 'drumBlock' + this.id;
     const x = position[0];
     const y = position[1] + this.drumStackY;
     const z =position[2];
@@ -145,10 +148,10 @@ class BigTree {
     const y = position[1] + this.drumStackY + this.drumStackHeight - 50;
     const z =position[2];
     leaves.position.set(x, y, z);
-    leaves.name = 'leafBlock';
+    leaves.name = 'leafBlock' + this.id;
     // leaves.receiveShadow = true;
     this.scene.children.filter(obj => (
-      obj.name === 'leafBlock'
+      obj.name === 'leafBlock' + this.id
     )).forEach(el => this.scene.remove(el));
     leaves.rotateY(this.drumStackRotation);
     this.scene.add(leaves);
@@ -175,14 +178,9 @@ class BigTree {
         rainbow[Math.floor(Math.random()*12)]
       ];
     }
-    // const geometry = new THREE.BoxBufferGeometry(
-    //   this.drumStackwidth,
-    //   150,
-    //   this.drumStackDepth
-    // );
     // const material = new THREE.MeshBasicMaterial({
     //   color: this.drumStackColors[Math.floor(Math.random()*2)]
-    // });
+    // }); //this should be triggered if night mode is engaged
     console.log(this.stackPosition);
     this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
     this.addLeaves(this.xyposition, this.stackPosition);
@@ -197,11 +195,11 @@ class BigTree {
     this.drumStackY = -100;
     this.drumStackZ = 0;
     this.drumStackZIncrement = 9;
-    this.drumStackPosition = 0;
+    this.stackPosition = 0;
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
     this.scene.children.filter(obj => (
-      obj.name === 'drumBlock' || obj.name === 'leafBlock'
+      obj.name === 'drumBlock' + this.id || obj.name === 'leafBlock' + this.id
     )).forEach(el => this.scene.remove(el));
   }
 }

@@ -46546,10 +46546,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
-  var bigTree = new _big_tree2.default([-330, 490, -700], audio, world.scene, 2);
+  var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 2, '1');
+  var bigTree2 = new _big_tree2.default([-420, -100, 400], audio, world.scene, 1, '2');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
-  var handlers = new _handlers2.default(audio, world, bigTree);
+  var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2]);
   window.world = world;
 
   handlers.loadCheck();
@@ -47782,12 +47783,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Handlers = function () {
-  function Handlers(audio, world, drumStack) {
+  function Handlers(audio, world, drumStacks) {
     _classCallCheck(this, Handlers);
 
     this.audio = audio;
     this.world = world;
-    this.drumStack = drumStack;
+    this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);
   }
@@ -47798,9 +47799,11 @@ var Handlers = function () {
       if (!this.audio.playing) {
         this.audio.masterGain.gain.value = 1;
         this.audio.start();
-        this.drumStack.resetInterval();
-        this.drumStack.reset8thNoteTimeouts();
-        this.drumStack.setInterval();
+        this.drumStacks.forEach(function (el) {
+          el.resetInterval();
+          el.reset8thNoteTimeouts();
+          el.setInterval();
+        });
       }
     }
   }, {
@@ -47816,8 +47819,10 @@ var Handlers = function () {
         this.audio.masterGain.gain.value = 0;
         this.audio.stop();
         window.removeEventListener('mouseup', this.handleClick, false);
-        this.drumStack.resetInterval();
-        this.drumStack.reset8thNoteTimeouts();
+        this.drumStacks.forEach(function (el) {
+          el.resetInterval();
+          el.reset8thNoteTimeouts();
+        });
         this.audio.reload();
         this.loadCheck();
       }
@@ -47840,9 +47845,11 @@ var Handlers = function () {
       window.removeEventListener('mouseup', this.handleClick, false);
       this.audio.pausedAt = 0;
       this.audio.resetting = 1;
-      this.drumStack.resetStack();
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
+      this.drumStacks.forEach(function (el) {
+        el.resetInterval();
+        el.reset8thNoteTimeouts();
+        el.setInterval();
+      });
       window.setTimeout(function () {
         _this.audio.resetting = 0;
       }, 400);
@@ -48103,9 +48110,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BigTree = function () {
-  function BigTree(xyposition, audio, scene, type) {
+  function BigTree(xyposition, audio, scene, type, id) {
     _classCallCheck(this, BigTree);
 
+    this.id = id;
     this.audio = audio;
     this.scene = scene;
     this.xyposition = xyposition;
@@ -48114,12 +48122,14 @@ var BigTree = function () {
     this.drumStackZIncrement = 9;
     if (type === 1) {
       this.drumStackWidth = 150;
-      this.drumStackHeight = 150;
+      this.drumStackHeight = 100;
       this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
       this.drumStackWidth = 150;
       this.drumStackHeight = 75;
       this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
@@ -48200,7 +48210,7 @@ var BigTree = function () {
     key: 'addBlock',
     value: function addBlock(position, geometry, material) {
       var drumBlock = new THREE.Mesh(geometry, material);
-      drumBlock.name = 'drumBlock';
+      drumBlock.name = 'drumBlock' + this.id;
       var x = position[0];
       var y = position[1] + this.drumStackY;
       var z = position[2];
@@ -48254,10 +48264,10 @@ var BigTree = function () {
       var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
       var z = position[2];
       leaves.position.set(x, y, z);
-      leaves.name = 'leafBlock';
+      leaves.name = 'leafBlock' + this.id;
       // leaves.receiveShadow = true;
       this.scene.children.filter(function (obj) {
-        return obj.name === 'leafBlock';
+        return obj.name === 'leafBlock' + _this3.id;
       }).forEach(function (el) {
         return _this3.scene.remove(el);
       });
@@ -48271,14 +48281,9 @@ var BigTree = function () {
       if (!this.drumStackColors) {
         this.drumStackColors = [rainbow[Math.floor(Math.random() * 12)], rainbow[Math.floor(Math.random() * 12)]];
       }
-      // const geometry = new THREE.BoxBufferGeometry(
-      //   this.drumStackwidth,
-      //   150,
-      //   this.drumStackDepth
-      // );
       // const material = new THREE.MeshBasicMaterial({
       //   color: this.drumStackColors[Math.floor(Math.random()*2)]
-      // });
+      // }); //this should be triggered if night mode is engaged
       console.log(this.stackPosition);
       this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
       this.addLeaves(this.xyposition, this.stackPosition);
@@ -48296,11 +48301,11 @@ var BigTree = function () {
       this.drumStackY = -100;
       this.drumStackZ = 0;
       this.drumStackZIncrement = 9;
-      this.drumStackPosition = 0;
+      this.stackPosition = 0;
       this.drumStackRotation = 0;
       this.drumStackColors = undefined;
       this.scene.children.filter(function (obj) {
-        return obj.name === 'drumBlock' || obj.name === 'leafBlock';
+        return obj.name === 'drumBlock' + _this4.id || obj.name === 'leafBlock' + _this4.id;
       }).forEach(function (el) {
         return _this4.scene.remove(el);
       });

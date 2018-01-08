@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
-  const bigTree = new BigTree([-330, 490, -700], audio, world.scene, 2);
+  const bigTree = new BigTree([-330, 490, -750], audio, world.scene, 2, '1');
+  const bigTree2 = new BigTree([-420, -100, 400], audio, world.scene, 1, '2');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
-  const handlers = new Handlers(audio, world, bigTree);
+  const handlers = new Handlers(audio, world, [bigTree, bigTree2]);
   window.world = world;
 
   handlers.loadCheck();

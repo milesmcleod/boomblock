@@ -1,27 +1,39 @@
 import * as THREE from 'three';
+import * as Leaves from'./tree_geometries';
 
 class BigTree {
-  constructor(xyposition, audio, scene) {
+  constructor(xyposition, audio, scene, type) {
     this.audio = audio;
     this.scene = scene;
     this.xyposition = xyposition;
     this.drumStackY = -100;
     this.drumStackZ = 0;
     this.drumStackZIncrement = 9;
-    this.drumStackwidth = 150;
-    this.drumStackDepth = 150;
+    if (type === 1) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 150;
+      this.drumStackDepth = 150;
+    } else if (type === 2) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 150;
+    }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
     this.intervalId = undefined;
     this.timeoutIds = [];
     this.stackPosition = 0;
     this.bigTrunkGeometry = new THREE.BoxBufferGeometry(
-      this.drumStackwidth,
-      150,
+      this.drumStackWidth,
+      this.drumStackHeight,
       this.drumStackDepth
     );
     this.bigTrunkDayMaterial = new THREE.MeshBasicMaterial({
-      color: "#623b00"
+      color: 0x623b00
+    });
+    this.leafMaterial = new THREE.MeshBasicMaterial({
+      color: 0x059c46,
+      side: THREE.DoubleSide
     });
   }
 
@@ -82,11 +94,60 @@ class BigTree {
     drumBlock.name = 'drumBlock';
     const x = position[0];
     const y = position[1] + this.drumStackY;
-    const z =position[2] + this.drumStackZ;
+    const z =position[2];
+    // const z =position[2] + this.drumStackZ;
     drumBlock.position.set(x, y, z);
-    drumBlock.rotateX(this.drumStackRotation/2);
-    // drumBlock.rotateY(this.drumStackRotation);
+    // drumBlock.rotateX(this.drumStackRotation/2);
+    drumBlock.rotateY(this.drumStackRotation);
     this.scene.add(drumBlock);
+  }
+
+  addLeaves(position, stackPosition) {
+    let leafSize;
+    switch (stackPosition % 8) {
+      case 0:
+        leafSize = 120;
+        break;
+      case 1:
+        leafSize = 140;
+        break;
+      case 2:
+        leafSize = 160;
+        break;
+      case 3:
+        leafSize = 180;
+        break;
+      case 4:
+        leafSize = 200;
+        break;
+      case 5:
+        leafSize = 220;
+        break;
+      case 6:
+        leafSize = 240;
+        break;
+      case 7:
+        leafSize = 260;
+        break;
+    }
+    const geometries = Leaves.buildSmallLeaves1(leafSize);
+    const leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
+    const leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
+    const leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
+    const leaves = new THREE.Group();
+    leaves.add(leaves1);
+    leaves.add(leaves2);
+    leaves.add(leaves3);
+    const x = position[0] -85;
+    const y = position[1] + this.drumStackY + this.drumStackHeight - 50;
+    const z =position[2] - 40;
+    leaves.position.set(x, y, z);
+    leaves.name = 'leafBlock';
+    // leaves.receiveShadow = true;
+    this.scene.children.filter(obj => (
+      obj.name === 'leafBlock'
+    )).forEach(el => this.scene.remove(el));
+    this.scene.add(leaves);
   }
 
   stack() {
@@ -118,9 +179,11 @@ class BigTree {
     // const material = new THREE.MeshBasicMaterial({
     //   color: this.drumStackColors[Math.floor(Math.random()*2)]
     // });
+    console.log(this.stackPosition);
     this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
+    this.addLeaves(this.xyposition, this.stackPosition);
     this.stackPosition += 1;
-    this.drumStackY += 150;
+    this.drumStackY += this.drumStackHeight;
     this.drumStackZ = this.drumStackZIncrement;
     this.drumStackZIncrement = this.drumStackZIncrement * 2;
     this.drumStackRotation += Math.PI/8;

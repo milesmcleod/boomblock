@@ -46546,7 +46546,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // const traintrack = new TrainTrack(world.scene);
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
-  var bigTree = new _big_tree2.default([-330, 525, -700], audio, world.scene);
+  var bigTree = new _big_tree2.default([-330, 500, -700], audio, world.scene, 2);
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
   var handlers = new _handlers2.default(audio, world, bigTree);
@@ -48005,7 +48005,7 @@ exports.default = Test;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.bigLeaves3Geometry = exports.bigLeaves2Geometry = exports.bigLeaves1Geometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.trunkBlockGeometry = undefined;
+exports.bigLeaves3Geometry = exports.bigLeaves2Geometry = exports.bigLeaves1Geometry = exports.smallLeaves3Geometry = exports.smallLeaves2Geometry = exports.smallLeaves1Geometry = exports.buildSmallLeaves1 = undefined;
 
 var _three = __webpack_require__(0);
 
@@ -48013,7 +48013,31 @@ var THREE = _interopRequireWildcard(_three);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var trunkBlockGeometry = exports.trunkBlockGeometry = new THREE.BoxBufferGeometry(150, 150, 150);
+var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(scale) {
+  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
+  var bigLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 1, 3), new THREE.Face3(3, 4, 1), new THREE.Face3(1, 2, 4), new THREE.Face3(4, 5, 2), new THREE.Face3(2, 0, 5), new THREE.Face3(5, 3, 0), new THREE.Face3(3, 4, 6), new THREE.Face3(4, 5, 6), new THREE.Face3(5, 3, 6)];
+
+  var bigLeaves1Geometry = new THREE.Geometry();
+
+  bigLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(0.2, 0.5, -0.9), new THREE.Vector3(0.8, 0.5, -0.9), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.4, 0.5, -1.6)];
+
+  var bigLeaves2Geometry = new THREE.Geometry();
+
+  bigLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(-0.7, 0.6, 0.6), new THREE.Vector3(-0.3, 0.6, 1), new THREE.Vector3(-0.5, 1.2, 0.8), new THREE.Vector3(-1, 0.4, 1.1)];
+
+  var bigLeaves3Geometry = new THREE.Geometry();
+
+  bigLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(0.5, 0.5, 0.5), new THREE.Vector3(1.5, 0.3, 0.9), new THREE.Vector3(1.5, 0.3, 1.5), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(1.6, -0.1, 1.4)];
+
+  bigLeaves1Geometry.faces = bigLeafFaces;
+  bigLeaves1Geometry.applyMatrix(leafShift);
+  bigLeaves2Geometry.faces = bigLeafFaces;
+  bigLeaves2Geometry.applyMatrix(leafShift);
+  bigLeaves3Geometry.faces = bigLeafFaces;
+  bigLeaves3Geometry.applyMatrix(leafShift);
+
+  return [bigLeaves1Geometry, bigLeaves2Geometry, bigLeaves3Geometry];
+};
 
 var leafShift = new THREE.Matrix4().makeScale(150, 150, 150);
 var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
@@ -48075,12 +48099,16 @@ var _three = __webpack_require__(0);
 
 var THREE = _interopRequireWildcard(_three);
 
+var _tree_geometries = __webpack_require__(18);
+
+var Leaves = _interopRequireWildcard(_tree_geometries);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BigTree = function () {
-  function BigTree(xyposition, audio, scene) {
+  function BigTree(xyposition, audio, scene, type) {
     _classCallCheck(this, BigTree);
 
     this.audio = audio;
@@ -48089,16 +48117,27 @@ var BigTree = function () {
     this.drumStackY = -100;
     this.drumStackZ = 0;
     this.drumStackZIncrement = 9;
-    this.drumStackwidth = 150;
-    this.drumStackDepth = 150;
+    if (type === 1) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 150;
+      this.drumStackDepth = 150;
+    } else if (type === 2) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 150;
+    }
     this.drumStackRotation = 0;
     this.drumStackColors = undefined;
     this.intervalId = undefined;
     this.timeoutIds = [];
     this.stackPosition = 0;
-    this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackwidth, 150, this.drumStackDepth);
+    this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackWidth, this.drumStackHeight, this.drumStackDepth);
     this.bigTrunkDayMaterial = new THREE.MeshBasicMaterial({
-      color: "#623b00"
+      color: 0x623b00
+    });
+    this.leafMaterial = new THREE.MeshBasicMaterial({
+      color: 0x059c46,
+      side: THREE.DoubleSide
     });
   }
 
@@ -48166,11 +48205,65 @@ var BigTree = function () {
       drumBlock.name = 'drumBlock';
       var x = position[0];
       var y = position[1] + this.drumStackY;
-      var z = position[2] + this.drumStackZ;
+      var z = position[2];
+      // const z =position[2] + this.drumStackZ;
       drumBlock.position.set(x, y, z);
-      drumBlock.rotateX(this.drumStackRotation / 2);
-      // drumBlock.rotateY(this.drumStackRotation);
+      // drumBlock.rotateX(this.drumStackRotation/2);
+      drumBlock.rotateY(this.drumStackRotation);
       this.scene.add(drumBlock);
+    }
+  }, {
+    key: 'addLeaves',
+    value: function addLeaves(position, stackPosition) {
+      var _this3 = this;
+
+      var leafSize = void 0;
+      switch (stackPosition % 8) {
+        case 0:
+          leafSize = 120;
+          break;
+        case 1:
+          leafSize = 140;
+          break;
+        case 2:
+          leafSize = 160;
+          break;
+        case 3:
+          leafSize = 180;
+          break;
+        case 4:
+          leafSize = 200;
+          break;
+        case 5:
+          leafSize = 220;
+          break;
+        case 6:
+          leafSize = 240;
+          break;
+        case 7:
+          leafSize = 260;
+          break;
+      }
+      var geometries = Leaves.buildSmallLeaves1(leafSize);
+      var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
+      var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
+      var leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
+      var leaves = new THREE.Group();
+      leaves.add(leaves1);
+      leaves.add(leaves2);
+      leaves.add(leaves3);
+      var x = position[0] - 85;
+      var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
+      var z = position[2] - 40;
+      leaves.position.set(x, y, z);
+      leaves.name = 'leafBlock';
+      // leaves.receiveShadow = true;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'leafBlock';
+      }).forEach(function (el) {
+        return _this3.scene.remove(el);
+      });
+      this.scene.add(leaves);
     }
   }, {
     key: 'stack',
@@ -48187,9 +48280,11 @@ var BigTree = function () {
       // const material = new THREE.MeshBasicMaterial({
       //   color: this.drumStackColors[Math.floor(Math.random()*2)]
       // });
+      console.log(this.stackPosition);
       this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
+      this.addLeaves(this.xyposition, this.stackPosition);
       this.stackPosition += 1;
-      this.drumStackY += 150;
+      this.drumStackY += this.drumStackHeight;
       this.drumStackZ = this.drumStackZIncrement;
       this.drumStackZIncrement = this.drumStackZIncrement * 2;
       this.drumStackRotation += Math.PI / 8;
@@ -48197,7 +48292,7 @@ var BigTree = function () {
   }, {
     key: 'resetStack',
     value: function resetStack() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.drumStackY = -100;
       this.drumStackZ = 0;
@@ -48208,7 +48303,7 @@ var BigTree = function () {
       this.scene.children.filter(function (obj) {
         return obj.name === 'drumBlock';
       }).forEach(function (el) {
-        return _this3.scene.remove(el);
+        return _this4.scene.remove(el);
       });
     }
   }]);

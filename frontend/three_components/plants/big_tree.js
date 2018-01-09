@@ -24,7 +24,7 @@ class BigTree {
       this.xRotation = true;
       this.arcRotation = 3 * Math.PI/2;
       this.arcRadius = 350;
-      this.yRotationShift = Math.PI/3;
+      this.yRotationShift = Math.PI/6;
     }
     this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
@@ -107,16 +107,15 @@ class BigTree {
     let y = position[1] + this.drumStackY;
     let z = position[2];
     if (this.xRotation) {
-      y = position[1] + this.arcRadius * (Math.cos(this.arcRotation));
-      z = position[2] + this.arcRadius * (Math.sin(this.arcRotation));
-      x -= z * Math.cos(this.yRotationShift);
-      z = z * Math.sin(this.yRotationShift);
+      const r = this.arcRadius * Math.sin(this.arcRotation);
+      x = position[0] + (r * Math.sin(this.yRotationShift) * -1);
+      y = position[1] + (this.arcRadius * (Math.cos(this.arcRotation)));
+      z = position[2] + (r * Math.cos(this.yRotationShift));
     }
     drumBlock.position.set(x, y, z);
     if (this.xRotation) {
-      drumBlock.rotateX(this.arcRotation);
-      // drumBlock.rotateY(this.yRotationShift);
-      drumBlock.rotateZ(this.drumStackRotation);
+      // drumBlock.rotateX(this.arcRotation);
+      drumBlock.rotateY((this.yRotationShift) + this.drumStackRotation);
       this.arcRotation += Math.PI/12;
     } else {
       drumBlock.rotateY(this.drumStackRotation);
@@ -139,8 +138,10 @@ class BigTree {
     let y = position[1] + this.drumStackY + this.drumStackHeight - 50;
     let z =position[2];
     if (this.xRotation) {
-      y = position[1] + this.arcRadius * (Math.cos(this.arcRotation));
-      z = position[2] + this.arcRadius * (Math.sin(this.arcRotation));
+      const r = this.arcRadius * Math.sin(this.arcRotation);
+      x = position[0] + (r * Math.sin(this.yRotationShift) * -1);
+      y = position[1] + (this.arcRadius * (Math.cos(this.arcRotation)));
+      z = position[2] + (r * Math.cos(this.yRotationShift));
     }
     leaves.position.set(x, y, z);
     if (this.xRotation) {
@@ -154,7 +155,7 @@ class BigTree {
       obj.name === 'leafBlock' + this.id
     )).forEach(el => this.scene.remove(el));
     leaves.rotateY(this.drumStackRotation);
-    this.scene.add(leaves);
+    // this.scene.add(leaves);
   }
 
   stack() {

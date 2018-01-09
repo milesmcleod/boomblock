@@ -48134,7 +48134,7 @@ var BigTree = function () {
       this.xRotation = true;
       this.arcRotation = 3 * Math.PI / 2;
       this.arcRadius = 350;
-      this.yRotationShift = Math.PI / 3;
+      this.yRotationShift = Math.PI / 6;
     }
     this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
@@ -48220,16 +48220,15 @@ var BigTree = function () {
       var y = position[1] + this.drumStackY;
       var z = position[2];
       if (this.xRotation) {
+        var r = this.arcRadius * Math.sin(this.arcRotation);
+        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
         y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
-        z = position[2] + this.arcRadius * Math.sin(this.arcRotation);
-        x -= z * Math.cos(this.yRotationShift);
-        z = z * Math.sin(this.yRotationShift);
+        z = position[2] + r * Math.cos(this.yRotationShift);
       }
       drumBlock.position.set(x, y, z);
       if (this.xRotation) {
-        drumBlock.rotateX(this.arcRotation);
-        // drumBlock.rotateY(this.yRotationShift);
-        drumBlock.rotateZ(this.drumStackRotation);
+        // drumBlock.rotateX(this.arcRotation);
+        drumBlock.rotateY(this.yRotationShift + this.drumStackRotation);
         this.arcRotation += Math.PI / 12;
       } else {
         drumBlock.rotateY(this.drumStackRotation);
@@ -48255,8 +48254,10 @@ var BigTree = function () {
       var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
       var z = position[2];
       if (this.xRotation) {
+        var r = this.arcRadius * Math.sin(this.arcRotation);
+        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
         y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
-        z = position[2] + this.arcRadius * Math.sin(this.arcRotation);
+        z = position[2] + r * Math.cos(this.yRotationShift);
       }
       leaves.position.set(x, y, z);
       if (this.xRotation) {
@@ -48272,7 +48273,7 @@ var BigTree = function () {
         return _this3.scene.remove(el);
       });
       leaves.rotateY(this.drumStackRotation);
-      this.scene.add(leaves);
+      // this.scene.add(leaves);
     }
   }, {
     key: 'stack',

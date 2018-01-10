@@ -224,29 +224,6 @@ class BigTree {
   }
 
   stack() {
-    // const rainbow = [
-    //   0xcc0000,
-    //   0xff3300,
-    //   0xff9933,
-    //   0xffcc00,
-    //   0xffff00,
-    //   0x66ff33,
-    //   0x66ff66,
-    //   0x00ff99,
-    //   0x00ccff,
-    //   0x0066ff,
-    //   0x7f00ff,
-    //   0xff00ff
-    // ];
-    // if (!this.drumStackColors) {
-    //   this.drumStackColors = [
-    //     rainbow[Math.floor(Math.random()*12)],
-    //     rainbow[Math.floor(Math.random()*12)]
-    //   ];
-    // }
-    // const material = new THREE.MeshBasicMaterial({
-    //   color: this.drumStackColors[Math.floor(Math.random()*2)]
-    // }); //this should be triggered if night mode is engaged
     this.addBlock(
       this.xyposition,
       this.bigTrunkGeometry,

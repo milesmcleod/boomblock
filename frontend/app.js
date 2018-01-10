@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   handlers.loadCheck();
 
   const about = document.getElementsByClassName('about-link')[0];
+
   about.addEventListener("click", () => {
     const modal = document.getElementsByClassName('about-modal')[0];
     modal.classList.add('show-modal');

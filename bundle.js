@@ -46635,6 +46635,7 @@ document.addEventListener('DOMContentLoaded', function () {
   handlers.loadCheck();
 
   var about = document.getElementsByClassName('about-link')[0];
+
   about.addEventListener("click", function () {
     var modal = document.getElementsByClassName('about-modal')[0];
     modal.classList.add('show-modal');
@@ -48064,29 +48065,6 @@ var BigTree = function () {
   }, {
     key: 'stack',
     value: function stack() {
-      // const rainbow = [
-      //   0xcc0000,
-      //   0xff3300,
-      //   0xff9933,
-      //   0xffcc00,
-      //   0xffff00,
-      //   0x66ff33,
-      //   0x66ff66,
-      //   0x00ff99,
-      //   0x00ccff,
-      //   0x0066ff,
-      //   0x7f00ff,
-      //   0xff00ff
-      // ];
-      // if (!this.drumStackColors) {
-      //   this.drumStackColors = [
-      //     rainbow[Math.floor(Math.random()*12)],
-      //     rainbow[Math.floor(Math.random()*12)]
-      //   ];
-      // }
-      // const material = new THREE.MeshBasicMaterial({
-      //   color: this.drumStackColors[Math.floor(Math.random()*2)]
-      // }); //this should be triggered if night mode is engaged
       this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
       this.addLeaves(this.xyposition, this.stackPosition);
       this.stackPosition += 1;
@@ -48328,15 +48306,6 @@ var Handlers = function () {
         if (_this2.audio.loaded === 1) {
           window.addEventListener('mouseup', _this2.handleClick, false);
           window.addEventListener('mousemove', _this2.handleMove, false);
-          var night = document.getElementById('night-switch');
-          night.addEventListener('click', function (e) {
-            var world = document.getElementById('world');
-            if (world.classList.contains('background-black')) {
-              world.classList.remove('background-black');
-            } else {
-              world.classList.add('background-black');
-            }
-          });
           _this2.audio.beatAnalyser = new _beat_analysis2.default(_this2.audio.drumsBuffer);
           _this2.audio.globalTempo = Math.round(_this2.audio.beatAnalyser.getIntervalInMilliseconds());
         } else {

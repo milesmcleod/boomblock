@@ -146,15 +146,6 @@ class Handlers {
       if (this.audio.loaded === 1) {
         window.addEventListener('mouseup', this.handleClick, false);
         window.addEventListener('mousemove', this.handleMove, false);
-        const night = document.getElementById('night-switch');
-        night.addEventListener('click', (e) => {
-          const world = document.getElementById('world');
-          if (world.classList.contains('background-black')) {
-            world.classList.remove('background-black');
-          } else {
-            world.classList.add('background-black');
-          }
-        });
         this.audio.beatAnalyser = new BeatAnalyser(this.audio.drumsBuffer);
         this.audio.globalTempo = Math.round(
           this.audio.beatAnalyser.getIntervalInMilliseconds()

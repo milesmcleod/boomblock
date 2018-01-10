@@ -46623,17 +46623,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var lighting = new _lighting2.default(world.scene);
   var island = new _island2.default(world.scene);
   var water = new _water2.default(world.scene);
-  // const playlist = new Playlist(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
-  // const traintrack = new TrainTrack(world.scene);
-  // const buildings = new Buildings(world.scene);
-  // const drumStack = new DrumStack(audio, world.scene);
-  var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 1, '1');
+  var bigTree = new _big_tree2.default([250, 400, -650], audio, world.scene, 6, '1');
   var bigTree2 = new _big_tree2.default([-660, -220, 840], audio, world.scene, 2, '2');
-  var bigTree3 = new _big_tree2.default([420, 210, -600], audio, world.scene, 3, '3');
-  // const test = new Test(world.scene);
-  // const handlers = new Handlers(audio, world, drumStack);
-  var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2, bigTree3]);
+  var bigTree3 = new _big_tree2.default([-800, -150, -100], audio, world.scene, 3, '3');
+  var bigTree4 = new _big_tree2.default([-10, 140, -200], audio, world.scene, 5, '4');
+  var bigTree5 = new _big_tree2.default([960, -130, 260], audio, world.scene, 4, '5');
+  var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
   window.world = world;
 
   handlers.loadCheck();
@@ -47849,7 +47845,7 @@ var BigTree = function () {
     this.drumStackZ = 0;
     this.drumStackZIncrement = 40;
     this.xRotation = false;
-    if (type === 1 || type === 3) {
+    if (type === 1) {
       this.drumStackWidth = type === 1 ? 150 : 135;
       this.drumStackHeight = type === 1 ? 75 : 135;
       this.drumStackDepth = type === 1 ? 150 : 135;
@@ -47863,6 +47859,42 @@ var BigTree = function () {
       this.arcRotation = 3 * Math.PI / 2;
       this.arcRadius = 350;
       this.yRotationShift = Math.PI / 6;
+    } else if (type === 3) {
+      this.drumStackWidth = 100;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 100;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 350;
+      this.yRotationShift = 4 * Math.PI / 6;
+    } else if (type === 4) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 550;
+      this.yRotationShift = 10 * Math.PI / 6;
+    } else if (type === 5) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 550;
+      this.yRotationShift = Math.PI / 3;
+    } else if (type === 6) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 500;
+      this.yRotationShift = 9 * Math.PI / 6;
     }
     this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;
@@ -48209,7 +48241,7 @@ var Handlers = function () {
       this.drumStacks.forEach(function (el) {
         el.resetInterval();
         el.reset8thNoteTimeouts();
-        el.setInterval();
+        el.resetStack();
       });
       window.setTimeout(function () {
         _this.audio.resetting = 0;

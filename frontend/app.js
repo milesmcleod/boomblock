@@ -24,17 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const lighting = new Lighting(world.scene);
   const island = new Island(world.scene);
   const water = new Water(world.scene);
-  // const playlist = new Playlist(world.scene);
   const boomblock = new BoomBlock(world.scene);
-  // const traintrack = new TrainTrack(world.scene);
-  // const buildings = new Buildings(world.scene);
-  // const drumStack = new DrumStack(audio, world.scene);
-  const bigTree = new BigTree([-330, 490, -750], audio, world.scene, 1, '1');
+  const bigTree = new BigTree([250, 400, -650], audio, world.scene, 6, '1');
   const bigTree2 = new BigTree([-660, -220, 840], audio, world.scene, 2, '2');
-  const bigTree3 = new BigTree([420, 210, -600], audio, world.scene, 3, '3');
-  // const test = new Test(world.scene);
-  // const handlers = new Handlers(audio, world, drumStack);
-  const handlers = new Handlers(audio, world, [bigTree, bigTree2, bigTree3]);
+  const bigTree3 = new BigTree([-800, -150, -100], audio, world.scene, 3, '3');
+  const bigTree4 = new BigTree([-10, 140, -200], audio, world.scene, 5, '4');
+  const bigTree5 = new BigTree([960, -130, 260], audio, world.scene, 4, '5');
+  const handlers = new Handlers(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
   window.world = world;
 
   handlers.loadCheck();

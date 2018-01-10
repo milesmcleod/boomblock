@@ -11,7 +11,7 @@ class BigTree {
     this.drumStackZ = 0;
     this.drumStackZIncrement = 40;
     this.xRotation = false;
-    if (type === 1 || type === 3) {
+    if (type === 1) {
       this.drumStackWidth = type === 1 ? 150 : 135;
       this.drumStackHeight = type === 1 ? 75 : 135;
       this.drumStackDepth = type === 1 ? 150 : 135;
@@ -25,6 +25,42 @@ class BigTree {
       this.arcRotation = 3 * Math.PI/2;
       this.arcRadius = 350;
       this.yRotationShift = Math.PI/6;
+    } else if (type === 3) {
+      this.drumStackWidth = 100;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 100;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI/2;
+      this.arcRadius = 350;
+      this.yRotationShift = 4 * Math.PI/6;
+    }else if (type === 4) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI/2;
+      this.arcRadius = 550;
+      this.yRotationShift = 10 * Math.PI/6;
+    } else if (type === 5) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI/2;
+      this.arcRadius = 550;
+      this.yRotationShift = Math.PI/3;
+    } else if (type === 6) {
+      this.drumStackWidth = 140;
+      this.drumStackHeight = 140;
+      this.drumStackDepth = 140;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI/2;
+      this.arcRadius = 500;
+      this.yRotationShift = 9 * Math.PI/6;
     }
     this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
     this.drumStackColors = undefined;

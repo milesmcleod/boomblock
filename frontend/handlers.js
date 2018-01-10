@@ -65,7 +65,7 @@ class Handlers {
     this.drumStacks.forEach((el) => {
       el.resetInterval();
       el.reset8thNoteTimeouts();
-      el.setInterval();
+      el.resetStack();
     });
     window.setTimeout(() => { this.audio.resetting = 0; }, 400);
     this.audio.reload();

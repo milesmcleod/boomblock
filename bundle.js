@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -45142,7 +45142,7 @@ var _three = __webpack_require__(0);
 
 var THREE = _interopRequireWildcard(_three);
 
-var _threeOrbitcontrols = __webpack_require__(11);
+var _threeOrbitcontrols = __webpack_require__(12);
 
 var _threeOrbitcontrols2 = _interopRequireDefault(_threeOrbitcontrols);
 
@@ -45987,6 +45987,88 @@ exports.default = DrumStack;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.buildSmallLeaves1 = exports.buildBigLeaves1 = undefined;
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var buildBigLeaves1 = exports.buildBigLeaves1 = function buildBigLeaves1(scale) {
+  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
+  var bigLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 1, 3), new THREE.Face3(3, 4, 1), new THREE.Face3(1, 2, 4), new THREE.Face3(4, 5, 2), new THREE.Face3(2, 0, 5), new THREE.Face3(5, 3, 0), new THREE.Face3(3, 4, 6), new THREE.Face3(4, 5, 6), new THREE.Face3(5, 3, 6)];
+
+  var bigLeaves1Geometry = new THREE.Geometry();
+
+  bigLeaves1Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-0.3, 0.5, -1.4), new THREE.Vector3(0.3, 0.5, -1.4), new THREE.Vector3(0, 1, -1.5), new THREE.Vector3(-0.1, 0.5, -2.1)];
+
+  var bigLeaves2Geometry = new THREE.Geometry();
+
+  bigLeaves2Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-1.2, 0.6, 0.1), new THREE.Vector3(-0.8, 0.6, 0.5), new THREE.Vector3(-1, 1.2, 0.3), new THREE.Vector3(-1.5, 0.4, 0.6)];
+
+  var bigLeaves3Geometry = new THREE.Geometry();
+
+  bigLeaves3Geometry.vertices = [new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(1, 0.3, 0.4), new THREE.Vector3(1, 0.3, 1), new THREE.Vector3(1, 1, 0.7), new THREE.Vector3(1.1, -0.1, 0.9)];
+
+  bigLeaves1Geometry.faces = bigLeafFaces;
+  bigLeaves1Geometry.applyMatrix(leafShift);
+  bigLeaves2Geometry.faces = bigLeafFaces;
+  bigLeaves2Geometry.applyMatrix(leafShift);
+  bigLeaves3Geometry.faces = bigLeafFaces;
+  bigLeaves3Geometry.applyMatrix(leafShift);
+  bigLeaves1Geometry.computeFaceNormals();
+  bigLeaves1Geometry.computeVertexNormals();
+  bigLeaves2Geometry.computeFaceNormals();
+  bigLeaves2Geometry.computeVertexNormals();
+  bigLeaves3Geometry.computeFaceNormals();
+  bigLeaves3Geometry.computeVertexNormals();
+
+  return [bigLeaves1Geometry, bigLeaves2Geometry, bigLeaves3Geometry];
+};
+
+var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(scale) {
+  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
+  var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
+
+  var smallLeaves1Geometry = new THREE.Geometry();
+
+  smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+  var smallLeaves2Geometry = new THREE.Geometry();
+
+  smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-0.5, 1.2, 1), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+  var smallLeaves3Geometry = new THREE.Geometry();
+
+  smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(0.5, 0.5, 0.5)];
+
+  smallLeaves1Geometry.faces = smallLeafFaces;
+  smallLeaves1Geometry.applyMatrix(leafShift);
+  smallLeaves2Geometry.faces = smallLeafFaces;
+  smallLeaves2Geometry.applyMatrix(leafShift);
+  smallLeaves3Geometry.faces = smallLeafFaces;
+  smallLeaves3Geometry.applyMatrix(leafShift);
+  smallLeaves1Geometry.computeFaceNormals();
+  smallLeaves1Geometry.computeVertexNormals();
+  smallLeaves2Geometry.computeFaceNormals();
+  smallLeaves2Geometry.computeVertexNormals();
+  smallLeaves3Geometry.computeFaceNormals();
+  smallLeaves3Geometry.computeVertexNormals();
+
+  return [smallLeaves1Geometry, smallLeaves2Geometry, smallLeaves3Geometry];
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -46026,7 +46108,7 @@ var TrainTrack = function () {
 exports.default = TrainTrack;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46221,7 +46303,7 @@ var AudioTracks = function () {
 exports.default = AudioTracks;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46358,7 +46440,7 @@ that interval occurs between adjacent values in the peaksArray
 */
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46466,7 +46548,7 @@ var Buildings = function () {
 exports.default = Buildings;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46484,11 +46566,11 @@ var _island = __webpack_require__(3);
 
 var _island2 = _interopRequireDefault(_island);
 
-var _water = __webpack_require__(12);
+var _water = __webpack_require__(13);
 
 var _water2 = _interopRequireDefault(_water);
 
-var _playlist = __webpack_require__(13);
+var _playlist = __webpack_require__(14);
 
 var _playlist2 = _interopRequireDefault(_playlist);
 
@@ -46500,31 +46582,31 @@ var _drum_stack = __webpack_require__(5);
 
 var _drum_stack2 = _interopRequireDefault(_drum_stack);
 
-var _big_tree = __webpack_require__(19);
+var _big_tree = __webpack_require__(15);
 
 var _big_tree2 = _interopRequireDefault(_big_tree);
 
-var _traintrack = __webpack_require__(6);
+var _traintrack = __webpack_require__(7);
 
 var _traintrack2 = _interopRequireDefault(_traintrack);
 
-var _audio_tracks = __webpack_require__(7);
+var _audio_tracks = __webpack_require__(8);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
-var _beat_analysis = __webpack_require__(8);
+var _beat_analysis = __webpack_require__(9);
 
 var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
 
-var _buildings = __webpack_require__(9);
+var _buildings = __webpack_require__(10);
 
 var _buildings2 = _interopRequireDefault(_buildings);
 
-var _handlers = __webpack_require__(14);
+var _handlers = __webpack_require__(16);
 
 var _handlers2 = _interopRequireDefault(_handlers);
 
-var _test = __webpack_require__(15);
+var _test = __webpack_require__(17);
 
 var _test2 = _interopRequireDefault(_test);
 
@@ -46547,7 +46629,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
   var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 1, '1');
-  var bigTree2 = new _big_tree2.default([-480, -220, 880], audio, world.scene, 2, '2');
+  var bigTree2 = new _big_tree2.default([-580, -220, 850], audio, world.scene, 2, '2');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
   var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2]);
@@ -46568,7 +46650,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var THREE = __webpack_require__(0)
@@ -47620,7 +47702,7 @@ module.exports = OrbitControls
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47666,7 +47748,7 @@ var Water = function () {
 exports.default = Water;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47730,7 +47812,285 @@ var Playlist = function () {
 exports.default = Playlist;
 
 /***/ }),
-/* 14 */
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+var _tree_geometries = __webpack_require__(6);
+
+var Leaves = _interopRequireWildcard(_tree_geometries);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BigTree = function () {
+  function BigTree(xyposition, audio, scene, type, id) {
+    _classCallCheck(this, BigTree);
+
+    this.id = id;
+    this.audio = audio;
+    this.scene = scene;
+    this.xyposition = xyposition;
+    this.drumStackY = -100;
+    this.drumStackZ = 0;
+    this.drumStackZIncrement = 40;
+    this.xRotation = false;
+    if (type === 1) {
+      this.drumStackWidth = 150;
+      this.drumStackHeight = 75;
+      this.drumStackDepth = 150;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+    } else if (type === 2) {
+      this.drumStackWidth = 100;
+      this.drumStackHeight = 100;
+      this.drumStackDepth = 100;
+      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
+      this.xRotation = true;
+      this.arcRotation = 3 * Math.PI / 2;
+      this.arcRadius = 350;
+      this.yRotationShift = Math.PI / 6;
+    }
+    this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
+    this.drumStackColors = undefined;
+    this.intervalId = undefined;
+    this.timeoutIds = [];
+    this.stackPosition = 0;
+    this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackWidth, this.drumStackHeight, this.drumStackDepth);
+    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
+      color: 0x623b00
+    });
+    this.leafMaterial = new THREE.MeshPhongMaterial({
+      color: 0x00c563,
+      side: THREE.DoubleSide,
+      reflectivity: 0.1,
+      shininess: 5,
+      lightMapIntensity: 0.3
+    });
+  }
+
+  _createClass(BigTree, [{
+    key: 'set8thNoteTimeouts',
+    value: function set8thNoteTimeouts(beatOffset) {
+      var _this = this;
+
+      this.reset8thNoteTimeouts();
+      var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
+      if (beatOffset) {
+        eighthNotes = eighthNotes.map(function (el) {
+          return beatOffset - el;
+        });
+        eighthNotes = eighthNotes.filter(function (el) {
+          return el >= 0 && el < beatOffset;
+        });
+      }
+      eighthNotes.forEach(function (note) {
+        var id = window.setTimeout(function () {
+          return _this.stack();
+        }, note);
+        _this.timeoutIds.push(id);
+      });
+    }
+  }, {
+    key: 'reset8thNoteTimeouts',
+    value: function reset8thNoteTimeouts() {
+      this.timeoutIds.forEach(function (id) {
+        return window.clearTimeout(id);
+      });
+    }
+  }, {
+    key: 'setInterval',
+    value: function setInterval() {
+      var _this2 = this;
+
+      var tempo = this.audio.globalTempo;
+      var pausedAt = this.audio.pausedAt;
+      //this is the coolest thing ever
+      var beatOffset = pausedAt ? tempo - pausedAt % tempo : 0;
+      this.set8thNoteTimeouts(beatOffset);
+      window.setTimeout(function () {
+        if (beatOffset) {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }
+        _this2.intervalId = window.setInterval(function () {
+          _this2.reset8thNoteTimeouts();
+          _this2.resetStack(_this2.scene);
+          _this2.set8thNoteTimeouts(0);
+        }, _this2.audio.globalTempo);
+      }, beatOffset);
+    }
+  }, {
+    key: 'resetInterval',
+    value: function resetInterval() {
+      window.clearInterval(this.intervalId);
+    }
+  }, {
+    key: 'addBlock',
+    value: function addBlock(position, geometry, material) {
+      var drumBlock = new THREE.Mesh(geometry, material);
+      drumBlock.name = 'drumBlock' + this.id;
+      var x = position[0];
+      var y = position[1] + this.drumStackY;
+      var z = position[2];
+      if (this.xRotation) {
+        var r = this.arcRadius * Math.sin(this.arcRotation);
+        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
+        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
+        z = position[2] + r * Math.cos(this.yRotationShift);
+      }
+      drumBlock.position.set(x, y, z);
+      if (this.xRotation) {
+        var rotation = void 0;
+        if (this.stackPosition % 2 === 0) {
+          rotation = this.yRotationShift;
+          x = Math.cos(rotation);
+          y = 0;
+          z = Math.sin(rotation);
+        } else {
+          rotation = this.yRotationShift;
+          x = Math.cos(rotation);
+          y = 0;
+          z = Math.sin(rotation);
+          rotation = this.drumStackRotation;
+        }
+
+        var newAxisX = new THREE.Vector3(x, y, z).normalize();
+        var rotationX = this.arcRotation + Math.PI / 2;
+
+        var newAxisY = new THREE.Vector3(0, 1, 0).normalize();
+        var rotationY = -1 * rotation;
+
+        var quaternionY = new THREE.Quaternion();
+        quaternionY.setFromAxisAngle(newAxisY, rotationY);
+
+        var quaternionX = new THREE.Quaternion();
+        quaternionX.setFromAxisAngle(newAxisX, rotationX);
+
+        drumBlock.applyQuaternion(quaternionY);
+        drumBlock.applyQuaternion(quaternionX);
+
+        this.arcRotation += Math.PI / 12;
+      } else {
+        drumBlock.rotateY(this.drumStackRotation);
+      }
+      this.scene.add(drumBlock);
+    }
+  }, {
+    key: 'addLeaves',
+    value: function addLeaves(position, stackPosition) {
+      var _this3 = this;
+
+      var leafSize = this.leafRatios[stackPosition % 8];
+      var geometries = Leaves.buildBigLeaves1(leafSize);
+      var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
+      var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
+      var leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
+      var leaves = new THREE.Group();
+      leaves.add(leaves1);
+      leaves.add(leaves2);
+      leaves.add(leaves3);
+      var x = position[0];
+      var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
+      var z = position[2];
+      if (this.xRotation) {
+        var r = this.arcRadius * Math.sin(this.arcRotation);
+        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
+        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
+        z = position[2] + r * Math.cos(this.yRotationShift);
+      }
+      leaves.position.set(x, y, z);
+      if (this.xRotation) {
+        leaves.rotateY(this.drumStackRotation);
+      } else {
+        leaves.rotateY(this.drumStackRotation);
+      }
+      leaves.name = 'leafBlock' + this.id;
+      // leaves.receiveShadow = true;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'leafBlock' + _this3.id;
+      }).forEach(function (el) {
+        return _this3.scene.remove(el);
+      });
+      leaves.rotateY(this.drumStackRotation);
+      this.scene.add(leaves);
+    }
+  }, {
+    key: 'stack',
+    value: function stack() {
+      // const rainbow = [
+      //   0xcc0000,
+      //   0xff3300,
+      //   0xff9933,
+      //   0xffcc00,
+      //   0xffff00,
+      //   0x66ff33,
+      //   0x66ff66,
+      //   0x00ff99,
+      //   0x00ccff,
+      //   0x0066ff,
+      //   0x7f00ff,
+      //   0xff00ff
+      // ];
+      // if (!this.drumStackColors) {
+      //   this.drumStackColors = [
+      //     rainbow[Math.floor(Math.random()*12)],
+      //     rainbow[Math.floor(Math.random()*12)]
+      //   ];
+      // }
+      // const material = new THREE.MeshBasicMaterial({
+      //   color: this.drumStackColors[Math.floor(Math.random()*2)]
+      // }); //this should be triggered if night mode is engaged
+      this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
+      this.addLeaves(this.xyposition, this.stackPosition);
+      this.stackPosition += 1;
+      this.drumStackY += this.drumStackHeight;
+      this.drumStackZ = this.drumStackZIncrement;
+      this.drumStackZIncrement = this.drumStackZIncrement + 40;
+      this.drumStackRotation += Math.PI / 4;
+    }
+  }, {
+    key: 'resetStack',
+    value: function resetStack() {
+      var _this4 = this;
+
+      this.drumStackY = -100;
+      this.drumStackZ = 0;
+      this.drumStackZIncrement = 9;
+      this.stackPosition = 0;
+      this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
+      this.drumStackColors = undefined;
+      this.scene.children.filter(function (obj) {
+        return obj.name === 'drumBlock' + _this4.id || obj.name === 'leafBlock' + _this4.id;
+      }).forEach(function (el) {
+        return _this4.scene.remove(el);
+      });
+      if (this.xRotation) {
+        this.arcRotation = 3 * Math.PI / 2;
+      }
+    }
+  }]);
+
+  return BigTree;
+}();
+
+exports.default = BigTree;
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47762,19 +48122,19 @@ var _drum_stack = __webpack_require__(5);
 
 var _drum_stack2 = _interopRequireDefault(_drum_stack);
 
-var _traintrack = __webpack_require__(6);
+var _traintrack = __webpack_require__(7);
 
 var _traintrack2 = _interopRequireDefault(_traintrack);
 
-var _audio_tracks = __webpack_require__(7);
+var _audio_tracks = __webpack_require__(8);
 
 var _audio_tracks2 = _interopRequireDefault(_audio_tracks);
 
-var _beat_analysis = __webpack_require__(8);
+var _beat_analysis = __webpack_require__(9);
 
 var _beat_analysis2 = _interopRequireDefault(_beat_analysis);
 
-var _buildings = __webpack_require__(9);
+var _buildings = __webpack_require__(10);
 
 var _buildings2 = _interopRequireDefault(_buildings);
 
@@ -47950,7 +48310,7 @@ var Handlers = function () {
 exports.default = Handlers;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47966,7 +48326,7 @@ var _three = __webpack_require__(0);
 
 var THREE = _interopRequireWildcard(_three);
 
-var _tree_geometries = __webpack_require__(18);
+var _tree_geometries = __webpack_require__(6);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47999,342 +48359,6 @@ var Test = function () {
 }();
 
 exports.default = Test;
-
-/***/ }),
-/* 16 */,
-/* 17 */,
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.buildSmallLeaves1 = exports.buildBigLeaves1 = undefined;
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var buildBigLeaves1 = exports.buildBigLeaves1 = function buildBigLeaves1(scale) {
-  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
-  var bigLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 1, 3), new THREE.Face3(3, 4, 1), new THREE.Face3(1, 2, 4), new THREE.Face3(4, 5, 2), new THREE.Face3(2, 0, 5), new THREE.Face3(5, 3, 0), new THREE.Face3(3, 4, 6), new THREE.Face3(4, 5, 6), new THREE.Face3(5, 3, 6)];
-
-  var bigLeaves1Geometry = new THREE.Geometry();
-
-  bigLeaves1Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-0.3, 0.5, -1.4), new THREE.Vector3(0.3, 0.5, -1.4), new THREE.Vector3(0, 1, -1.5), new THREE.Vector3(-0.1, 0.5, -2.1)];
-
-  var bigLeaves2Geometry = new THREE.Geometry();
-
-  bigLeaves2Geometry.vertices = [new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(-1.2, 0.6, 0.1), new THREE.Vector3(-0.8, 0.6, 0.5), new THREE.Vector3(-1, 1.2, 0.3), new THREE.Vector3(-1.5, 0.4, 0.6)];
-
-  var bigLeaves3Geometry = new THREE.Geometry();
-
-  bigLeaves3Geometry.vertices = [new THREE.Vector3(0.5, 0, -0.5), new THREE.Vector3(0, 0, .5), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(1, 0.3, 0.4), new THREE.Vector3(1, 0.3, 1), new THREE.Vector3(1, 1, 0.7), new THREE.Vector3(1.1, -0.1, 0.9)];
-
-  bigLeaves1Geometry.faces = bigLeafFaces;
-  bigLeaves1Geometry.applyMatrix(leafShift);
-  bigLeaves2Geometry.faces = bigLeafFaces;
-  bigLeaves2Geometry.applyMatrix(leafShift);
-  bigLeaves3Geometry.faces = bigLeafFaces;
-  bigLeaves3Geometry.applyMatrix(leafShift);
-  bigLeaves1Geometry.computeFaceNormals();
-  bigLeaves1Geometry.computeVertexNormals();
-  bigLeaves2Geometry.computeFaceNormals();
-  bigLeaves2Geometry.computeVertexNormals();
-  bigLeaves3Geometry.computeFaceNormals();
-  bigLeaves3Geometry.computeVertexNormals();
-
-  return [bigLeaves1Geometry, bigLeaves2Geometry, bigLeaves3Geometry];
-};
-
-var buildSmallLeaves1 = exports.buildSmallLeaves1 = function buildSmallLeaves1(scale) {
-  var leafShift = new THREE.Matrix4().makeScale(scale, scale, scale);
-  var smallLeafFaces = [new THREE.Face3(0, 1, 2), new THREE.Face3(0, 2, 3), new THREE.Face3(0, 1, 3), new THREE.Face3(1, 2, 3)];
-
-  var smallLeaves1Geometry = new THREE.Geometry();
-
-  smallLeaves1Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.5, 1, -1), new THREE.Vector3(0.5, 0.5, 0.5)];
-
-  var smallLeaves2Geometry = new THREE.Geometry();
-
-  smallLeaves2Geometry.vertices = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(-0.5, 1.2, 1), new THREE.Vector3(0.5, 0.5, 0.5)];
-
-  var smallLeaves3Geometry = new THREE.Geometry();
-
-  smallLeaves3Geometry.vertices = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(.5, 0, 1), new THREE.Vector3(1.5, 1, 1.2), new THREE.Vector3(0.5, 0.5, 0.5)];
-
-  smallLeaves1Geometry.faces = smallLeafFaces;
-  smallLeaves1Geometry.applyMatrix(leafShift);
-  smallLeaves2Geometry.faces = smallLeafFaces;
-  smallLeaves2Geometry.applyMatrix(leafShift);
-  smallLeaves3Geometry.faces = smallLeafFaces;
-  smallLeaves3Geometry.applyMatrix(leafShift);
-  smallLeaves1Geometry.computeFaceNormals();
-  smallLeaves1Geometry.computeVertexNormals();
-  smallLeaves2Geometry.computeFaceNormals();
-  smallLeaves2Geometry.computeVertexNormals();
-  smallLeaves3Geometry.computeFaceNormals();
-  smallLeaves3Geometry.computeVertexNormals();
-
-  return [smallLeaves1Geometry, smallLeaves2Geometry, smallLeaves3Geometry];
-};
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _three = __webpack_require__(0);
-
-var THREE = _interopRequireWildcard(_three);
-
-var _tree_geometries = __webpack_require__(18);
-
-var Leaves = _interopRequireWildcard(_tree_geometries);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BigTree = function () {
-  function BigTree(xyposition, audio, scene, type, id) {
-    _classCallCheck(this, BigTree);
-
-    this.id = id;
-    this.audio = audio;
-    this.scene = scene;
-    this.xyposition = xyposition;
-    this.drumStackY = -100;
-    this.drumStackZ = 0;
-    this.drumStackZIncrement = 40;
-    this.xRotation = false;
-    if (type === 1) {
-      this.drumStackWidth = 150;
-      this.drumStackHeight = 75;
-      this.drumStackDepth = 150;
-      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
-    } else if (type === 2) {
-      this.drumStackWidth = 100;
-      this.drumStackHeight = 100;
-      this.drumStackDepth = 100;
-      this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
-      this.xRotation = true;
-      this.arcRotation = 3 * Math.PI / 2;
-      this.arcRadius = 350;
-      this.yRotationShift = Math.PI / 6;
-    }
-    this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
-    this.drumStackColors = undefined;
-    this.intervalId = undefined;
-    this.timeoutIds = [];
-    this.stackPosition = 0;
-    this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackWidth, this.drumStackHeight, this.drumStackDepth);
-    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
-      color: 0x623b00
-    });
-    this.leafMaterial = new THREE.MeshPhongMaterial({
-      color: 0x00c563,
-      side: THREE.DoubleSide,
-      reflectivity: 0.1,
-      shininess: 5,
-      lightMapIntensity: 0.3
-    });
-  }
-
-  _createClass(BigTree, [{
-    key: 'set8thNoteTimeouts',
-    value: function set8thNoteTimeouts(beatOffset) {
-      var _this = this;
-
-      this.reset8thNoteTimeouts();
-      var eighthNotes = [0, this.audio.globalTempo / 8, 2 * this.audio.globalTempo / 8, 3 * this.audio.globalTempo / 8, 4 * this.audio.globalTempo / 8, 5 * this.audio.globalTempo / 8, 6 * this.audio.globalTempo / 8, 7 * this.audio.globalTempo / 8];
-      if (beatOffset) {
-        eighthNotes = eighthNotes.map(function (el) {
-          return beatOffset - el;
-        });
-        eighthNotes = eighthNotes.filter(function (el) {
-          return el >= 0 && el < beatOffset;
-        });
-      }
-      eighthNotes.forEach(function (note) {
-        var id = window.setTimeout(function () {
-          return _this.stack();
-        }, note);
-        _this.timeoutIds.push(id);
-      });
-    }
-  }, {
-    key: 'reset8thNoteTimeouts',
-    value: function reset8thNoteTimeouts() {
-      this.timeoutIds.forEach(function (id) {
-        return window.clearTimeout(id);
-      });
-    }
-  }, {
-    key: 'setInterval',
-    value: function setInterval() {
-      var _this2 = this;
-
-      var tempo = this.audio.globalTempo;
-      var pausedAt = this.audio.pausedAt;
-      //this is the coolest thing ever
-      var beatOffset = pausedAt ? tempo - pausedAt % tempo : 0;
-      this.set8thNoteTimeouts(beatOffset);
-      window.setTimeout(function () {
-        if (beatOffset) {
-          _this2.reset8thNoteTimeouts();
-          _this2.resetStack(_this2.scene);
-          _this2.set8thNoteTimeouts(0);
-        }
-        _this2.intervalId = window.setInterval(function () {
-          _this2.reset8thNoteTimeouts();
-          _this2.resetStack(_this2.scene);
-          _this2.set8thNoteTimeouts(0);
-        }, _this2.audio.globalTempo);
-      }, beatOffset);
-    }
-  }, {
-    key: 'resetInterval',
-    value: function resetInterval() {
-      window.clearInterval(this.intervalId);
-    }
-  }, {
-    key: 'addBlock',
-    value: function addBlock(position, geometry, material) {
-      var drumBlock = new THREE.Mesh(geometry, material);
-      drumBlock.name = 'drumBlock' + this.id;
-      var x = position[0];
-      var y = position[1] + this.drumStackY;
-      var z = position[2];
-      if (this.xRotation) {
-        var r = this.arcRadius * Math.sin(this.arcRotation);
-        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
-        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
-        z = position[2] + r * Math.cos(this.yRotationShift);
-      }
-      drumBlock.position.set(x, y, z);
-      if (this.xRotation) {
-        // drumBlock.rotateX(this.arcRotation);
-        drumBlock.rotateY(this.yRotationShift + this.drumStackRotation);
-        this.arcRotation += Math.PI / 12;
-      } else {
-        drumBlock.rotateY(this.drumStackRotation);
-      }
-      // drumBlock.rotateY(this.drumStackRotation);
-      this.scene.add(drumBlock);
-    }
-  }, {
-    key: 'addLeaves',
-    value: function addLeaves(position, stackPosition) {
-      var _this3 = this;
-
-      var leafSize = this.leafRatios[stackPosition % 8];
-      var geometries = Leaves.buildBigLeaves1(leafSize);
-      var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
-      var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
-      var leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
-      var leaves = new THREE.Group();
-      leaves.add(leaves1);
-      leaves.add(leaves2);
-      leaves.add(leaves3);
-      var x = position[0];
-      var y = position[1] + this.drumStackY + this.drumStackHeight - 50;
-      var z = position[2];
-      if (this.xRotation) {
-        var r = this.arcRadius * Math.sin(this.arcRotation);
-        x = position[0] + r * Math.sin(this.yRotationShift) * -1;
-        y = position[1] + this.arcRadius * Math.cos(this.arcRotation);
-        z = position[2] + r * Math.cos(this.yRotationShift);
-      }
-      leaves.position.set(x, y, z);
-      if (this.xRotation) {
-        leaves.rotateY(this.drumStackRotation);
-      } else {
-        leaves.rotateY(this.drumStackRotation);
-      }
-      leaves.name = 'leafBlock' + this.id;
-      // leaves.receiveShadow = true;
-      this.scene.children.filter(function (obj) {
-        return obj.name === 'leafBlock' + _this3.id;
-      }).forEach(function (el) {
-        return _this3.scene.remove(el);
-      });
-      leaves.rotateY(this.drumStackRotation);
-      // this.scene.add(leaves);
-    }
-  }, {
-    key: 'stack',
-    value: function stack() {
-      // const rainbow = [
-      //   0xcc0000,
-      //   0xff3300,
-      //   0xff9933,
-      //   0xffcc00,
-      //   0xffff00,
-      //   0x66ff33,
-      //   0x66ff66,
-      //   0x00ff99,
-      //   0x00ccff,
-      //   0x0066ff,
-      //   0x7f00ff,
-      //   0xff00ff
-      // ];
-      // if (!this.drumStackColors) {
-      //   this.drumStackColors = [
-      //     rainbow[Math.floor(Math.random()*12)],
-      //     rainbow[Math.floor(Math.random()*12)]
-      //   ];
-      // }
-      // const material = new THREE.MeshBasicMaterial({
-      //   color: this.drumStackColors[Math.floor(Math.random()*2)]
-      // }); //this should be triggered if night mode is engaged
-      this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
-      this.addLeaves(this.xyposition, this.stackPosition);
-      this.stackPosition += 1;
-      this.drumStackY += this.drumStackHeight;
-      this.drumStackZ = this.drumStackZIncrement;
-      this.drumStackZIncrement = this.drumStackZIncrement + 40;
-      this.drumStackRotation += Math.PI / 4;
-    }
-  }, {
-    key: 'resetStack',
-    value: function resetStack() {
-      var _this4 = this;
-
-      this.drumStackY = -100;
-      this.drumStackZ = 0;
-      this.drumStackZIncrement = 9;
-      this.stackPosition = 0;
-      this.drumStackRotation = this.xRotation ? this.yRotationShift : 0;
-      this.drumStackColors = undefined;
-      this.scene.children.filter(function (obj) {
-        return obj.name === 'drumBlock' + _this4.id || obj.name === 'leafBlock' + _this4.id;
-      }).forEach(function (el) {
-        return _this4.scene.remove(el);
-      });
-      if (this.xRotation) {
-        this.arcRotation = 3 * Math.PI / 2;
-      }
-    }
-  }]);
-
-  return BigTree;
-}();
-
-exports.default = BigTree;
 
 /***/ })
 /******/ ]);

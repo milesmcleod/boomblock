@@ -114,13 +114,42 @@ class BigTree {
     }
     drumBlock.position.set(x, y, z);
     if (this.xRotation) {
-      // drumBlock.rotateX(this.arcRotation);
-      drumBlock.rotateY((this.yRotationShift) + this.drumStackRotation);
+      let rotation;
+      if (this.stackPosition % 2 === 0) {
+        rotation = this.yRotationShift;
+        x = Math.cos(rotation);
+        y = 0;
+        z = Math.sin(rotation);
+      } else {
+        rotation = this.yRotationShift;
+        x = Math.cos(rotation);
+        y = 0;
+        z = Math.sin(rotation);
+        rotation = this.drumStackRotation;
+      }
+
+      const newAxisX = new THREE.Vector3(x, y, z).normalize();
+      const rotationX = this.arcRotation + Math.PI/2;
+
+      const newAxisY = new THREE.Vector3(0, 1, 0).normalize();
+      const rotationY = -1 * rotation;
+
+      let quaternionY = new THREE.Quaternion();
+      quaternionY.setFromAxisAngle(newAxisY, rotationY);
+
+
+      let quaternionX = new THREE.Quaternion();
+      quaternionX.setFromAxisAngle(newAxisX, rotationX);
+
+      drumBlock.applyQuaternion(quaternionY);
+      drumBlock.applyQuaternion(quaternionX);
+
+
+
       this.arcRotation += Math.PI/12;
     } else {
       drumBlock.rotateY(this.drumStackRotation);
     }
-    // drumBlock.rotateY(this.drumStackRotation);
     this.scene.add(drumBlock);
   }
 
@@ -155,7 +184,7 @@ class BigTree {
       obj.name === 'leafBlock' + this.id
     )).forEach(el => this.scene.remove(el));
     leaves.rotateY(this.drumStackRotation);
-    // this.scene.add(leaves);
+    this.scene.add(leaves);
   }
 
   stack() {

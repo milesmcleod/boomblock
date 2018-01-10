@@ -46610,9 +46610,12 @@ var _test = __webpack_require__(17);
 
 var _test2 = _interopRequireDefault(_test);
 
+var _material_core = __webpack_require__(18);
+
+var _material_core2 = _interopRequireDefault(_material_core);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -46624,11 +46627,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var island = new _island2.default(world.scene);
   var water = new _water2.default(world.scene);
   var boomblock = new _boomblock2.default(world.scene);
-  var bigTree = new _big_tree2.default([250, 400, -650], audio, world.scene, 6, '1');
-  var bigTree2 = new _big_tree2.default([-660, -220, 840], audio, world.scene, 2, '2');
-  var bigTree3 = new _big_tree2.default([-800, -150, -100], audio, world.scene, 3, '3');
-  var bigTree4 = new _big_tree2.default([-10, 140, -200], audio, world.scene, 5, '4');
-  var bigTree5 = new _big_tree2.default([960, -130, 260], audio, world.scene, 4, '5');
+  var materials = new _material_core2.default();
+  var bigTree = new _big_tree2.default(materials, [250, 400, -650], audio, world.scene, 6, '1');
+  var bigTree2 = new _big_tree2.default(materials, [-660, -220, 840], audio, world.scene, 2, '2');
+  var bigTree3 = new _big_tree2.default(materials, [-800, -150, -100], audio, world.scene, 3, '3');
+  var bigTree4 = new _big_tree2.default(materials, [-10, 140, -200], audio, world.scene, 5, '4');
+  var bigTree5 = new _big_tree2.default(materials, [960, -130, 260], audio, world.scene, 4, '5');
   var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
   window.world = world;
 
@@ -46644,8 +46648,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  var night = document.getElementById('night-switch');
+
+  night.addEventListener('click', function (e) {
+    var worldDiv = document.getElementById('world');
+    if (worldDiv.classList.contains('background-black')) {
+      worldDiv.classList.remove('background-black');
+      handlers.setMode('dayTime');
+    } else {
+      worldDiv.classList.add('background-black');
+      handlers.setMode('nightTime');
+    }
+  });
+
   world.loop(audio);
-});
+}); // entry.jsx
 
 /***/ }),
 /* 12 */
@@ -47835,9 +47852,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BigTree = function () {
-  function BigTree(xyposition, audio, scene, type, id) {
+  function BigTree(materials, xyposition, audio, scene, type, id) {
     _classCallCheck(this, BigTree);
 
+    this.materials = materials;
+    this.mode = undefined;
     this.id = id;
     this.audio = audio;
     this.scene = scene;
@@ -47903,9 +47922,6 @@ var BigTree = function () {
     this.timeoutIds = [];
     this.stackPosition = 0;
     this.bigTrunkGeometry = new THREE.BoxBufferGeometry(this.drumStackWidth, this.drumStackHeight, this.drumStackDepth);
-    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
-      color: 0x623b00
-    });
     this.leafMaterial = new THREE.MeshPhongMaterial({
       color: 0x00c563,
       side: THREE.DoubleSide,
@@ -47916,6 +47932,11 @@ var BigTree = function () {
   }
 
   _createClass(BigTree, [{
+    key: 'injectMode',
+    value: function injectMode(mode) {
+      this.mode = mode;
+    }
+  }, {
     key: 'set8thNoteTimeouts',
     value: function set8thNoteTimeouts(beatOffset) {
       var _this = this;
@@ -48025,14 +48046,15 @@ var BigTree = function () {
     }
   }, {
     key: 'addLeaves',
-    value: function addLeaves(position, stackPosition) {
+    value: function addLeaves(position, stackPosition, mode) {
       var _this3 = this;
 
       var leafSize = this.leafRatios[stackPosition % 8];
       var geometries = Leaves.buildBigLeaves1(leafSize);
-      var leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
-      var leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
-      var leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
+      var material = this.materials.leafMaterial(mode);
+      var leaves1 = new THREE.Mesh(geometries[0], material);
+      var leaves2 = new THREE.Mesh(geometries[1], material);
+      var leaves3 = new THREE.Mesh(geometries[2], material);
       var leaves = new THREE.Group();
       leaves.add(leaves1);
       leaves.add(leaves2);
@@ -48065,8 +48087,8 @@ var BigTree = function () {
   }, {
     key: 'stack',
     value: function stack() {
-      this.addBlock(this.xyposition, this.bigTrunkGeometry, this.bigTrunkDayMaterial);
-      this.addLeaves(this.xyposition, this.stackPosition);
+      this.addBlock(this.xyposition, this.bigTrunkGeometry, this.materials.trunkMaterial(this.mode));
+      this.addLeaves(this.xyposition, this.stackPosition, this.mode);
       this.stackPosition += 1;
       this.drumStackY += this.drumStackHeight;
       this.drumStackZ = this.drumStackZIncrement;
@@ -48078,6 +48100,7 @@ var BigTree = function () {
     value: function resetStack() {
       var _this4 = this;
 
+      this.materials.clearTrunkMaterials();
       this.drumStackY = -100;
       this.drumStackZ = 0;
       this.drumStackZIncrement = 9;
@@ -48159,21 +48182,33 @@ var Handlers = function () {
 
     this.audio = audio;
     this.world = world;
+    this.mode = 'dayTime';
     this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);
   }
 
   _createClass(Handlers, [{
+    key: 'setMode',
+    value: function setMode(mode) {
+      this.mode = mode;
+      this.drumStacks.forEach(function (el) {
+        return el.injectMode(mode);
+      });
+    }
+  }, {
     key: 'handlePlay',
     value: function handlePlay() {
+      var _this = this;
+
       if (!this.audio.playing) {
         this.audio.masterGain.gain.value = 1;
         this.audio.start();
         this.drumStacks.forEach(function (el) {
+          el.injectMode(_this.mode);
           el.resetInterval();
           el.reset8thNoteTimeouts();
-          el.setInterval();
+          el.setInterval(_this.mode);
         });
       }
     }
@@ -48201,7 +48236,7 @@ var Handlers = function () {
   }, {
     key: 'handleReset',
     value: function handleReset() {
-      var _this = this;
+      var _this2 = this;
 
       var killId = setTimeout(function () {
         for (var i = killId; i > 0; i--) {
@@ -48222,7 +48257,7 @@ var Handlers = function () {
         el.resetStack();
       });
       window.setTimeout(function () {
-        _this.audio.resetting = 0;
+        _this2.audio.resetting = 0;
       }, 400);
       this.audio.reload();
       this.loadCheck();
@@ -48300,16 +48335,16 @@ var Handlers = function () {
   }, {
     key: 'loadCheck',
     value: function loadCheck() {
-      var _this2 = this;
+      var _this3 = this;
 
       window.setTimeout(function () {
-        if (_this2.audio.loaded === 1) {
-          window.addEventListener('mouseup', _this2.handleClick, false);
-          window.addEventListener('mousemove', _this2.handleMove, false);
-          _this2.audio.beatAnalyser = new _beat_analysis2.default(_this2.audio.drumsBuffer);
-          _this2.audio.globalTempo = Math.round(_this2.audio.beatAnalyser.getIntervalInMilliseconds());
+        if (_this3.audio.loaded === 1) {
+          window.addEventListener('mouseup', _this3.handleClick, false);
+          window.addEventListener('mousemove', _this3.handleMove, false);
+          _this3.audio.beatAnalyser = new _beat_analysis2.default(_this3.audio.drumsBuffer);
+          _this3.audio.globalTempo = Math.round(_this3.audio.beatAnalyser.getIntervalInMilliseconds());
         } else {
-          _this2.loadCheck();
+          _this3.loadCheck();
         }
       }, 10);
     }
@@ -48370,6 +48405,93 @@ var Test = function () {
 }();
 
 exports.default = Test;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Materials = function () {
+  function Materials() {
+    _classCallCheck(this, Materials);
+
+    this.trunkColors = undefined;
+    this.rainbow = [0xcc0000, 0xff3300, 0xff9933, 0xffcc00, 0xffff00, 0x66ff33, 0x66ff66, 0x00ff99, 0x00ccff, 0x0066ff, 0x7f00ff, 0xff00ff];
+  }
+
+  _createClass(Materials, [{
+    key: 'waterMaterial',
+    value: function waterMaterial(mode) {
+      if (mode === 'dayTime') {
+        return new THREE.MeshPhongMaterial({ color: 0x1a75ff });
+      } else {
+        return new THREE.MeshPhongMaterial({ color: 0x000000 });
+      }
+    }
+  }, {
+    key: 'trunkMaterial',
+    value: function trunkMaterial(mode) {
+      if (mode === 'dayTime') {
+        return new THREE.MeshPhongMaterial({
+          color: 0x623b00
+        });
+      } else {
+        if (!this.trunkColors) {
+          this.trunkColors = [this.rainbow[Math.floor(Math.random() * 12)], this.rainbow[Math.floor(Math.random() * 12)]];
+        }
+        return new THREE.MeshBasicMaterial({
+          color: this.trunkColors[Math.floor(Math.random() * 2)]
+        });
+      }
+    }
+  }, {
+    key: 'clearTrunkMaterials',
+    value: function clearTrunkMaterials() {
+      this.trunkColors = undefined;
+    }
+  }, {
+    key: 'leafMaterial',
+    value: function leafMaterial(mode) {
+      if (mode === 'dayTime') {
+        return new THREE.MeshPhongMaterial({
+          color: 0x00c563,
+          side: THREE.DoubleSide,
+          reflectivity: 0.1,
+          shininess: 5,
+          lightMapIntensity: 0.3
+        });
+      } else {
+        return new THREE.MeshBasicMaterial({
+          color: 0x00c563,
+          side: THREE.DoubleSide,
+          reflectivity: 0.1,
+          shininess: 5,
+          lightMapIntensity: 0.3
+        });
+      }
+    }
+  }]);
+
+  return Materials;
+}();
+
+exports.default = Materials;
 
 /***/ })
 /******/ ]);

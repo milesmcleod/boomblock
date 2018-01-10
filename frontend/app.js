@@ -13,6 +13,7 @@ import BeatAnalyser from './audio_components/beat_analysis';
 import Buildings from './three_components/buildings';
 import Handlers from './handlers';
 import Test from './three_components/test';
+import Materials from './three_components/materials/material_core';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -25,11 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const island = new Island(world.scene);
   const water = new Water(world.scene);
   const boomblock = new BoomBlock(world.scene);
-  const bigTree = new BigTree([250, 400, -650], audio, world.scene, 6, '1');
-  const bigTree2 = new BigTree([-660, -220, 840], audio, world.scene, 2, '2');
-  const bigTree3 = new BigTree([-800, -150, -100], audio, world.scene, 3, '3');
-  const bigTree4 = new BigTree([-10, 140, -200], audio, world.scene, 5, '4');
-  const bigTree5 = new BigTree([960, -130, 260], audio, world.scene, 4, '5');
+  const materials = new Materials();
+  const bigTree = new BigTree(materials, [250, 400, -650], audio, world.scene, 6, '1');
+  const bigTree2 = new BigTree(materials, [-660, -220, 840], audio, world.scene, 2, '2');
+  const bigTree3 = new BigTree(materials, [-800, -150, -100], audio, world.scene, 3, '3');
+  const bigTree4 = new BigTree(materials, [-10, 140, -200], audio, world.scene, 5, '4');
+  const bigTree5 = new BigTree(materials, [960, -130, 260], audio, world.scene, 4, '5');
   const handlers = new Handlers(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
   window.world = world;
 
@@ -43,6 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener("click", () => {
       modal.classList.remove('show-modal');
     });
+  });
+
+  const night = document.getElementById('night-switch');
+
+  night.addEventListener('click', (e) => {
+    const worldDiv = document.getElementById('world');
+    if (worldDiv.classList.contains('background-black')) {
+      worldDiv.classList.remove('background-black');
+      handlers.setMode('dayTime');
+    } else {
+      worldDiv.classList.add('background-black');
+      handlers.setMode('nightTime');
+    }
   });
 
   world.loop(audio);

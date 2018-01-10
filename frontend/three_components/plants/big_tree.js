@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 import * as Leaves from'./tree_geometries';
 
+
 class BigTree {
-  constructor(xyposition, audio, scene, type, id) {
+  constructor(materials, xyposition, audio, scene, type, id) {
+    this.materials = materials;
+    this.mode = undefined;
     this.id = id;
     this.audio = audio;
     this.scene = scene;
@@ -72,9 +75,6 @@ class BigTree {
       this.drumStackHeight,
       this.drumStackDepth
     );
-    this.bigTrunkDayMaterial = new THREE.MeshPhongMaterial({
-      color: 0x623b00
-    });
     this.leafMaterial = new THREE.MeshPhongMaterial({
       color: 0x00c563,
       side: THREE.DoubleSide,
@@ -82,6 +82,10 @@ class BigTree {
       shininess: 5,
       lightMapIntensity: 0.3
     });
+  }
+
+  injectMode(mode) {
+    this.mode = mode;
   }
 
   set8thNoteTimeouts (beatOffset) {
@@ -189,12 +193,13 @@ class BigTree {
     this.scene.add(drumBlock);
   }
 
-  addLeaves(position, stackPosition) {
+  addLeaves(position, stackPosition, mode) {
     let leafSize = this.leafRatios[stackPosition % 8];
     const geometries = Leaves.buildBigLeaves1(leafSize);
-    const leaves1 = new THREE.Mesh(geometries[0], this.leafMaterial);
-    const leaves2 = new THREE.Mesh(geometries[1], this.leafMaterial);
-    const leaves3 = new THREE.Mesh(geometries[2], this.leafMaterial);
+    const material = this.materials.leafMaterial(mode);
+    const leaves1 = new THREE.Mesh(geometries[0], material);
+    const leaves2 = new THREE.Mesh(geometries[1], material);
+    const leaves3 = new THREE.Mesh(geometries[2], material);
     const leaves = new THREE.Group();
     leaves.add(leaves1);
     leaves.add(leaves2);
@@ -227,9 +232,9 @@ class BigTree {
     this.addBlock(
       this.xyposition,
       this.bigTrunkGeometry,
-      this.bigTrunkDayMaterial
+      this.materials.trunkMaterial(this.mode)
     );
-    this.addLeaves(this.xyposition, this.stackPosition);
+    this.addLeaves(this.xyposition, this.stackPosition, this.mode);
     this.stackPosition += 1;
     this.drumStackY += this.drumStackHeight;
     this.drumStackZ = this.drumStackZIncrement;
@@ -238,6 +243,7 @@ class BigTree {
   }
 
   resetStack() {
+    this.materials.clearTrunkMaterials();
     this.drumStackY = -100;
     this.drumStackZ = 0;
     this.drumStackZIncrement = 9;

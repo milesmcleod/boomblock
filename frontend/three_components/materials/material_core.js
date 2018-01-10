@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class Materials {
-  constructor(materialType, mode) {
+  constructor() {
     this.trunkColors = undefined;
     this.rainbow = [
       0xcc0000,
@@ -40,7 +40,7 @@ class Materials {
         ];
       }
       return new THREE.MeshBasicMaterial({
-        color: this.drumStackColors[Math.floor(Math.random()*2)]
+        color: this.trunkColors[Math.floor(Math.random()*2)]
       });
     }
   }
@@ -69,3 +69,5 @@ class Materials {
     }
   }
 }
+
+export default Materials;

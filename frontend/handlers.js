@@ -12,9 +12,15 @@ class Handlers {
   constructor(audio, world, drumStacks) {
     this.audio = audio;
     this.world = world;
+    this.mode = 'dayTime';
     this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);
+  }
+
+  setMode(mode) {
+    this.mode = mode;
+    this.drumStacks.forEach((el) => el.injectMode(mode));
   }
 
   handlePlay() {
@@ -22,9 +28,10 @@ class Handlers {
       this.audio.masterGain.gain.value = 1;
       this.audio.start();
       this.drumStacks.forEach((el) => {
+        el.injectMode(this.mode);
         el.resetInterval();
         el.reset8thNoteTimeouts();
-        el.setInterval();
+        el.setInterval(this.mode);
       });
     }
   }

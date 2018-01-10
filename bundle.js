@@ -46629,10 +46629,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // const buildings = new Buildings(world.scene);
   // const drumStack = new DrumStack(audio, world.scene);
   var bigTree = new _big_tree2.default([-330, 490, -750], audio, world.scene, 1, '1');
-  var bigTree2 = new _big_tree2.default([-580, -220, 850], audio, world.scene, 2, '2');
+  var bigTree2 = new _big_tree2.default([-660, -220, 840], audio, world.scene, 2, '2');
+  var bigTree3 = new _big_tree2.default([420, 210, -600], audio, world.scene, 3, '3');
   // const test = new Test(world.scene);
   // const handlers = new Handlers(audio, world, drumStack);
-  var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2]);
+  var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2, bigTree3]);
   window.world = world;
 
   handlers.loadCheck();
@@ -47848,10 +47849,10 @@ var BigTree = function () {
     this.drumStackZ = 0;
     this.drumStackZIncrement = 40;
     this.xRotation = false;
-    if (type === 1) {
-      this.drumStackWidth = 150;
-      this.drumStackHeight = 75;
-      this.drumStackDepth = 150;
+    if (type === 1 || type === 3) {
+      this.drumStackWidth = type === 1 ? 150 : 135;
+      this.drumStackHeight = type === 1 ? 75 : 135;
+      this.drumStackDepth = type === 1 ? 150 : 135;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
       this.drumStackWidth = 100;

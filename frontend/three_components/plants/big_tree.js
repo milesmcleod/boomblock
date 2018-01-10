@@ -11,10 +11,10 @@ class BigTree {
     this.drumStackZ = 0;
     this.drumStackZIncrement = 40;
     this.xRotation = false;
-    if (type === 1) {
-      this.drumStackWidth = 150;
-      this.drumStackHeight = 75;
-      this.drumStackDepth = 150;
+    if (type === 1 || type === 3) {
+      this.drumStackWidth = type === 1 ? 150 : 135;
+      this.drumStackHeight = type === 1 ? 75 : 135;
+      this.drumStackDepth = type === 1 ? 150 : 135;
       this.leafRatios = [120, 140, 160, 180, 200, 220, 240, 260];
     } else if (type === 2) {
       this.drumStackWidth = 100;

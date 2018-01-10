@@ -19,14 +19,6 @@ class Materials {
     ];
   }
 
-  waterMaterial(mode) {
-    if (mode === 'dayTime') {
-      return new THREE.MeshPhongMaterial({color: 0x1a75ff});
-    } else {
-      return new THREE.MeshPhongMaterial({color: 0x000000});
-    }
-  }
-
   trunkMaterial(mode) {
     if (mode === 'dayTime') {
       return new THREE.MeshPhongMaterial({
@@ -39,7 +31,7 @@ class Materials {
           this.rainbow[Math.floor(Math.random()*12)]
         ];
       }
-      return new THREE.MeshBasicMaterial({
+      return new THREE.MeshPhongMaterial({
         color: this.trunkColors[Math.floor(Math.random()*2)]
       });
     }
@@ -59,7 +51,7 @@ class Materials {
         lightMapIntensity: 0.3
       });
     } else {
-      return new THREE.MeshBasicMaterial({
+      return new THREE.MeshPhongMaterial({
         color: 0x00c563,
         side: THREE.DoubleSide,
         reflectivity: 0.1,

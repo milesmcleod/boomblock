@@ -11,8 +11,19 @@ class Lighting {
       new THREE.SphereBufferGeometry(200, 64, 64),
       new THREE.MeshBasicMaterial({ color: 0xffff80 })
     );
+    this.sun.name = 'sun';
     this.sun.position.set(800, 3000, -3000);
     scene.add( this.sun );
+  }
+
+  createMoon(scene) {
+    this.moon = new THREE.Mesh(
+      new THREE.SphereBufferGeometry(200, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0xffff80 })
+    );
+    this.moon.name = 'moon';
+    this.moon.position.set(800, -3000, 3000);
+    scene.add( this.moon );
   }
 
   createSpotLight(scene) {
@@ -33,6 +44,7 @@ class Lighting {
   constructor(scene) {
     this.createAmbientLight(scene);
     this.createSun(scene);
+    this.createMoon(scene);
     this.createSpotLight(scene);
   }
 }

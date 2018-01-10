@@ -45164,6 +45164,10 @@ var World = function () {
       this.nearPlane = 1;
       this.farPlane = 20000;
       this.fps = 50;
+      this.sunTheta = Math.PI / 2;
+      this.moonTheta = 3 * Math.PI / 2;
+      this.sunRising = false;
+      this.sunSetting = false;
     }
   }, {
     key: 'createCamera',
@@ -45263,7 +45267,48 @@ var World = function () {
           el.rotateZ(0.5);
         }
       }); //rotateOnAxis function
-    }
+      var sun = this.scene.children.filter(function (el) {
+        return el.name === 'sun';
+      })[0];
+      var moon = this.scene.children.filter(function (el) {
+        return el.name === 'moon';
+      })[0];
+      if (this.sunSetting) {
+        this.sunTheta += Math.PI / (2 * 30);
+        this.moonTheta += Math.PI / (2 * 30);
+        if (this.sunTheta % (2 * Math.PI) === Math.PI / 2) {
+          //this is the part that is broken. use a range instead? math is also wrong
+          this.sunSetting = false;
+        } else {
+          //move sun and moon
+          sun.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta));
+          moon.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta));
+        }
+      } else if (this.sunRising) {
+        this.sunTheta += Math.PI / (2 * 30);
+        this.moonTheta += Math.PI / (2 * 30);
+        if (this.sunTheta % (2 * Math.PI) === 3 * Math.PI / 2) {
+          this.sunRising = false;
+        } else {
+          //move sun and moon
+          sun.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta));
+          moon.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta));
+        }
+      }
+    } //refactor
+
+    // moving the sun should be a trigonometric function that uses the sine
+    // and cosine of the sun's position relative to the origin. r is equal
+    // to the square root of ths sum of the squares of 3000 and 3000, and
+    // because we're working with a perfectly circular orbit, the respective
+    // y and z values will be something like:
+
+    // z = Math.sqrt(2 * (3000 ** 2)) * Math.sin(sunTheta) where sunTheta
+    // starts at Math.PI/2 radians and ends at 3 * Math.PI/2 radians
+    //
+    // y = Math.sqrt(2 * (3000 ** 2)) * Math.cos(sunTheta) where sunTheta
+    // starts at Math.PI/2 radians and ends at 3 * Math.PI/2 radians
+
   }, {
     key: 'render',
     value: function render() {
@@ -45292,6 +45337,16 @@ var World = function () {
           return _this.loop(audio);
         });
       }, 1000 / this.fps);
+    }
+  }, {
+    key: 'sunSet',
+    value: function sunSet() {
+      this.sunSetting = true;
+    }
+  }, {
+    key: 'sunRise',
+    value: function sunRise() {
+      this.sunRising = true;
     }
   }]);
 
@@ -45332,8 +45387,17 @@ var Lighting = function () {
     key: 'createSun',
     value: function createSun(scene) {
       this.sun = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffff80 }));
+      this.sun.name = 'sun';
       this.sun.position.set(800, 3000, -3000);
       scene.add(this.sun);
+    }
+  }, {
+    key: 'createMoon',
+    value: function createMoon(scene) {
+      this.moon = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffff80 }));
+      this.moon.name = 'moon';
+      this.moon.position.set(800, -3000, 3000);
+      scene.add(this.moon);
     }
   }, {
     key: 'createSpotLight',
@@ -45358,6 +45422,7 @@ var Lighting = function () {
 
     this.createAmbientLight(scene);
     this.createSun(scene);
+    this.createMoon(scene);
     this.createSpotLight(scene);
   }
 
@@ -46655,9 +46720,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (worldDiv.classList.contains('background-black')) {
       worldDiv.classList.remove('background-black');
       handlers.setMode('dayTime');
+      world.sunRise();
     } else {
       worldDiv.classList.add('background-black');
       handlers.setMode('nightTime');
+      world.sunSet();
     }
   });
 
@@ -48182,7 +48249,7 @@ var Handlers = function () {
 
     this.audio = audio;
     this.world = world;
-    this.mode = 'dayTime';
+    this.mode = 'dayTime'; //change to be determined by time
     this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);
@@ -48436,15 +48503,6 @@ var Materials = function () {
   }
 
   _createClass(Materials, [{
-    key: 'waterMaterial',
-    value: function waterMaterial(mode) {
-      if (mode === 'dayTime') {
-        return new THREE.MeshPhongMaterial({ color: 0x1a75ff });
-      } else {
-        return new THREE.MeshPhongMaterial({ color: 0x000000 });
-      }
-    }
-  }, {
     key: 'trunkMaterial',
     value: function trunkMaterial(mode) {
       if (mode === 'dayTime') {
@@ -48455,7 +48513,7 @@ var Materials = function () {
         if (!this.trunkColors) {
           this.trunkColors = [this.rainbow[Math.floor(Math.random() * 12)], this.rainbow[Math.floor(Math.random() * 12)]];
         }
-        return new THREE.MeshBasicMaterial({
+        return new THREE.MeshPhongMaterial({
           color: this.trunkColors[Math.floor(Math.random() * 2)]
         });
       }
@@ -48477,7 +48535,7 @@ var Materials = function () {
           lightMapIntensity: 0.3
         });
       } else {
-        return new THREE.MeshBasicMaterial({
+        return new THREE.MeshPhongMaterial({
           color: 0x00c563,
           side: THREE.DoubleSide,
           reflectivity: 0.1,

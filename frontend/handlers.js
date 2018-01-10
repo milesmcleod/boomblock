@@ -12,7 +12,7 @@ class Handlers {
   constructor(audio, world, drumStacks) {
     this.audio = audio;
     this.world = world;
-    this.mode = 'dayTime';
+    this.mode = 'dayTime'; //change to be determined by time
     this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);

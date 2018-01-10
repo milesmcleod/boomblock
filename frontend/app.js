@@ -32,7 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const bigTree3 = new BigTree(materials, [-800, -150, -100], audio, world.scene, 3, '3');
   const bigTree4 = new BigTree(materials, [-10, 140, -200], audio, world.scene, 5, '4');
   const bigTree5 = new BigTree(materials, [960, -130, 260], audio, world.scene, 4, '5');
-  const handlers = new Handlers(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
+  const handlers = new Handlers(
+    audio,
+    world,
+    [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]
+  );
   window.world = world;
 
   handlers.loadCheck();
@@ -54,9 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (worldDiv.classList.contains('background-black')) {
       worldDiv.classList.remove('background-black');
       handlers.setMode('dayTime');
+      world.sunRise();
     } else {
       worldDiv.classList.add('background-black');
       handlers.setMode('nightTime');
+      world.sunSet();
     }
   });
 

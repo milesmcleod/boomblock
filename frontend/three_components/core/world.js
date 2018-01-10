@@ -11,6 +11,10 @@ class World {
     this.nearPlane = 1;
     this.farPlane = 20000;
     this.fps = 50;
+    this.sunTheta = Math.PI/2;
+    this.moonTheta = 3 * Math.PI/2;
+    this.sunRising = false;
+    this.sunSetting = false;
   }
 
   createCamera() {
@@ -98,8 +102,59 @@ class World {
         el.rotateZ(0.5);
       }
     }); //rotateOnAxis function
+    const sun = this.scene.children.filter(el => el.name === 'sun')[0];
+    const moon = this.scene.children.filter(el => el.name === 'moon')[0];
+    if (this.sunSetting) {
+      this.sunTheta += Math.PI/(2 * 30);
+      this.moonTheta += Math.PI/(2 * 30);
+      if (this.sunTheta % (2 * Math.PI) === Math.PI/2) { //this is the part that is broken. use a range instead? math is also wrong
+        this.sunSetting = false;
+      } else {
+        //move sun and moon
+        sun.position.set(
+          800,
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta),
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta)
+        );
+        moon.position.set(
+          800,
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta),
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta)
+        );
+      }
+    } else if (this.sunRising) {
+      this.sunTheta += Math.PI/(2 * 30);
+      this.moonTheta += Math.PI/(2 * 30);
+      if (this.sunTheta % (2 * Math.PI) === 3 * Math.PI/2) {
+        this.sunRising = false;
+      } else {
+        //move sun and moon
+        sun.position.set(
+          800,
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta),
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta)
+        );
+        moon.position.set(
+          800,
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta),
+          Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta)
+        );
+      }
+    }
 
-  }
+  } //refactor
+
+  // moving the sun should be a trigonometric function that uses the sine
+  // and cosine of the sun's position relative to the origin. r is equal
+  // to the square root of ths sum of the squares of 3000 and 3000, and
+  // because we're working with a perfectly circular orbit, the respective
+  // y and z values will be something like:
+
+  // z = Math.sqrt(2 * (3000 ** 2)) * Math.sin(sunTheta) where sunTheta
+  // starts at Math.PI/2 radians and ends at 3 * Math.PI/2 radians
+  //
+  // y = Math.sqrt(2 * (3000 ** 2)) * Math.cos(sunTheta) where sunTheta
+  // starts at Math.PI/2 radians and ends at 3 * Math.PI/2 radians
 
   render () {
     this.renderer.render( this.scene, this.camera );
@@ -121,6 +176,14 @@ class World {
       this.render();
       requestAnimationFrame(() => this.loop(audio));
     }, 1000/this.fps);
+  }
+
+  sunSet() {
+    this.sunSetting = true;
+  }
+
+  sunRise() {
+    this.sunRising = true;
   }
 
 }

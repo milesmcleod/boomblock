@@ -9,7 +9,6 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
-  background: #1a75ff;
 }
 
 .world-move {
@@ -130,4 +129,19 @@ img {
 .show-modal {
   z-index: 500;
   opacity: 0.95;
+}
+
+.background-blue {
+  transition: all 1s ease;
+  background: #1a75ff;
+}
+
+.background-black {
+  background-color: #000000;
+}
+#night-switch {
+  position: fixed;
+  top: 600px;
+  left: 10px;
+  color: red;
 }

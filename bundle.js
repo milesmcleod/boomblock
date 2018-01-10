@@ -48328,6 +48328,15 @@ var Handlers = function () {
         if (_this2.audio.loaded === 1) {
           window.addEventListener('mouseup', _this2.handleClick, false);
           window.addEventListener('mousemove', _this2.handleMove, false);
+          var night = document.getElementById('night-switch');
+          night.addEventListener('click', function (e) {
+            var world = document.getElementById('world');
+            if (world.classList.contains('background-black')) {
+              world.classList.remove('background-black');
+            } else {
+              world.classList.add('background-black');
+            }
+          });
           _this2.audio.beatAnalyser = new _beat_analysis2.default(_this2.audio.drumsBuffer);
           _this2.audio.globalTempo = Math.round(_this2.audio.beatAnalyser.getIntervalInMilliseconds());
         } else {

@@ -46731,6 +46731,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   handlers.loadCheck();
 
+  //refactor all of these click handlers out into a new htmlhandler class
+
   var about = document.getElementsByClassName('about-link')[0];
 
   about.addEventListener("click", function () {
@@ -46756,16 +46758,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  var playlistLink = document.getElementById("playlist");
+  var playlistDiv = document.getElementById("playlist");
+  var playlistLink = document.getElementById("playlist-link");
 
-  playlistLink.addEventListener("click", function () {
+  playlistDiv.addEventListener("click", function (e) {
     var playlist = document.getElementsByClassName("playlist-menu")[0];
-    if (playlist.classList.contains('show')) {
+    if (playlist.classList.contains('show') && e.target === playlistLink) {
+      //also need to verify click target
       playlist.classList.remove("show");
       window.setTimeout(function () {
         playlist.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === playlistLink) {
       window.setTimeout(function () {
         playlist.classList.add("show");
       }, 10);
@@ -46773,16 +46777,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  var controlsLink = document.getElementById("controls");
+  var controlsDiv = document.getElementById("controls");
+  var controlsLink = document.getElementById("controls-link");
 
-  controlsLink.addEventListener("click", function () {
+  controlsDiv.addEventListener("click", function (e) {
     var controls = document.getElementsByClassName("controls-menu")[0];
-    if (controls.classList.contains('show')) {
+    if (controls.classList.contains('show') && e.target === controlsLink) {
+      //also need to verify click target
       controls.classList.remove("show");
       window.setTimeout(function () {
         controls.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === controlsLink) {
       window.setTimeout(function () {
         controls.classList.add("show");
       }, 10);

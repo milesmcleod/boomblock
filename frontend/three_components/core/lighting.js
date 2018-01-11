@@ -23,6 +23,8 @@ class Lighting {
     );
     this.moon.name = 'moon';
     this.moon.position.set(800, -3000, 3000);
+    this.moon.material.transparent = true;
+    this.moon.material.opacity = 0;
     scene.add( this.moon );
   }
 

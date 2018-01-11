@@ -1,4 +1,5 @@
 // entry.jsx
+import * as THREE from 'three';
 import World from './three_components/core/world';
 import Lighting from './three_components/core/lighting';
 import Island from './three_components/core/island';
@@ -37,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     world,
     [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]
   );
+  const fog = new THREE.Fog( 0x4ff904, 0, 750 );
+  world.scene.add(fog);
   window.world = world;
 
   handlers.loadCheck();
@@ -63,6 +66,40 @@ document.addEventListener('DOMContentLoaded', () => {
       worldDiv.classList.add('background-black');
       handlers.setMode('nightTime');
       world.sunSet();
+    }
+  });
+
+  const playlistLink = document.getElementById("playlist");
+
+  playlistLink.addEventListener("click", () => {
+    const playlist = document.getElementsByClassName("playlist-menu")[0];
+    if (playlist.classList.contains('show')) {
+      playlist.classList.remove("show");
+      window.setTimeout(() => {
+        playlist.classList.add("hide");
+      }, 500);
+    } else {
+      window.setTimeout(() => {
+        playlist.classList.add("show");
+      }, 10);
+      playlist.classList.remove("hide");
+    }
+  });
+
+  const controlsLink = document.getElementById("controls");
+
+  controlsLink.addEventListener("click", () => {
+    const controls = document.getElementsByClassName("controls-menu")[0];
+    if (controls.classList.contains('show')) {
+      controls.classList.remove("show");
+      window.setTimeout(() => {
+        controls.classList.add("hide");
+      }, 500);
+    } else {
+      window.setTimeout(() => {
+        controls.classList.add("show");
+      }, 10);
+      controls.classList.remove("hide");
     }
   });
 

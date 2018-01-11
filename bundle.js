@@ -45414,6 +45414,8 @@ var Lighting = function () {
       this.moon = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffffff }));
       this.moon.name = 'moon';
       this.moon.position.set(800, -3000, 3000);
+      this.moon.material.transparent = true;
+      this.moon.material.opacity = 0;
       scene.add(this.moon);
     }
   }, {
@@ -46636,6 +46638,10 @@ exports.default = Buildings;
 "use strict";
 
 
+var _three = __webpack_require__(0);
+
+var THREE = _interopRequireWildcard(_three);
+
 var _world = __webpack_require__(1);
 
 var _world2 = _interopRequireDefault(_world);
@@ -46698,6 +46704,9 @@ var _material_core2 = _interopRequireDefault(_material_core);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// entry.jsx
 document.addEventListener('DOMContentLoaded', function () {
 
   var audio = new _audio_tracks2.default();
@@ -46716,6 +46725,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var bigTree4 = new _big_tree2.default(materials, [-10, 140, -200], audio, world.scene, 5, '4');
   var bigTree5 = new _big_tree2.default(materials, [960, -130, 260], audio, world.scene, 4, '5');
   var handlers = new _handlers2.default(audio, world, [bigTree, bigTree2, bigTree3, bigTree4, bigTree5]);
+  var fog = new THREE.Fog(0x4ff904, 0, 750);
+  world.scene.add(fog);
   window.world = world;
 
   handlers.loadCheck();
@@ -46745,8 +46756,42 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  var playlistLink = document.getElementById("playlist");
+
+  playlistLink.addEventListener("click", function () {
+    var playlist = document.getElementsByClassName("playlist-menu")[0];
+    if (playlist.classList.contains('show')) {
+      playlist.classList.remove("show");
+      window.setTimeout(function () {
+        playlist.classList.add("hide");
+      }, 500);
+    } else {
+      window.setTimeout(function () {
+        playlist.classList.add("show");
+      }, 10);
+      playlist.classList.remove("hide");
+    }
+  });
+
+  var controlsLink = document.getElementById("controls");
+
+  controlsLink.addEventListener("click", function () {
+    var controls = document.getElementsByClassName("controls-menu")[0];
+    if (controls.classList.contains('show')) {
+      controls.classList.remove("show");
+      window.setTimeout(function () {
+        controls.classList.add("hide");
+      }, 500);
+    } else {
+      window.setTimeout(function () {
+        controls.classList.add("show");
+      }, 10);
+      controls.classList.remove("hide");
+    }
+  });
+
   world.loop(audio);
-}); // entry.jsx
+});
 
 /***/ }),
 /* 12 */

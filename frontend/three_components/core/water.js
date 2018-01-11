@@ -4,7 +4,8 @@ class Water {
   createWater(scene) {
     this.water = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(15000,15000),
-      new THREE.MeshPhongMaterial({color: 0x1a75ff})
+      // new THREE.MeshPhongMaterial({color: 0x1a75ff})
+      new THREE.MeshPhongMaterial({color: 0x00626d})
     );
     this.water.rotation.x = -Math.PI/2;
     this.water.position.y = -300;
@@ -16,6 +17,7 @@ class Water {
 
   constructor(scene) {
     this.createWater(scene);
+    // this.createFloor(scene);
   }
 }
 

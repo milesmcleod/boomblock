@@ -19,7 +19,7 @@ class Lighting {
   createMoon(scene) {
     this.moon = new THREE.Mesh(
       new THREE.SphereBufferGeometry(200, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0xffff80 })
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
     );
     this.moon.name = 'moon';
     this.moon.position.set(800, -3000, 3000);

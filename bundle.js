@@ -45164,8 +45164,8 @@ var World = function () {
       this.nearPlane = 1;
       this.farPlane = 20000;
       this.fps = 50;
-      this.sunTheta = Math.PI / 2;
-      this.moonTheta = 3 * Math.PI / 2;
+      this.sunTheta = 3 * Math.PI / 4;
+      this.moonTheta = 7 * Math.PI / 4;
       this.sunRising = false;
       this.sunSetting = false;
     }
@@ -45267,6 +45267,9 @@ var World = function () {
           el.rotateZ(0.5);
         }
       }); //rotateOnAxis function
+
+      var stopRange = [3 * Math.PI / 4 - Math.PI / 100, 3 * Math.PI / 4 + Math.PI / 100];
+
       var sun = this.scene.children.filter(function (el) {
         return el.name === 'sun';
       })[0];
@@ -45276,23 +45279,37 @@ var World = function () {
       if (this.sunSetting) {
         this.sunTheta += Math.PI / (2 * 30);
         this.moonTheta += Math.PI / (2 * 30);
-        if (this.sunTheta % (2 * Math.PI) === Math.PI / 2) {
+        if (this.sunTheta % Math.PI > stopRange[0] && this.sunTheta % Math.PI < stopRange[1]) {
           //this is the part that is broken. use a range instead? math is also wrong
           this.sunSetting = false;
         } else {
           //move sun and moon
           sun.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta));
           moon.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta));
+          if (sun.position.y < -100) {
+            sun.material.transparent = true;
+            sun.material.opacity = 0;
+          } else if (moon.position.y > -100) {
+            moon.material.transparent = false;
+            moon.material.opacity = 1;
+          }
         }
       } else if (this.sunRising) {
         this.sunTheta += Math.PI / (2 * 30);
         this.moonTheta += Math.PI / (2 * 30);
-        if (this.sunTheta % (2 * Math.PI) === 3 * Math.PI / 2) {
+        if (this.sunTheta % Math.PI > stopRange[0] && this.sunTheta % Math.PI < stopRange[1]) {
           this.sunRising = false;
         } else {
           //move sun and moon
           sun.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.sunTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.sunTheta));
           moon.position.set(800, Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta), Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta));
+          if (moon.position.y < -100) {
+            moon.material.transparent = true;
+            moon.material.opacity = 0;
+          } else if (sun.position.y > -100) {
+            sun.material.transparent = false;
+            sun.material.opacity = 1;
+          }
         }
       }
     } //refactor
@@ -45394,7 +45411,7 @@ var Lighting = function () {
   }, {
     key: 'createMoon',
     value: function createMoon(scene) {
-      this.moon = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffff80 }));
+      this.moon = new THREE.Mesh(new THREE.SphereBufferGeometry(200, 64, 64), new THREE.MeshBasicMaterial({ color: 0xffffff }));
       this.moon.name = 'moon';
       this.moon.position.set(800, -3000, 3000);
       scene.add(this.moon);
@@ -47808,7 +47825,9 @@ var Water = function () {
   _createClass(Water, [{
     key: 'createWater',
     value: function createWater(scene) {
-      this.water = new THREE.Mesh(new THREE.PlaneBufferGeometry(15000, 15000), new THREE.MeshPhongMaterial({ color: 0x1a75ff }));
+      this.water = new THREE.Mesh(new THREE.PlaneBufferGeometry(15000, 15000),
+      // new THREE.MeshPhongMaterial({color: 0x1a75ff})
+      new THREE.MeshPhongMaterial({ color: 0x00626d }));
       this.water.rotation.x = -Math.PI / 2;
       this.water.position.y = -300;
       this.water.material.transparent = true;
@@ -47822,6 +47841,7 @@ var Water = function () {
     _classCallCheck(this, Water);
 
     this.createWater(scene);
+    // this.createFloor(scene);
   }
 
   return Water;

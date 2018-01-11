@@ -11,8 +11,8 @@ class World {
     this.nearPlane = 1;
     this.farPlane = 20000;
     this.fps = 50;
-    this.sunTheta = Math.PI/2;
-    this.moonTheta = 3 * Math.PI/2;
+    this.sunTheta = 3 * Math.PI/4;
+    this.moonTheta = 7 * Math.PI/4;
     this.sunRising = false;
     this.sunSetting = false;
   }
@@ -102,12 +102,21 @@ class World {
         el.rotateZ(0.5);
       }
     }); //rotateOnAxis function
+
+    const stopRange = [
+      (3 * Math.PI/4) - (Math.PI/100),
+      (3 * Math.PI/4) + (Math.PI/100)
+     ];
+
     const sun = this.scene.children.filter(el => el.name === 'sun')[0];
     const moon = this.scene.children.filter(el => el.name === 'moon')[0];
     if (this.sunSetting) {
       this.sunTheta += Math.PI/(2 * 30);
       this.moonTheta += Math.PI/(2 * 30);
-      if (this.sunTheta % (2 * Math.PI) === Math.PI/2) { //this is the part that is broken. use a range instead? math is also wrong
+      if (
+        this.sunTheta % (Math.PI) > stopRange[0] &&
+        this.sunTheta % (Math.PI) < stopRange[1]
+      ) { //this is the part that is broken. use a range instead? math is also wrong
         this.sunSetting = false;
       } else {
         //move sun and moon
@@ -121,11 +130,21 @@ class World {
           Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta),
           Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta)
         );
+        if (sun.position.y < -100){
+          sun.material.transparent = true;
+          sun.material.opacity = 0;
+        } else if (moon.position.y > -100){
+          moon.material.transparent = false;
+          moon.material.opacity = 1;
+        }
       }
     } else if (this.sunRising) {
       this.sunTheta += Math.PI/(2 * 30);
       this.moonTheta += Math.PI/(2 * 30);
-      if (this.sunTheta % (2 * Math.PI) === 3 * Math.PI/2) {
+      if (
+        this.sunTheta % (Math.PI) > stopRange[0] &&
+        this.sunTheta % (Math.PI) < stopRange[1]
+      ) {
         this.sunRising = false;
       } else {
         //move sun and moon
@@ -139,6 +158,13 @@ class World {
           Math.sqrt(2 * Math.pow(3000, 2)) * Math.sin(this.moonTheta),
           Math.sqrt(2 * Math.pow(3000, 2)) * Math.cos(this.moonTheta)
         );
+        if (moon.position.y < -100){
+          moon.material.transparent = true;
+          moon.material.opacity = 0;
+        } else if (sun.position.y > -100){
+          sun.material.transparent = false;
+          sun.material.opacity = 1;
+        }
       }
     }
 

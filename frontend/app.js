@@ -110,6 +110,22 @@ document.addEventListener('DOMContentLoaded', () => {
         controls.classList.add("show");
       }, 10);
       controls.classList.remove("hide");
+    } else if (e.target.classList.contains('play')) {
+      handlers.handlePlay();
+    } else if (e.target.classList.contains('pause')) {
+      handlers.handlePause();
+    } else if (e.target.classList.contains('reset')) {
+      handlers.handleReset();
+    } else if (e.target.classList.contains('mute')) {
+      handlers.handleMute();
+    } else if (e.target.classList.contains('mt1')) {
+      handlers.handleTrackMute(1);
+    } else if (e.target.classList.contains('mt2')) {
+      handlers.handleTrackMute(2);
+    } else if (e.target.classList.contains('mt3')) {
+      handlers.handleTrackMute(3);
+    } else if (e.target.classList.contains('mt4')) {
+      handlers.handleTrackMute(4);
     }
   });
 

@@ -160,7 +160,8 @@ img {
   color: white;
 }
 
-#night-switch:hover, #controls:hover, #playlist:hover {
+#night-switch:hover, #controls p:hover, #playlist p:hover,
+#controls li:hover, #playlist li:hover {
   cursor: pointer;
 }
 

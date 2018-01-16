@@ -1,7 +1,7 @@
-import World from './three_components/world';
-import Lighting from './three_components/lighting';
-import Floor from './three_components/floor';
-import BoomBlock from './three_components/boomblock';
+import World from './three_components/core/world';
+import Lighting from './three_components/core/lighting';
+import Island from './three_components/core/island';
+import BoomBlock from './three_components/core/boomblock';
 import DrumStack from './three_components/drum_stack';
 import TrainTrack from './three_components/traintrack';
 import AudioTracks from './audio_components/audio_tracks';
@@ -9,21 +9,30 @@ import BeatAnalyser from './audio_components/beat_analysis';
 import Buildings from './three_components/buildings';
 
 class Handlers {
-  constructor(audio, world, drumStack) {
+  constructor(audio, world, drumStacks) {
     this.audio = audio;
     this.world = world;
-    this.drumStack = drumStack;
+    this.mode = 'dayTime'; //change to be determined by time
+    this.drumStacks = drumStacks;
     this.handleClick = this.handleClick.bind(this);
     this.handleMove = this.handleMove.bind(this);
+  }
+
+  setMode(mode) {
+    this.mode = mode;
+    this.drumStacks.forEach((el) => el.injectMode(mode));
   }
 
   handlePlay() {
     if (!this.audio.playing) {
       this.audio.masterGain.gain.value = 1;
       this.audio.start();
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
-      this.drumStack.setInterval();
+      this.drumStacks.forEach((el) => {
+        el.injectMode(this.mode);
+        el.resetInterval();
+        el.reset8thNoteTimeouts();
+        el.setInterval(this.mode);
+      });
     }
   }
 
@@ -37,8 +46,10 @@ class Handlers {
       window.removeEventListener(
         'mouseup', this.handleClick, false
       );
-      this.drumStack.resetInterval();
-      this.drumStack.reset8thNoteTimeouts();
+      this.drumStacks.forEach((el) => {
+        el.resetInterval();
+        el.reset8thNoteTimeouts();
+      });
       this.audio.reload();
       this.loadCheck();
     }
@@ -58,9 +69,11 @@ class Handlers {
     );
     this.audio.pausedAt = 0;
     this.audio.resetting = 1;
-    this.drumStack.resetStack();
-    this.drumStack.resetInterval();
-    this.drumStack.reset8thNoteTimeouts();
+    this.drumStacks.forEach((el) => {
+      el.resetInterval();
+      el.reset8thNoteTimeouts();
+      el.resetStack();
+    });
     window.setTimeout(() => { this.audio.resetting = 0; }, 400);
     this.audio.reload();
     this.loadCheck();

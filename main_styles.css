@@ -9,7 +9,6 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
-  background: #000000;
 }
 
 .world-move {
@@ -130,4 +129,92 @@ img {
 .show-modal {
   z-index: 500;
   opacity: 0.95;
+}
+
+.background-blue {
+  transition: all 1s ease;
+  background: #1a75ff;
+}
+
+.background-black {
+  background-color: #000000;
+}
+#night-switch {
+  position: fixed;
+  bottom: 60px;
+  left: 90px;
+  color: white;
+}
+
+#playlist {
+  position: fixed;
+  bottom: 60px;
+  right: 200px;
+  color: white;
+}
+
+#controls {
+  position: fixed;
+  bottom: 60px;
+  right: 320px;
+  color: white;
+}
+
+#night-switch:hover, #controls:hover, #playlist:hover {
+  cursor: pointer;
+}
+
+.playlist-menu {
+  position: fixed;
+  height: 60%;
+  left: 75%;
+  right: 5%;
+  top: 20%;
+  bottom: auto;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.controls-menu {
+  position: fixed;
+  height: 10%;
+  left: 20%;
+  right: 30%;
+  bottom: 3%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.show {
+  opacity: 1
+}
+
+.hide {
+  display: none;
+}
+
+.menu-background {
+  background-color: black;
+  border-radius: 6px;
+  opacity: 0.4;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.playlist-list, .controls-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.playlist-list li {
+  margin: 0 30px;
 }

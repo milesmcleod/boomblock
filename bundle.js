@@ -46802,13 +46802,13 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (e.target.classList.contains('mute')) {
       handlers.handleMute();
     } else if (e.target.classList.contains('mt1')) {
-      handlers.handleTrackMute(1);
+      handlers.handleForeignTrackMute(1);
     } else if (e.target.classList.contains('mt2')) {
-      handlers.handleTrackMute(2);
+      handlers.handleForeignTrackMute(2);
     } else if (e.target.classList.contains('mt3')) {
-      handlers.handleTrackMute(3);
+      handlers.handleForeignTrackMute(3);
     } else if (e.target.classList.contains('mt4')) {
-      handlers.handleTrackMute(4);
+      handlers.handleForeignTrackMute(4);
     }
   });
 
@@ -48443,10 +48443,31 @@ var Handlers = function () {
       var gain = this.audio[tracks[trackNum] + 'Gain'].gain;
       if (gain.value) {
         gain.value = 0;
+        console.log(clickElement.object.name);
         clickElement.object.material.color.set(0x0000ff);
       } else {
         gain.value = 1;
         clickElement.object.material.color.set(0x00ffff);
+      }
+    }
+  }, {
+    key: 'handleForeignTrackMute',
+    value: function handleForeignTrackMute(trackNum) {
+      var boomBlockObject = this.world.scene.children.filter(function (obj) {
+        return obj.name === 'boombox';
+      })[0];
+      var button = boomBlockObject.children.filter(function (obj) {
+        return obj.name === 'track' + trackNum;
+      })[0];
+      var tracks = [null, 'drums', 'bass', 'melody', 'samples'];
+      var gain = this.audio[tracks[trackNum] + 'Gain'].gain;
+      if (gain.value) {
+        gain.value = 0;
+        console.log(button);
+        button.material.color.set(0x0000ff);
+      } else {
+        gain.value = 1;
+        button.material.color.set(0x00ffff);
       }
     }
   }, {

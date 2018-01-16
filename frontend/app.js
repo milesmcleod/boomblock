@@ -119,13 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.target.classList.contains('mute')) {
       handlers.handleMute();
     } else if (e.target.classList.contains('mt1')) {
-      handlers.handleTrackMute(1);
+      handlers.handleForeignTrackMute(1);
     } else if (e.target.classList.contains('mt2')) {
-      handlers.handleTrackMute(2);
+      handlers.handleForeignTrackMute(2);
     } else if (e.target.classList.contains('mt3')) {
-      handlers.handleTrackMute(3);
+      handlers.handleForeignTrackMute(3);
     } else if (e.target.classList.contains('mt4')) {
-      handlers.handleTrackMute(4);
+      handlers.handleForeignTrackMute(4);
     }
   });
 

@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   handlers.loadCheck();
 
+  //refactor all of these click handlers out into a new htmlhandler class
+
   const about = document.getElementsByClassName('about-link')[0];
 
   about.addEventListener("click", () => {
@@ -69,16 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const playlistLink = document.getElementById("playlist");
+  const playlistDiv = document.getElementById("playlist");
+  const playlistLink = document.getElementById("playlist-link");
 
-  playlistLink.addEventListener("click", () => {
+  playlistDiv.addEventListener("click", (e) => {
     const playlist = document.getElementsByClassName("playlist-menu")[0];
-    if (playlist.classList.contains('show')) {
+    if (
+      playlist.classList.contains('show')
+      && e.target === playlistLink
+    ) { //also need to verify click target
       playlist.classList.remove("show");
       window.setTimeout(() => {
         playlist.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === playlistLink) {
       window.setTimeout(() => {
         playlist.classList.add("show");
       }, 10);
@@ -86,20 +92,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const controlsLink = document.getElementById("controls");
+  const controlsDiv = document.getElementById("controls");
+  const controlsLink = document.getElementById("controls-link");
 
-  controlsLink.addEventListener("click", () => {
+  controlsDiv.addEventListener("click", (e) => {
     const controls = document.getElementsByClassName("controls-menu")[0];
-    if (controls.classList.contains('show')) {
+    if (
+      controls.classList.contains('show')
+      && e.target === controlsLink
+    ) { //also need to verify click target
       controls.classList.remove("show");
       window.setTimeout(() => {
         controls.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === controlsLink) {
       window.setTimeout(() => {
         controls.classList.add("show");
       }, 10);
       controls.classList.remove("hide");
+    } else if (e.target.classList.contains('play')) {
+      handlers.handlePlay();
+    } else if (e.target.classList.contains('pause')) {
+      handlers.handlePause();
+    } else if (e.target.classList.contains('reset')) {
+      handlers.handleReset();
+    } else if (e.target.classList.contains('mute')) {
+      handlers.handleMute();
+    } else if (e.target.classList.contains('mt1')) {
+      handlers.handleForeignTrackMute(1);
+    } else if (e.target.classList.contains('mt2')) {
+      handlers.handleForeignTrackMute(2);
+    } else if (e.target.classList.contains('mt3')) {
+      handlers.handleForeignTrackMute(3);
+    } else if (e.target.classList.contains('mt4')) {
+      handlers.handleForeignTrackMute(4);
     }
   });
 

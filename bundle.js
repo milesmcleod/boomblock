@@ -46731,6 +46731,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   handlers.loadCheck();
 
+  //refactor all of these click handlers out into a new htmlhandler class
+
   var about = document.getElementsByClassName('about-link')[0];
 
   about.addEventListener("click", function () {
@@ -46756,16 +46758,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  var playlistLink = document.getElementById("playlist");
+  var playlistDiv = document.getElementById("playlist");
+  var playlistLink = document.getElementById("playlist-link");
 
-  playlistLink.addEventListener("click", function () {
+  playlistDiv.addEventListener("click", function (e) {
     var playlist = document.getElementsByClassName("playlist-menu")[0];
-    if (playlist.classList.contains('show')) {
+    if (playlist.classList.contains('show') && e.target === playlistLink) {
+      //also need to verify click target
       playlist.classList.remove("show");
       window.setTimeout(function () {
         playlist.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === playlistLink) {
       window.setTimeout(function () {
         playlist.classList.add("show");
       }, 10);
@@ -46773,20 +46777,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  var controlsLink = document.getElementById("controls");
+  var controlsDiv = document.getElementById("controls");
+  var controlsLink = document.getElementById("controls-link");
 
-  controlsLink.addEventListener("click", function () {
+  controlsDiv.addEventListener("click", function (e) {
     var controls = document.getElementsByClassName("controls-menu")[0];
-    if (controls.classList.contains('show')) {
+    if (controls.classList.contains('show') && e.target === controlsLink) {
+      //also need to verify click target
       controls.classList.remove("show");
       window.setTimeout(function () {
         controls.classList.add("hide");
       }, 500);
-    } else {
+    } else if (e.target === controlsLink) {
       window.setTimeout(function () {
         controls.classList.add("show");
       }, 10);
       controls.classList.remove("hide");
+    } else if (e.target.classList.contains('play')) {
+      handlers.handlePlay();
+    } else if (e.target.classList.contains('pause')) {
+      handlers.handlePause();
+    } else if (e.target.classList.contains('reset')) {
+      handlers.handleReset();
+    } else if (e.target.classList.contains('mute')) {
+      handlers.handleMute();
+    } else if (e.target.classList.contains('mt1')) {
+      handlers.handleForeignTrackMute(1);
+    } else if (e.target.classList.contains('mt2')) {
+      handlers.handleForeignTrackMute(2);
+    } else if (e.target.classList.contains('mt3')) {
+      handlers.handleForeignTrackMute(3);
+    } else if (e.target.classList.contains('mt4')) {
+      handlers.handleForeignTrackMute(4);
     }
   });
 
@@ -48421,10 +48443,31 @@ var Handlers = function () {
       var gain = this.audio[tracks[trackNum] + 'Gain'].gain;
       if (gain.value) {
         gain.value = 0;
+        console.log(clickElement.object.name);
         clickElement.object.material.color.set(0x0000ff);
       } else {
         gain.value = 1;
         clickElement.object.material.color.set(0x00ffff);
+      }
+    }
+  }, {
+    key: 'handleForeignTrackMute',
+    value: function handleForeignTrackMute(trackNum) {
+      var boomBlockObject = this.world.scene.children.filter(function (obj) {
+        return obj.name === 'boombox';
+      })[0];
+      var button = boomBlockObject.children.filter(function (obj) {
+        return obj.name === 'track' + trackNum;
+      })[0];
+      var tracks = [null, 'drums', 'bass', 'melody', 'samples'];
+      var gain = this.audio[tracks[trackNum] + 'Gain'].gain;
+      if (gain.value) {
+        gain.value = 0;
+        console.log(button);
+        button.material.color.set(0x0000ff);
+      } else {
+        gain.value = 1;
+        button.material.color.set(0x00ffff);
       }
     }
   }, {

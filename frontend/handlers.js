@@ -103,10 +103,30 @@ class Handlers {
     const gain = this.audio[`${tracks[trackNum]}Gain`].gain;
     if (gain.value) {
       gain.value = 0;
+      console.log(clickElement.object.name);
       clickElement.object.material.color.set(0x0000ff);
     } else {
       gain.value = 1;
       clickElement.object.material.color.set(0x00ffff);
+    }
+  }
+
+  handleForeignTrackMute(trackNum) {
+    const boomBlockObject = this.world.scene.children.filter(obj => (
+      obj.name === 'boombox'
+    ))[0];
+    const button = boomBlockObject.children.filter(obj => (
+      obj.name === `track${trackNum}`
+    ))[0];
+    const tracks = [null, 'drums', 'bass', 'melody', 'samples'];
+    const gain = this.audio[`${tracks[trackNum]}Gain`].gain;
+    if (gain.value) {
+      gain.value = 0;
+      console.log(button);
+      button.material.color.set(0x0000ff);
+    } else {
+      gain.value = 1;
+      button.material.color.set(0x00ffff);
     }
   }
 

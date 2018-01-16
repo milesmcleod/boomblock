@@ -142,7 +142,7 @@ img {
 #night-switch {
   position: fixed;
   bottom: 60px;
-  left: 90px;
+  left: 180px;
   color: white;
 }
 
@@ -160,7 +160,8 @@ img {
   color: white;
 }
 
-#night-switch:hover, #controls:hover, #playlist:hover {
+#night-switch:hover, #controls p:hover, #playlist p:hover,
+#controls li:hover, #playlist li:hover {
   cursor: pointer;
 }
 
@@ -180,7 +181,7 @@ img {
   height: 10%;
   left: 20%;
   right: 30%;
-  bottom: 3%;
+  bottom: 3.5%;
   opacity: 0;
   transition: opacity 0.5s ease;
 }
@@ -196,7 +197,7 @@ img {
 .menu-background {
   background-color: black;
   border-radius: 6px;
-  opacity: 0.4;
+  opacity: 0.7;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -213,6 +214,12 @@ img {
   z-index: 100;
   opacity: 1;
   transition: opacity 0.5s ease;
+}
+
+.controls-list {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .playlist-list li {

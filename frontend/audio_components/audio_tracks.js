@@ -52,16 +52,16 @@ class AudioTracks {
 
   load() {
     const getDrums = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3"
+      "https://boomblock.s3.amazonaws.com/purple/purple_82_drums.mp3"
     );
     const getBass = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3"
+      "https://boomblock.s3.amazonaws.com/purple/purple_82_bass.mp3"
     );
     const getSamples = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3"
+      "https://boomblock.s3.amazonaws.com/purple/purple_82_guitar.mp3"
     );
     const getMelody = this.getTrack(
-      "https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3"
+      "https://boomblock.s3.amazonaws.com/purple/purple_82_synth.mp3"
     );
     Promise.all([
       getDrums,

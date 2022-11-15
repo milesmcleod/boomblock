@@ -46263,10 +46263,10 @@ var AudioTracks = function () {
     value: function load() {
       var _this = this;
 
-      var getDrums = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_drums.mp3");
-      var getBass = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_bass.mp3");
-      var getSamples = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_samples.mp3");
-      var getMelody = this.getTrack("https://s3-us-west-1.amazonaws.com/boomblock/radio_hat.mp3");
+      var getDrums = this.getTrack("https://boomblock.s3.amazonaws.com/purple/purple_82_drums.mp3");
+      var getBass = this.getTrack("https://boomblock.s3.amazonaws.com/purple/purple_82_bass.mp3");
+      var getSamples = this.getTrack("https://boomblock.s3.amazonaws.com/purple/purple_82_guitar.mp3");
+      var getMelody = this.getTrack("https://boomblock.s3.amazonaws.com/purple/purple_82_synth.mp3");
       Promise.all([getDrums, getBass, getSamples, getMelody]).then(function (results) {
         ['drums', 'bass', 'samples', 'melody'].forEach(function (type, idx) {
           _this.arrayBufferCollection[type + "ArrayBuffer"] = results[idx];
